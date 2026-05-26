@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 
 class Pqrs extends Model
 {
@@ -51,8 +52,10 @@ class Pqrs extends Model
 
     public static function generarRadicado(): string
     {
-        $year = now()->year;
-        $ultimo = static::whereYear('created_at', $year)->count() + 1;
-        return 'PQRS-' . $year . '-' . str_pad($ultimo, 6, '0', STR_PAD_LEFT);
+        return DB::transaction(function () {
+            $year = now()->year;
+            $ultimo = static::whereYear('created_at', $year)->lockForUpdate()->count() + 1;
+            return 'PQRS-' . $year . '-' . str_pad($ultimo, 6, '0', STR_PAD_LEFT);
+        });
     }
 }

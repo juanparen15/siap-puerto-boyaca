@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PqrsHistorial extends Model
 {
+    protected $table = 'pqrs_historial';
+
     public $timestamps = false;
 
     protected $fillable = [
