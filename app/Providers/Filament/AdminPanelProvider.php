@@ -2,10 +2,12 @@
 
 namespace App\Providers\Filament;
 
+use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationGroup;
 use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -51,6 +53,15 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+            ])
+            ->plugins([
+                FilamentShieldPlugin::make(),
+            ])
+            ->navigationGroups([
+                NavigationGroup::make('Alumbrado Público')->icon('heroicon-o-light-bulb'),
+                NavigationGroup::make('Gestión Financiera')->icon('heroicon-o-banknotes'),
+                NavigationGroup::make('Supervisión')->icon('heroicon-o-clipboard-document-check'),
+                NavigationGroup::make('Administración')->icon('heroicon-o-cog-6-tooth'),
             ])
             ->authMiddleware([
                 Authenticate::class,
