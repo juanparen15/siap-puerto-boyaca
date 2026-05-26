@@ -7,6 +7,7 @@ use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -52,5 +53,15 @@ class User extends Authenticatable implements FilamentUser
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function pqrsAsignados(): HasMany
+    {
+        return $this->hasMany(Pqrs::class, 'funcionario_id');
+    }
+
+    public function informesInterventoria(): HasMany
+    {
+        return $this->hasMany(InterventoriaInforme::class, 'usuario_id');
     }
 }
