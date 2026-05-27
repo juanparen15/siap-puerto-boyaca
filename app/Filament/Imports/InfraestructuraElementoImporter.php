@@ -37,8 +37,10 @@ class InfraestructuraElementoImporter extends Importer
             ImportColumn::make('tipo_poste')
                 ->label('tipo_de_poste'),
             ImportColumn::make('altura_poste_m')
+                ->label('altura_del_poste_m')
                 ->numeric(),
             ImportColumn::make('carga_rotura_kgf')
+                ->label('carga_de_rotura_kgf')
                 ->integer(),
             ImportColumn::make('clasificacion')
                 ->fillRecordUsing(fn ($record, $value) => $record->clasificacion = match(strtoupper(trim($value))) {
@@ -47,7 +49,8 @@ class InfraestructuraElementoImporter extends Importer
                     default => 'casco_urbano',
                 }),
             ImportColumn::make('descripcion'),
-            ImportColumn::make('observaciones'),
+            ImportColumn::make('observaciones')
+                ->label('observaciones_mtto'),
             ImportColumn::make('latitud')
                 ->label('y')
                 ->numeric()
