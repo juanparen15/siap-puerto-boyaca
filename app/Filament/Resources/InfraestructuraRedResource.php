@@ -63,28 +63,41 @@ class InfraestructuraRedResource extends Resource
                     ->maxLength(100)
                     ->visible(fn (Get $get) => in_array($get('tipo'), ['alimentacion', 'canalizacion'])),
                 TextInput::make('calibre_conductores')
+                    ->label('Calibre de Conductores')
                     ->maxLength(50)
                     ->visible(fn (Get $get) => $get('tipo') === 'alimentacion'),
                 Select::make('tipo_instalacion')
+                    ->label('Tipo de Instalación')
                     ->options(['aerea' => 'Aérea', 'subterranea' => 'Subterránea'])
                     ->visible(fn (Get $get) => $get('tipo') === 'alimentacion'),
                 Select::make('tipo_zona')
+                    ->label('Tipo de Zona')
                     ->options(['dura' => 'Zona Dura', 'verde' => 'Zona Verde', 'cruce_calzada' => 'Cruce de Calzada'])
                     ->visible(fn (Get $get) => $get('tipo') === 'canalizacion'),
                 Select::make('tipo_transformador')
+                    ->label('Tipo de Transformador')
                     ->options(['aereo' => 'Aéreo', 'local' => 'Local', 'pedestal' => 'Pedestal', 'subterraneo' => 'Subterráneo'])
                     ->visible(fn (Get $get) => $get('tipo') === 'transformador'),
                 TextInput::make('potencia_kva')
                     ->numeric()
                     ->label('Potencia (kVA)')
+                    ->minValue(0)
+                    ->step(0.01)
+                    ->suffix('kVA')
                     ->visible(fn (Get $get) => $get('tipo') === 'transformador'),
                 TextInput::make('tension_primaria_kv')
                     ->numeric()
                     ->label('Tensión Primaria (kV)')
+                    ->minValue(0)
+                    ->step(0.01)
+                    ->suffix('kV')
                     ->visible(fn (Get $get) => $get('tipo') === 'transformador'),
                 TextInput::make('tension_secundaria_kv')
                     ->numeric()
                     ->label('Tensión Secundaria (kV)')
+                    ->minValue(0)
+                    ->step(0.01)
+                    ->suffix('kV')
                     ->visible(fn (Get $get) => $get('tipo') === 'transformador'),
             ])->columns(2),
             Textarea::make('observaciones')->columnSpanFull(),
@@ -103,8 +116,20 @@ class InfraestructuraRedResource extends Resource
                     'canalizacion' => 'warning',
                     default => 'gray',
                 }),
-            TextColumn::make('uso')->badge(),
-            TextColumn::make('clasificacion')->badge(),
+            TextColumn::make('uso')
+                ->badge()
+                ->color(fn (string $state): string => match ($state) {
+                    'exclusivo' => 'info',
+                    'compartido' => 'warning',
+                    default => 'gray',
+                }),
+            TextColumn::make('clasificacion')
+                ->badge()
+                ->color(fn (string $state): string => match ($state) {
+                    'casco_urbano' => 'success',
+                    'puerto_serviez' => 'primary',
+                    default => 'gray',
+                }),
             TextColumn::make('elementos_count')
                 ->counts('elementos')
                 ->label('Elementos'),
@@ -123,6 +148,8 @@ class InfraestructuraRedResource extends Resource
         ])->recordActions([
             EditAction::make(),
             DeleteAction::make(),
+        ])->bulkActions([
+            \Filament\Tables\Actions\DeleteBulkAction::make(),
         ]);
     }
 

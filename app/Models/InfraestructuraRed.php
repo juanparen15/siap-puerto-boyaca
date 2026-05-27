@@ -13,6 +13,12 @@ class InfraestructuraRed extends Model
         'tension_secundaria_kv', 'observaciones',
     ];
 
+    protected $casts = [
+        'potencia_kva' => 'decimal:2',
+        'tension_primaria_kv' => 'decimal:2',
+        'tension_secundaria_kv' => 'decimal:2',
+    ];
+
     public function elementos(): HasMany
     {
         return $this->hasMany(InfraestructuraElemento::class, 'red_id');
