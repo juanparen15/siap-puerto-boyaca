@@ -43,3 +43,13 @@
 .leaflet-container {
     font-family: inherit;
 }
+
+/* Responsive: small screens (rural Colombia often uses low-end Android) */
+@media (max-width: 480px) {
+    .stat-card {
+        padding: 1rem;
+    }
+    .stat-card .countup {
+        font-size: 1.875rem; /* text-3xl */
+    }
+}

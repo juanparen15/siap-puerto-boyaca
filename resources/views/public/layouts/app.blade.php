@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sistema de Información de Alumbrado Público — Alcaldía de Puerto Boyacá, Boyacá, Colombia. Consulte el inventario, radique PQRS y acceda a reportes del servicio de alumbrado público municipal.">
+    <meta name="robots" content="index, follow">
+    <link rel="icon" type="image/png" href="{{ asset('images/escudo.png') }}">
     <title>SIAP · Alcaldía de Puerto Boyacá</title>
     @vite(['resources/css/app.css', 'resources/css/public.css', 'resources/js/app.js'])
     @stack('styles')
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 <body class="bg-white text-gray-800">
 
@@ -62,7 +64,6 @@
         </div>
     </footer>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     @stack('scripts')
 </body>
 </html>

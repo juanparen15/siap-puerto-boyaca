@@ -1,3 +1,4 @@
+import 'leaflet/dist/leaflet.css';
 import { CountUp } from 'countup.js';
 import L from 'leaflet';
 
@@ -39,7 +40,6 @@ document.addEventListener('DOMContentLoaded', () => {
         touchZoom: false,
         doubleClickZoom: false,
         keyboard: false,
-        attributionControl: false,
     });
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

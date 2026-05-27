@@ -3,7 +3,7 @@
 @section('content')
 
 {{-- Hero Section --}}
-<section id="hero" class="relative h-screen overflow-hidden">
+<section id="hero" class="relative min-h-screen overflow-hidden">
     {{-- Leaflet background map --}}
     <div id="hero-map" class="absolute inset-0 z-0"></div>
     {{-- White overlay --}}
@@ -57,22 +57,22 @@
         <p class="text-center text-gray-500 mb-12">Accede a la información del alumbrado público de Puerto Boyacá</p>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <a href="{{ route('mapa') }}" class="glass-card group">
-                <div class="text-4xl mb-4">🗺️</div>
+                <div class="text-4xl mb-4"><span aria-hidden="true">🗺️</span></div>
                 <h3 class="font-bold text-lg text-[#1B6B2F] mb-2">Mapa Interactivo</h3>
                 <p class="text-sm text-gray-500">Consulta la ubicación de todos los puntos de alumbrado georeferenciados.</p>
             </a>
             <a href="{{ route('pqrs') }}" class="glass-card group">
-                <div class="text-4xl mb-4">📋</div>
+                <div class="text-4xl mb-4"><span aria-hidden="true">📋</span></div>
                 <h3 class="font-bold text-lg text-[#1B6B2F] mb-2">Radicar PQRS</h3>
                 <p class="text-sm text-gray-500">Reporta peticiones, quejas, reclamos o solicitudes sobre el alumbrado.</p>
             </a>
             <a href="{{ route('pqrs.consultar') }}" class="glass-card group">
-                <div class="text-4xl mb-4">🔍</div>
+                <div class="text-4xl mb-4"><span aria-hidden="true">🔍</span></div>
                 <h3 class="font-bold text-lg text-[#1B6B2F] mb-2">Consultar PQRS</h3>
                 <p class="text-sm text-gray-500">Sigue el estado de tu solicitud con el radicado o número de cédula.</p>
             </a>
             <a href="{{ route('reportes') }}" class="glass-card group">
-                <div class="text-4xl mb-4">📊</div>
+                <div class="text-4xl mb-4"><span aria-hidden="true">📊</span></div>
                 <h3 class="font-bold text-lg text-[#1B6B2F] mb-2">Reportes</h3>
                 <p class="text-sm text-gray-500">Estadísticas y reportes públicos sobre el servicio de alumbrado.</p>
             </a>
@@ -92,21 +92,21 @@
         </p>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12 text-left">
             <div class="flex gap-4">
-                <div class="text-[#1B6B2F] text-2xl">⚡</div>
+                <div class="text-[#1B6B2F] text-2xl"><span aria-hidden="true">⚡</span></div>
                 <div>
                     <h4 class="font-bold text-gray-800 mb-1">Inventario Actualizado</h4>
                     <p class="text-sm text-gray-500">{{ number_format($stats['total']) }} elementos georeferenciados con tecnología GPS.</p>
                 </div>
             </div>
             <div class="flex gap-4">
-                <div class="text-[#1B6B2F] text-2xl">🏛️</div>
+                <div class="text-[#1B6B2F] text-2xl"><span aria-hidden="true">🏛️</span></div>
                 <div>
                     <h4 class="font-bold text-gray-800 mb-1">Gestión Transparente</h4>
                     <p class="text-sm text-gray-500">Seguimiento en tiempo real de sus solicitudes y reportes.</p>
                 </div>
             </div>
             <div class="flex gap-4">
-                <div class="text-[#1B6B2F] text-2xl">📱</div>
+                <div class="text-[#1B6B2F] text-2xl"><span aria-hidden="true">📱</span></div>
                 <div>
                     <h4 class="font-bold text-gray-800 mb-1">Acceso Ciudadano</h4>
                     <p class="text-sm text-gray-500">Información pública disponible 24/7 desde cualquier dispositivo.</p>

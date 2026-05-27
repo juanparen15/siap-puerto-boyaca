@@ -12,10 +12,10 @@ class PublicController extends Controller
     {
         $stats = cache()->remember('landing_stats', now()->addMinutes(10), function () {
             return [
-                'total' => InfraestructuraElemento::count(),
-                'operativos' => InfraestructuraElemento::where('estado', 'operativa')->count(),
-                'no_operativos' => InfraestructuraElemento::where('estado', 'no_operativa')->count(),
-                'pqrs_activos' => Pqrs::whereIn('estado', ['radicada', 'en_proceso'])->count(),
+                'total' => (int) InfraestructuraElemento::count(),
+                'operativos' => (int) InfraestructuraElemento::where('estado', 'operativa')->count(),
+                'no_operativos' => (int) InfraestructuraElemento::where('estado', 'no_operativa')->count(),
+                'pqrs_activos' => (int) Pqrs::whereIn('estado', ['radicada', 'en_proceso'])->count(),
             ];
         });
         return view('public.landing', compact('stats'));
@@ -29,5 +29,15 @@ class PublicController extends Controller
     public function reportes(): View
     {
         return view('public.reportes');
+    }
+
+    public function pqrs(): \Illuminate\View\View
+    {
+        return view('public.pqrs-stub');
+    }
+
+    public function pqrsConsultar(): \Illuminate\View\View
+    {
+        return view('public.pqrs-consultar-stub');
     }
 }
