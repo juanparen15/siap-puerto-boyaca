@@ -42,11 +42,18 @@ class InfraestructuraElementoResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Inventario de Elementos';
 
-    protected static ?string $recordTitleAttribute = 'rotulo';
+    protected static ?string $recordTitleAttribute = 'record_title';
 
     public static function getNavigationBadge(): ?string
     {
-        return static::getModel()::count();
+        return cache()->remember('nav_badge_elementos', now()->addMinutes(5), fn () =>
+            (string) static::getModel()::count()
+        );
+    }
+
+    public static function getNavigationBadgeColor(): string|array|null
+    {
+        return 'primary';
     }
 
     public static function form(Schema $schema): Schema
@@ -124,6 +131,20 @@ class InfraestructuraElementoResource extends Resource
             ])->columns(3)
               ->visible(fn (Get $get) => $get('tipo') === 'poste'),
 
+            Section::make('Área / Sendero')
+                ->schema([
+                    TextInput::make('descripcion')
+                        ->label('Descripción del área')
+                        ->maxLength(255),
+                    Select::make('red_id')
+                        ->relationship('red', 'nombre')
+                        ->label('Circuito / Red')
+                        ->searchable()
+                        ->preload(),
+                ])
+                ->columns(2)
+                ->visible(fn (Get $get) => in_array($get('tipo'), ['sendero_peatonal', 'campo_deportivo'])),
+
             Section::make('Ubicación Georreferenciada')->schema([
                 Map::make('location')
                     ->label('Ubicación en el mapa')
@@ -136,7 +157,7 @@ class InfraestructuraElementoResource extends Resource
                         $set('longitud', $state['lng'] ?? null);
                     })
                     ->afterStateHydrated(function ($state, $record, Set $set): void {
-                        if ($record && $record->latitud && $record->longitud) {
+                        if ($record && $record->latitud !== null && $record->longitud !== null) {
                             $set('location', [
                                 'lat' => (float) $record->latitud,
                                 'lng' => (float) $record->longitud,
@@ -171,7 +192,9 @@ class InfraestructuraElementoResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return $table->columns([
+        return $table
+            ->query(\App\Models\InfraestructuraElemento::query()->with('red'))
+            ->columns([
             TextColumn::make('rotulo')
                 ->searchable()
                 ->sortable()
@@ -202,6 +225,10 @@ class InfraestructuraElementoResource extends Resource
                     'puerto_serviez' => 'primary',
                     default          => 'gray',
                 }),
+            TextColumn::make('red.nombre')
+                ->label('Circuito / Red')
+                ->toggleable(isToggledHiddenByDefault: true)
+                ->searchable(),
             TextColumn::make('latitud')
                 ->toggleable(isToggledHiddenByDefault: true),
             TextColumn::make('longitud')
@@ -233,7 +260,9 @@ class InfraestructuraElementoResource extends Resource
             DeleteAction::make(),
         ])->bulkActions([
             DeleteBulkAction::make(),
-        ])->defaultSort('rotulo');
+        ])->defaultSort('rotulo')
+          ->defaultPaginationPageOption(25)
+          ->paginationPageOptions([25, 50, 100]);
     }
 
     public static function getRelations(): array
