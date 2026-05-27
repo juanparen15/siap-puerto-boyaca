@@ -10,6 +10,7 @@ export default defineConfig({
                 'resources/css/public.css',
                 'resources/js/app.js',
                 'resources/js/landing.js',
+                'resources/js/mapa-publico.js',
             ],
             refresh: true,
         }),
