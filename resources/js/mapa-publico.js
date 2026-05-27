@@ -14,7 +14,7 @@ window.mapaPublico = function () {
         },
 
         init() {
-            this.map = L.map('mapa-publico').setView([5.977, -74.579], 14);
+            this.map = L.map('mapa-publico').setView([5.977, -74.579], 13);
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',

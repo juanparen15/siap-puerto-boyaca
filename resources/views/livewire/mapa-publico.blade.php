@@ -38,7 +38,7 @@
          wire:ignore
          x-data="mapaPublico()"
          x-init="init()"
-         @filtros-updated.window="actualizarFiltros($event.detail)">
+         @filtros-changed.window="actualizarFiltros($event.detail)">
     </div>
 </div>
 
