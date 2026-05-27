@@ -32,18 +32,23 @@ class ImportarInventarioCommand extends Command
 
         foreach ($csv->getRecords() as $row) {
             try {
-                // Validate coordinate ranges (Colombian bounds: lat -4 to 13, lng -82 to -66)
-                $lat = (float) ($row['y'] ?? 0);
-                $lng = (float) ($row['x'] ?? 0);
-
-                if ($lat < -4 || $lat > 13 || $lng < -82 || $lng > -66) {
-                    $this->warn("\nCoordenadas fuera de rango para globalid={$row['globalid']}. Saltando.");
+                $globalid = $row['globalid'] ?? null;
+                if (empty($globalid)) {
                     $errors++;
                     continue;
                 }
 
-                $globalid = $row['globalid'] ?? null;
-                if (empty($globalid)) {
+                if (empty($row['y'] ?? '') || empty($row['x'] ?? '')) {
+                    $this->warn("\nCoordenadas vacías para globalid={$globalid}. Saltando.");
+                    $errors++;
+                    continue;
+                }
+                $lat = (float) $row['y'];
+                $lng = (float) $row['x'];
+
+                // Validate coordinate ranges (Colombian bounds: lat -4 to 13, lng -82 to -66)
+                if ($lat < -4 || $lat > 13 || $lng < -82 || $lng > -66) {
+                    $this->warn("\nCoordenadas fuera de rango para globalid={$globalid}. Saltando.");
                     $errors++;
                     continue;
                 }
@@ -76,9 +81,15 @@ class ImportarInventarioCommand extends Command
                         'carga_rotura_kgf' => is_numeric($row['carga_de_rotura_kgf'] ?? '') ? (int)$row['carga_de_rotura_kgf'] : null,
                         'descripcion' => ($row['descripcion'] ?? '') ?: null,
                         'observaciones' => ($row['observaciones_mtto'] ?? '') ?: null,
-                        'fecha_levantamiento' => !empty($row['fecha_de_levantamiento'])
-                            ? substr($row['fecha_de_levantamiento'], 0, 10)
-                            : null,
+                        'fecha_levantamiento' => (function () use ($row) {
+                            try {
+                                return !empty($row['fecha_de_levantamiento'])
+                                    ? \Carbon\Carbon::parse($row['fecha_de_levantamiento'])->toDateString()
+                                    : null;
+                            } catch (\Exception $e) {
+                                return null;
+                            }
+                        })(),
                     ]
                 );
 

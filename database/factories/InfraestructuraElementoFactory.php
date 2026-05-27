@@ -21,8 +21,8 @@ class InfraestructuraElementoFactory extends Factory
             'tipo' => 'luminaria',
             'clasificacion' => 'casco_urbano',
             'estado' => 'operativa',
-            'latitud' => 5.977,
-            'longitud' => -74.579,
+            'latitud' => fake()->latitude(-4, 13),
+            'longitud' => fake()->longitude(-82, -66),
             'globalid' => \Illuminate\Support\Str::uuid(),
         ];
     }

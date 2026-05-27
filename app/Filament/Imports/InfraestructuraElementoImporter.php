@@ -17,7 +17,11 @@ class InfraestructuraElementoImporter extends Importer
             ImportColumn::make('tipo')
                 ->label('tipo_de_elemento')
                 ->rules(['required'])
-                ->fillRecordUsing(fn ($record, $value) => $record->tipo = strtolower(str_replace(' ', '_', $value))),
+                ->fillRecordUsing(function ($record, $value) {
+                    $allowed = ['luminaria', 'poste', 'reflector', 'sendero_peatonal', 'campo_deportivo', 'luminaria_parque'];
+                    $mapped = strtolower(str_replace(' ', '_', $value));
+                    $record->tipo = in_array($mapped, $allowed) ? $mapped : 'luminaria';
+                }),
             ImportColumn::make('rotulo')
                 ->label('referencia_del_rotulo'),
             ImportColumn::make('marca'),
@@ -68,7 +72,11 @@ class InfraestructuraElementoImporter extends Importer
 
     public function resolveRecord(): ?InfraestructuraElemento
     {
-        return InfraestructuraElemento::firstOrNew(['globalid' => $this->data['globalid']]);
+        $globalid = $this->data['globalid'] ?? null;
+        if (empty($globalid)) {
+            return new InfraestructuraElemento();
+        }
+        return InfraestructuraElemento::firstOrNew(['globalid' => $globalid]);
     }
 
     public static function getCompletedNotificationBody(Import $import): string
