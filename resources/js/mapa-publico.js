@@ -1,6 +1,10 @@
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
+function escHtml(str) {
+    return String(str ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
 window.mapaPublico = function () {
     return {
         map: null,
@@ -14,6 +18,7 @@ window.mapaPublico = function () {
         },
 
         init() {
+            this._abortController = null;
             this.map = L.map('mapa-publico').setView([5.977, -74.579], 13);
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -30,7 +35,13 @@ window.mapaPublico = function () {
             this.cargarElementos();
         },
 
-        cargarElementos() {
+        cargarElementos(filtros = {}) {
+            if (this._abortController) {
+                this._abortController.abort();
+            }
+            this._abortController = new AbortController();
+            const signal = this._abortController.signal;
+
             const bounds = this.map.getBounds();
             const params = new URLSearchParams({
                 sw_lat: bounds.getSouth(),
@@ -42,7 +53,7 @@ window.mapaPublico = function () {
                 ),
             });
 
-            fetch('/api/mapa/elementos?' + params)
+            fetch('/api/mapa/elementos?' + params, { signal })
                 .then(r => r.json())
                 .then(elementos => {
                     this.markersLayer.clearLayers();
@@ -67,7 +78,11 @@ window.mapaPublico = function () {
                     const contador = document.getElementById('contador-elementos');
                     if (contador) contador.textContent = elementos.length;
                 })
-                .catch(console.error);
+                .catch(err => {
+                    if (err.name !== 'AbortError') {
+                        console.error('Error cargando elementos:', err);
+                    }
+                });
         },
 
         buildPopup(el) {
@@ -80,16 +95,16 @@ window.mapaPublico = function () {
                 luminaria_parque: 'Luminaria de Parque',
             };
 
-            const rotulo = el.rotulo || 'Sin rótulo';
-            const tipo = tipoLabel[el.tipo] || el.tipo;
+            const rotulo = escHtml(el.rotulo || 'Sin rótulo');
+            const tipo = escHtml(tipoLabel[el.tipo] || el.tipo);
 
             return `
                 <div style="font-family: system-ui, sans-serif; padding: 4px;">
                     <div style="font-weight:700; font-size:14px; margin-bottom:6px;">${rotulo}</div>
                     <div style="font-size:12px; color:#555; margin-bottom:2px;">Tipo: ${tipo}</div>
-                    ${el.marca ? `<div style="font-size:12px; color:#555; margin-bottom:2px;">Marca: ${el.marca}</div>` : ''}
-                    ${el.potencia_w ? `<div style="font-size:12px; color:#555; margin-bottom:6px;">Potencia: ${el.potencia_w} W</div>` : ''}
-                    <span style="font-size:11px; padding:2px 8px; border-radius:9999px; background:${el.estado === 'operativa' ? '#dcfce7' : el.estado === 'no_operativa' ? '#fee2e2' : '#f3f4f6'}; color:${el.estado === 'operativa' ? '#166534' : el.estado === 'no_operativa' ? '#991b1b' : '#4b5563'};">${el.estado.replace('_', ' ')}</span>
+                    ${el.marca ? `<div style="font-size:12px; color:#555; margin-bottom:2px;">Marca: ${escHtml(el.marca)}</div>` : ''}
+                    ${el.potencia_w ? `<div style="font-size:12px; color:#555; margin-bottom:6px;">Potencia: ${escHtml(el.potencia_w)} W</div>` : ''}
+                    <span style="font-size:11px; padding:2px 8px; border-radius:9999px; background:${el.estado === 'operativa' ? '#dcfce7' : el.estado === 'no_operativa' ? '#fee2e2' : '#f3f4f6'}; color:${el.estado === 'operativa' ? '#166534' : el.estado === 'no_operativa' ? '#991b1b' : '#4b5563'};">${escHtml(el.estado).replace('_', ' ')}</span>
                     <div style="margin-top:10px;">
                         <a href="/pqrs?elemento_id=${el.id}"
                            style="display:block; background:#1B6B2F; color:#fff; text-align:center; padding:6px 12px; border-radius:6px; font-size:12px; text-decoration:none; font-weight:600;">

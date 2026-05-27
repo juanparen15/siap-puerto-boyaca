@@ -11,31 +11,15 @@ class MapaPublico extends Component
     public string $filtroClasificacion = '';
     public ?int $elementoSeleccionadoId = null;
 
-    public function updatedFiltroTipo(): void
+    public function updated(string $property): void
     {
-        $this->dispatch('filtros-changed', [
-            'tipo' => $this->filtroTipo,
-            'estado' => $this->filtroEstado,
-            'clasificacion' => $this->filtroClasificacion,
-        ]);
-    }
-
-    public function updatedFiltroEstado(): void
-    {
-        $this->dispatch('filtros-changed', [
-            'tipo' => $this->filtroTipo,
-            'estado' => $this->filtroEstado,
-            'clasificacion' => $this->filtroClasificacion,
-        ]);
-    }
-
-    public function updatedFiltroClasificacion(): void
-    {
-        $this->dispatch('filtros-changed', [
-            'tipo' => $this->filtroTipo,
-            'estado' => $this->filtroEstado,
-            'clasificacion' => $this->filtroClasificacion,
-        ]);
+        if (str_starts_with($property, 'filtro')) {
+            $this->dispatch('filtros-changed', [
+                'tipo'          => $this->filtroTipo,
+                'estado'        => $this->filtroEstado,
+                'clasificacion' => $this->filtroClasificacion,
+            ]);
+        }
     }
 
     public function render()

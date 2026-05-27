@@ -6,11 +6,22 @@ use App\Http\Controllers\Controller;
 use App\Models\InfraestructuraElemento;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class MapaController extends Controller
 {
     public function elementos(Request $request): JsonResponse
     {
+        $request->validate([
+            'tipo'           => ['nullable', 'string', Rule::in(['luminaria', 'poste', 'reflector', 'sendero_peatonal', 'campo_deportivo', 'luminaria_parque'])],
+            'estado'         => ['nullable', 'string', Rule::in(['operativa', 'no_operativa', 'desinstalada'])],
+            'clasificacion'  => ['nullable', 'string', Rule::in(['casco_urbano', 'puerto_serviez'])],
+            'sw_lat'         => ['nullable', 'numeric', 'between:-4,13'],
+            'sw_lng'         => ['nullable', 'numeric', 'between:-82,-66'],
+            'ne_lat'         => ['nullable', 'numeric', 'between:-4,13'],
+            'ne_lng'         => ['nullable', 'numeric', 'between:-82,-66'],
+        ]);
+
         $query = InfraestructuraElemento::select(
             'id', 'tipo', 'rotulo', 'estado', 'clasificacion',
             'latitud', 'longitud', 'marca', 'potencia_w'

@@ -47,4 +47,28 @@ class MapaControllerTest extends TestCase
         $response = $this->getJson('/api/mapa/elementos?tipo=luminaria');
         $response->assertStatus(200)->assertJsonCount(1);
     }
+
+    public function test_filtra_por_estado(): void
+    {
+        InfraestructuraElemento::factory()->create(['estado' => 'operativa', 'latitud' => 5.977, 'longitud' => -74.579]);
+        InfraestructuraElemento::factory()->create(['estado' => 'no_operativa', 'latitud' => 5.978, 'longitud' => -74.580]);
+
+        $response = $this->getJson('/api/mapa/elementos?estado=operativa');
+
+        $response->assertOk()
+                 ->assertJsonCount(1)
+                 ->assertJsonFragment(['estado' => 'operativa']);
+    }
+
+    public function test_filtra_por_clasificacion(): void
+    {
+        InfraestructuraElemento::factory()->create(['clasificacion' => 'casco_urbano', 'latitud' => 5.977, 'longitud' => -74.579]);
+        InfraestructuraElemento::factory()->create(['clasificacion' => 'puerto_serviez', 'latitud' => 5.978, 'longitud' => -74.580]);
+
+        $response = $this->getJson('/api/mapa/elementos?clasificacion=casco_urbano');
+
+        $response->assertOk()
+                 ->assertJsonCount(1)
+                 ->assertJsonFragment(['clasificacion' => 'casco_urbano']);
+    }
 }
