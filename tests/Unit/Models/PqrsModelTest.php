@@ -12,7 +12,15 @@ class PqrsModelTest extends TestCase
 
     public function test_generates_radicado_with_correct_format(): void
     {
-        $radicado = Pqrs::generarRadicado();
-        $this->assertMatchesRegularExpression('/^PQRS-\d{4}-\d{6}$/', $radicado);
+        $pqrs = \DB::transaction(fn () => Pqrs::crearConRadicado([
+            'numero_cedula' => '12345678',
+            'tipo_solicitud' => 'peticion',
+            'descripcion' => 'Descripción de prueba para el test unitario',
+            'nombre_ciudadano' => 'Test Usuario',
+            'estado' => 'radicada',
+        ]));
+
+        $this->assertInstanceOf(Pqrs::class, $pqrs);
+        $this->assertMatchesRegularExpression('/^PQRS-\d{4}-\d{6}$/', $pqrs->radicado);
     }
 }

@@ -77,26 +77,31 @@ class FormularioPqrs extends Component
         $this->validate();
 
         try {
-            $pqrs = Pqrs::crearConRadicado([
-                'numero_cedula' => $this->numero_cedula,
-                'elemento_id' => $this->elemento_id,
-                'latitud' => $this->latitud,
-                'longitud' => $this->longitud,
-                'tipo_solicitud' => $this->tipo_solicitud,
-                'descripcion' => $this->descripcion,
-                'nombre_ciudadano' => $this->nombre_ciudadano,
-                'email' => $this->email ?: null,
-                'telefono' => $this->telefono ?: null,
-                'estado' => 'radicada',
-            ]);
+            $pqrs = \DB::transaction(function () {
+                $pqrs = Pqrs::crearConRadicado([
+                    'numero_cedula' => $this->numero_cedula,
+                    'elemento_id' => $this->elemento_id,
+                    'latitud' => $this->latitud,
+                    'longitud' => $this->longitud,
+                    'tipo_solicitud' => $this->tipo_solicitud,
+                    'descripcion' => $this->descripcion,
+                    'nombre_ciudadano' => $this->nombre_ciudadano,
+                    'email' => $this->email ?: null,
+                    'telefono' => $this->telefono ?: null,
+                    'estado' => 'radicada',
+                ]);
 
-            PqrsHistorial::create([
-                'pqrs_id' => $pqrs->id,
-                'estado_anterior' => null,
-                'estado_nuevo' => 'radicada',
-                'observacion' => 'PQRS radicada por ciudadano',
-            ]);
+                PqrsHistorial::create([
+                    'pqrs_id' => $pqrs->id,
+                    'estado_anterior' => null,
+                    'estado_nuevo' => 'radicada',
+                    'observacion' => 'PQRS radicada por ciudadano',
+                ]);
 
+                return $pqrs;
+            });
+
+            // Notify after transaction commits
             $pqrs->notify(new PqrsRadicadaNotification($pqrs));
 
             $this->radicadoGenerado = $pqrs->radicado;

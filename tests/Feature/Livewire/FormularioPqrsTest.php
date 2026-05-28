@@ -31,6 +31,7 @@ class FormularioPqrsTest extends TestCase
             });
 
         $this->assertSame(1, Pqrs::count());
+        $this->assertSame(1, \App\Models\PqrsHistorial::count());
     }
 
     public function test_step_one_validation_requires_nombre_and_cedula(): void
