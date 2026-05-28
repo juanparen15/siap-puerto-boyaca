@@ -31,11 +31,6 @@ class PublicController extends Controller
         return view('public.reportes');
     }
 
-    public function pqrs(): \Illuminate\View\View
-    {
-        return view('public.pqrs-stub');
-    }
-
     public function pqrsConsultar(): \Illuminate\View\View
     {
         return view('public.pqrs-consultar-stub');

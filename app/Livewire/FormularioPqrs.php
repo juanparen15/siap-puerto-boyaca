@@ -65,38 +65,46 @@ class FormularioPqrs extends Component
 
     public function anterior(): void
     {
-        $this->paso--;
+        $this->paso = max(1, $this->paso - 1);
     }
 
     public function enviar(): void
     {
+        if ($this->paso !== 2) {
+            return;
+        }
+
         $this->validate();
 
-        $pqrs = Pqrs::create([
-            'radicado' => Pqrs::generarRadicado(),
-            'numero_cedula' => $this->numero_cedula,
-            'elemento_id' => $this->elemento_id,
-            'latitud' => $this->latitud,
-            'longitud' => $this->longitud,
-            'tipo_solicitud' => $this->tipo_solicitud,
-            'descripcion' => $this->descripcion,
-            'nombre_ciudadano' => $this->nombre_ciudadano,
-            'email' => $this->email ?: null,
-            'telefono' => $this->telefono ?: null,
-            'estado' => 'radicada',
-        ]);
+        try {
+            $pqrs = Pqrs::crearConRadicado([
+                'numero_cedula' => $this->numero_cedula,
+                'elemento_id' => $this->elemento_id,
+                'latitud' => $this->latitud,
+                'longitud' => $this->longitud,
+                'tipo_solicitud' => $this->tipo_solicitud,
+                'descripcion' => $this->descripcion,
+                'nombre_ciudadano' => $this->nombre_ciudadano,
+                'email' => $this->email ?: null,
+                'telefono' => $this->telefono ?: null,
+                'estado' => 'radicada',
+            ]);
 
-        PqrsHistorial::create([
-            'pqrs_id' => $pqrs->id,
-            'estado_anterior' => null,
-            'estado_nuevo' => 'radicada',
-            'observacion' => 'PQRS radicada por ciudadano',
-        ]);
+            PqrsHistorial::create([
+                'pqrs_id' => $pqrs->id,
+                'estado_anterior' => null,
+                'estado_nuevo' => 'radicada',
+                'observacion' => 'PQRS radicada por ciudadano',
+            ]);
 
-        $pqrs->notify(new PqrsRadicadaNotification($pqrs));
+            $pqrs->notify(new PqrsRadicadaNotification($pqrs));
 
-        $this->radicadoGenerado = $pqrs->radicado;
-        $this->paso = 3;
+            $this->radicadoGenerado = $pqrs->radicado;
+            $this->paso = 3;
+        } catch (\Throwable $e) {
+            \Log::error('Error al radicar PQRS: ' . $e->getMessage());
+            $this->addError('general', 'Ocurrió un error al radicar su PQRS. Por favor intente de nuevo.');
+        }
     }
 
     public function render()

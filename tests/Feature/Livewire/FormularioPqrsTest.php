@@ -23,6 +23,7 @@ class FormularioPqrsTest extends TestCase
             ->set('email', 'juan@test.com')
             ->set('tipo_solicitud', 'queja')
             ->set('descripcion', 'La luminaria en la calle 5 no funciona desde hace 3 días')
+            ->set('paso', 2)
             ->call('enviar')
             ->assertSet('paso', 3)
             ->assertSet('radicadoGenerado', function ($value) {

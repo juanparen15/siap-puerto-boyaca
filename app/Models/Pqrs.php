@@ -58,4 +58,14 @@ class Pqrs extends Model
             return 'PQRS-' . $year . '-' . str_pad($ultimo, 6, '0', STR_PAD_LEFT);
         });
     }
+
+    public static function crearConRadicado(array $datos): static
+    {
+        return DB::transaction(function () use ($datos) {
+            $year = now()->year;
+            $ultimo = static::whereYear('created_at', $year)->lockForUpdate()->count() + 1;
+            $datos['radicado'] = 'PQRS-' . $year . '-' . str_pad($ultimo, 6, '0', STR_PAD_LEFT);
+            return static::create($datos);
+        });
+    }
 }

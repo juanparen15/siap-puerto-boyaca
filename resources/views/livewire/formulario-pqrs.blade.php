@@ -109,7 +109,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Tipo de solicitud <span class="text-red-500">*</span>
                     </label>
-                    <select wire:model.live="tipo_solicitud"
+                    <select wire:model="tipo_solicitud"
                             class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#1B6B2F] focus:border-transparent @error('tipo_solicitud') border-red-400 @enderror">
                         <option value="">-- Seleccione --</option>
                         <option value="peticion">Petición</option>
@@ -132,7 +132,7 @@
                               rows="5"
                               placeholder="Describa detalladamente su solicitud, incluyendo la ubicación del problema y el tiempo que lleva presentándose..."
                               class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#1B6B2F] focus:border-transparent @error('descripcion') border-red-400 @enderror"></textarea>
-                    <p class="text-xs text-gray-400 mt-1 text-right">{{ strlen($descripcion) }} / 2000</p>
+                    <p class="text-xs text-gray-400 mt-1 text-right">{{ mb_strlen($descripcion) }} / 2000</p>
                     @error('descripcion')
                         <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                     @enderror
@@ -172,6 +172,10 @@
                     @endif
                 </div>
             </div>
+
+            @error('general')
+                <p class="text-red-600 text-sm mt-4 text-center">{{ $message }}</p>
+            @enderror
 
             <div class="mt-8 flex justify-between">
                 <button wire:click="anterior"
