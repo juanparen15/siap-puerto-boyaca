@@ -22,7 +22,8 @@ class ConsultaPqrsTest extends TestCase
             ->call('consultar')
             ->assertSet('pqrs.radicado', 'PQRS-2026-000001')
             ->assertDontSeeHtml($pqrs->email)
-            ->assertDontSeeHtml($pqrs->nombre_ciudadano);
+            ->assertDontSeeHtml($pqrs->nombre_ciudadano)
+            ->assertDontSeeHtml($pqrs->telefono);
     }
 
     public function test_finds_pqrs_by_cedula_without_exposing_pii(): void
@@ -35,7 +36,8 @@ class ConsultaPqrsTest extends TestCase
             ->call('consultar')
             ->assertSet('pqrs.radicado', $pqrs->radicado)
             ->assertDontSeeHtml($pqrs->email)
-            ->assertDontSeeHtml($pqrs->nombre_ciudadano);
+            ->assertDontSeeHtml($pqrs->nombre_ciudadano)
+            ->assertDontSeeHtml($pqrs->telefono);
     }
 
     public function test_shows_error_when_pqrs_not_found(): void

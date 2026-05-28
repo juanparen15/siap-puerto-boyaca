@@ -14,18 +14,26 @@ class ConsultaPqrs extends Component
 
     public function consultar(): void
     {
+        $this->validate([
+            'busqueda'     => 'required|string|max:50',
+            'tipoBusqueda' => 'required|in:radicado,cedula',
+        ]);
+
         $this->error = '';
-        $this->pqrs = null;
+        $this->pqrs  = null;
 
         $query = Pqrs::with(['historial.usuario', 'elemento']);
 
-        $this->pqrs = $this->tipoBusqueda === 'radicado'
+        $found = $this->tipoBusqueda === 'radicado'
             ? $query->where('radicado', $this->busqueda)->first()
             : $query->where('numero_cedula', $this->busqueda)->latest()->first();
 
-        if (!$this->pqrs) {
+        if (!$found) {
             $this->error = 'No se encontró ningún PQRS con los datos ingresados.';
+            return;
         }
+
+        $this->pqrs = $found->makeHidden(['nombre_ciudadano', 'email', 'telefono', 'descripcion']);
     }
 
     public function render()

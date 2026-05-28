@@ -47,7 +47,7 @@ class Pqrs extends Model
 
     public function historial(): HasMany
     {
-        return $this->hasMany(PqrsHistorial::class);
+        return $this->hasMany(PqrsHistorial::class)->orderBy('created_at');
     }
 
     public static function crearConRadicado(array $datos): static
