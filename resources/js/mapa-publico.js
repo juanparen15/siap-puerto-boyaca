@@ -35,7 +35,7 @@ window.mapaPublico = function () {
             this.cargarElementos();
         },
 
-        cargarElementos(filtros = {}) {
+        cargarElementos() {
             if (this._abortController) {
                 this._abortController.abort();
             }
@@ -106,7 +106,7 @@ window.mapaPublico = function () {
                     ${el.potencia_w ? `<div style="font-size:12px; color:#555; margin-bottom:6px;">Potencia: ${escHtml(el.potencia_w)} W</div>` : ''}
                     <span style="font-size:11px; padding:2px 8px; border-radius:9999px; background:${el.estado === 'operativa' ? '#dcfce7' : el.estado === 'no_operativa' ? '#fee2e2' : '#f3f4f6'}; color:${el.estado === 'operativa' ? '#166534' : el.estado === 'no_operativa' ? '#991b1b' : '#4b5563'};">${escHtml(el.estado).replace('_', ' ')}</span>
                     <div style="margin-top:10px;">
-                        <a href="/pqrs?elemento_id=${el.id}"
+                        <a href="/pqrs?elemento_id=${parseInt(el.id, 10)}"
                            style="display:block; background:#1B6B2F; color:#fff; text-align:center; padding:6px 12px; border-radius:6px; font-size:12px; text-decoration:none; font-weight:600;">
                             📋 Reportar problema
                         </a>

@@ -14,11 +14,11 @@ class MapaPublico extends Component
     public function updated(string $property): void
     {
         if (str_starts_with($property, 'filtro')) {
-            $this->dispatch('filtros-changed', [
-                'tipo'          => $this->filtroTipo,
-                'estado'        => $this->filtroEstado,
-                'clasificacion' => $this->filtroClasificacion,
-            ]);
+            $this->dispatch('filtros-changed',
+                tipo: $this->filtroTipo,
+                estado: $this->filtroEstado,
+                clasificacion: $this->filtroClasificacion,
+            );
         }
     }
 
