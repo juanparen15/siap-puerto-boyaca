@@ -131,24 +131,6 @@
                 @push('styles')
                     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
                 @endpush
-                @push('scripts')
-                    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV/XN/sp38=" crossorigin=""></script>
-                    <script>
-                        document.addEventListener('livewire:updated', function () {
-                            var el = document.getElementById('pqrs-map');
-                            if (el && !el._leafletMap) {
-                                var lat = parseFloat(el.dataset.lat);
-                                var lng = parseFloat(el.dataset.lng);
-                                el._leafletMap = L.map(el).setView([lat, lng], 16);
-                                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                                    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-                                    maxZoom: 19
-                                }).addTo(el._leafletMap);
-                                L.marker([lat, lng]).addTo(el._leafletMap);
-                            }
-                        });
-                    </script>
-                @endpush
                 <div>
                     <p class="text-xs text-gray-500 uppercase tracking-wide mb-2">Ubicación del reporte</p>
                     <div id="pqrs-map" style="height: 200px;"
@@ -158,6 +140,25 @@
                          wire:ignore></div>
                 </div>
             @endif
+
+            @push('scripts')
+                <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV/XN/sp38=" crossorigin=""></script>
+                <script>
+                    document.addEventListener('livewire:updated', function () {
+                        var el = document.getElementById('pqrs-map');
+                        if (el && !el._leafletMap) {
+                            var lat = parseFloat(el.dataset.lat);
+                            var lng = parseFloat(el.dataset.lng);
+                            el._leafletMap = L.map(el).setView([lat, lng], 16);
+                            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+                                maxZoom: 19
+                            }).addTo(el._leafletMap);
+                            L.marker([lat, lng]).addTo(el._leafletMap);
+                        }
+                    });
+                </script>
+            @endpush
 
             {{-- History timeline --}}
             @if ($pqrs->historial->isNotEmpty())
