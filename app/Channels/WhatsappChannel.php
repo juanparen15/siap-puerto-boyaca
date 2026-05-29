@@ -14,7 +14,8 @@ class WhatsappChannel
         if (!$to) return;
 
         if (method_exists($notification, 'toWhatsapp')) {
-            $notification->toWhatsapp($notifiable);
+            $data = $notification->toWhatsapp($notifiable);
+            $this->driver->sendTemplate($to, $data['template'], $data['params']);
         }
     }
 }

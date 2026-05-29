@@ -25,12 +25,11 @@ class PqrsActualizadaNotification extends Notification
             ->view('emails.pqrs-actualizada', ['pqrs' => $this->pqrs]);
     }
 
-    public function toWhatsapp(object $notifiable): void
+    public function toWhatsapp(object $notifiable): array
     {
-        app(\App\Contracts\WhatsappDriver::class)->sendTemplate(
-            $notifiable->telefono,
-            'pqrs_actualizada',
-            [$this->pqrs->radicado, $this->pqrs->estado, url('/pqrs/consultar')]
-        );
+        return [
+            'template' => 'pqrs_actualizada',
+            'params'   => [$this->pqrs->radicado, $this->pqrs->estado, url('/pqrs/consultar')],
+        ];
     }
 }

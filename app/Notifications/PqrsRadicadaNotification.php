@@ -25,12 +25,11 @@ class PqrsRadicadaNotification extends Notification
             ->view('emails.pqrs-radicada', ['pqrs' => $this->pqrs]);
     }
 
-    public function toWhatsapp(object $notifiable): void
+    public function toWhatsapp(object $notifiable): array
     {
-        app(\App\Contracts\WhatsappDriver::class)->sendTemplate(
-            $notifiable->telefono,
-            'pqrs_radicada',
-            [$this->pqrs->radicado, $this->pqrs->tipo_solicitud, url('/pqrs/consultar')]
-        );
+        return [
+            'template' => 'pqrs_radicada',
+            'params'   => [$this->pqrs->radicado, $this->pqrs->tipo_solicitud, url('/pqrs/consultar')],
+        ];
     }
 }
