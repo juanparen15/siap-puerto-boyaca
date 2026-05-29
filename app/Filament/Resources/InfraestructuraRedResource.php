@@ -26,7 +26,9 @@ class InfraestructuraRedResource extends Resource
 {
     protected static ?string $model = InfraestructuraRed::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedSignal;
+    // Icon omitted: the 'Alumbrado Público' NavigationGroup already has an icon.
+    // Filament v5 forbids items from having icons when their group has one.
+    protected static string|BackedEnum|null $navigationIcon = null;
 
     protected static string|UnitEnum|null $navigationGroup = 'Alumbrado Público';
 
