@@ -169,8 +169,7 @@ class PqrsResource extends Resource
                             'estado_nuevo'    => $data['estado_nuevo'],
                             'observacion'     => $data['observacion'] ?? null,
                         ]);
-                        // Notification stub - will be wired in Task 13
-                        // $record->notify(new PqrsActualizadaNotification($record));
+                        $record->notify(new \App\Notifications\PqrsActualizadaNotification($record));
                         cache()->forget('nav_badge_pqrs');
                     }),
             ])

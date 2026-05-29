@@ -5,7 +5,7 @@ use App\Models\Pqrs;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class PqrsRadicadaNotification extends Notification
+class PqrsActualizadaNotification extends Notification
 {
     public function __construct(public readonly Pqrs $pqrs) {}
 
@@ -21,16 +21,16 @@ class PqrsRadicadaNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('PQRS Radicada — ' . $this->pqrs->radicado)
-            ->view('emails.pqrs-radicada', ['pqrs' => $this->pqrs]);
+            ->subject('PQRS Actualizada — ' . $this->pqrs->radicado)
+            ->view('emails.pqrs-actualizada', ['pqrs' => $this->pqrs]);
     }
 
     public function toWhatsapp(object $notifiable): void
     {
         app(\App\Contracts\WhatsappDriver::class)->sendTemplate(
             $notifiable->telefono,
-            'pqrs_radicada',
-            [$this->pqrs->radicado, $this->pqrs->tipo_solicitud, url('/pqrs/consultar')]
+            'pqrs_actualizada',
+            [$this->pqrs->radicado, $this->pqrs->estado, url('/pqrs/consultar')]
         );
     }
 }
