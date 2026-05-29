@@ -6,6 +6,7 @@ use App\Models\InfraestructuraElemento;
 use Filament\Actions\Imports\ImportColumn;
 use Filament\Actions\Imports\Importer;
 use Filament\Actions\Imports\Models\Import;
+use Illuminate\Validation\ValidationException;
 
 class InfraestructuraElementoImporter extends Importer
 {
@@ -19,8 +20,16 @@ class InfraestructuraElementoImporter extends Importer
                 ->rules(['required'])
                 ->fillRecordUsing(function ($record, $value) {
                     $allowed = ['luminaria', 'poste', 'reflector', 'sendero_peatonal', 'campo_deportivo', 'luminaria_parque'];
-                    $mapped = strtolower(str_replace(' ', '_', $value));
-                    $record->tipo = in_array($mapped, $allowed) ? $mapped : 'luminaria';
+                    $mapped = strtolower(str_replace(' ', '_', trim($value)));
+
+                    if (! in_array($mapped, $allowed)) {
+                        throw ValidationException::withMessages([
+                            'tipo' => "Tipo de elemento inválido: \"{$value}\". "
+                                . 'Valores permitidos: ' . implode(', ', $allowed) . '.',
+                        ]);
+                    }
+
+                    $record->tipo = $mapped;
                 }),
             ImportColumn::make('rotulo')
                 ->label('referencia_del_rotulo'),
