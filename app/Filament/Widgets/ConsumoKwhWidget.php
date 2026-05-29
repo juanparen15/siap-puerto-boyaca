@@ -6,7 +6,7 @@ use Filament\Widgets\ChartWidget;
 
 class ConsumoKwhWidget extends ChartWidget
 {
-    protected static ?string $heading = 'Consumo kWh (últimos 6 períodos)';
+    protected ?string $heading = 'Consumo kWh (últimos 6 períodos)';
     protected static ?int $sort = 4;
 
     protected function getData(): array
