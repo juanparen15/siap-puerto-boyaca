@@ -42,6 +42,10 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 AccountWidget::class,
                 FilamentInfoWidget::class,
+                \App\Filament\Widgets\StatsOverviewWidget::class,
+                \App\Filament\Widgets\MapaDashboardWidget::class,
+                \App\Filament\Widgets\UltimosPqrsWidget::class,
+                \App\Filament\Widgets\ConsumoKwhWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
