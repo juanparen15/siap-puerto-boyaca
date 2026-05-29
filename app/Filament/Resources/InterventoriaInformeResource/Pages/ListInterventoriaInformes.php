@@ -14,6 +14,14 @@ class ListInterventoriaInformes extends ListRecords
     {
         return [
             CreateAction::make(),
+            \Filament\Actions\Action::make('exportar_pdf')
+                ->label('Exportar PDF')
+                ->icon('heroicon-o-document-text')
+                ->action(function () {
+                    $informes = \App\Models\InterventoriaInforme::with('usuario')->orderBy('fecha_informe', 'desc')->get();
+                    $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('exports.interventoria-pdf', ['informes' => $informes]);
+                    return response()->streamDownload(fn () => print($pdf->output()), 'informes-interventoria.pdf');
+                }),
         ];
     }
 }
