@@ -7,7 +7,7 @@ use Filament\Notifications\Notification;
 
 class Configuracion extends Page
 {
-    protected static \Filament\Support\Icons\Heroicon|\BackedEnum|string|null $navigationIcon = Heroicon::OutlinedCog6Tooth;
+    protected static \Filament\Support\Icons\Heroicon|\BackedEnum|string|null $navigationIcon = null;
     protected static \UnitEnum|string|null $navigationGroup = 'Administración';
     protected string $view = 'filament.pages.configuracion';
     protected static ?string $title = 'Configuración del Sistema';
