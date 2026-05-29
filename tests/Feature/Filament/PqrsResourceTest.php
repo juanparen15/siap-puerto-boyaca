@@ -37,83 +37,72 @@ class PqrsResourceTest extends TestCase
             ->assertStatus(200);
     }
 
-    public function test_cambiar_estado_action_updates_record_and_creates_historial(): void
+    public function test_cambiar_estado_action_changes_estado_and_creates_historial(): void
     {
         $user = $this->adminUser();
         $pqrs = Pqrs::factory()->create(['estado' => 'radicada']);
 
-        $data = [
-            'estado_nuevo'  => 'en_proceso',
-            'observacion'   => 'Se asignó al técnico.',
-            'accion_tomada' => 'Revisión programada.',
-        ];
+        \Livewire\Livewire::actingAs($user)
+            ->test(\App\Filament\Resources\PqrsResource\Pages\ListPqrs::class)
+            ->callTableAction('cambiarEstado', $pqrs, data: [
+                'estado_nuevo'  => 'en_proceso',
+                'observacion'   => 'Asignado al técnico.',
+                'accion_tomada' => null,
+            ])
+            ->assertHasNoTableActionErrors();
 
-        // Simulate the cambiarEstado action closure directly
-        $estadoAnterior = $pqrs->estado;
-        $pqrs->update([
-            'estado'          => $data['estado_nuevo'],
-            'accion_tomada'   => $data['accion_tomada'] ?? $pqrs->accion_tomada,
-            'fecha_respuesta' => now(),
-        ]);
-        PqrsHistorial::create([
-            'pqrs_id'         => $pqrs->id,
-            'usuario_id'      => $user->id,
-            'estado_anterior' => $estadoAnterior,
-            'estado_nuevo'    => $data['estado_nuevo'],
-            'observacion'     => $data['observacion'] ?? null,
-        ]);
-
-        $pqrs->refresh();
-
-        $this->assertEquals('en_proceso', $pqrs->estado);
-        $this->assertEquals('Revisión programada.', $pqrs->accion_tomada);
-        $this->assertNotNull($pqrs->fecha_respuesta);
-
+        $this->assertEquals('en_proceso', $pqrs->fresh()->estado);
+        $this->assertNull($pqrs->fresh()->fecha_respuesta); // not a terminal state
+        $this->assertSame(1, PqrsHistorial::where('pqrs_id', $pqrs->id)->count());
         $this->assertDatabaseHas('pqrs_historial', [
             'pqrs_id'         => $pqrs->id,
-            'usuario_id'      => $user->id,
             'estado_anterior' => 'radicada',
             'estado_nuevo'    => 'en_proceso',
-            'observacion'     => 'Se asignó al técnico.',
+            'observacion'     => 'Asignado al técnico.',
         ]);
-        $this->assertSame(1, PqrsHistorial::count());
     }
 
     public function test_cambiar_estado_to_resuelta_sets_fecha_respuesta_and_historial(): void
     {
-        $user  = $this->adminUser();
-        $pqrs  = Pqrs::factory()->create(['estado' => 'en_proceso', 'accion_tomada' => null]);
+        $user = $this->adminUser();
+        $pqrs = Pqrs::factory()->create(['estado' => 'en_proceso', 'accion_tomada' => null]);
 
-        $data = [
-            'estado_nuevo'  => 'resuelta',
-            'observacion'   => 'Problema resuelto.',
-            'accion_tomada' => 'Luminaria reemplazada.',
-        ];
+        \Livewire\Livewire::actingAs($user)
+            ->test(\App\Filament\Resources\PqrsResource\Pages\ListPqrs::class)
+            ->callTableAction('cambiarEstado', $pqrs, data: [
+                'estado_nuevo'  => 'resuelta',
+                'observacion'   => 'Problema resuelto.',
+                'accion_tomada' => 'Luminaria reemplazada.',
+            ])
+            ->assertHasNoTableActionErrors();
 
-        $estadoAnterior = $pqrs->estado;
-        $pqrs->update([
-            'estado'          => $data['estado_nuevo'],
-            'accion_tomada'   => $data['accion_tomada'] ?? $pqrs->accion_tomada,
-            'fecha_respuesta' => now(),
-        ]);
-        PqrsHistorial::create([
-            'pqrs_id'         => $pqrs->id,
-            'usuario_id'      => $user->id,
-            'estado_anterior' => $estadoAnterior,
-            'estado_nuevo'    => $data['estado_nuevo'],
-            'observacion'     => $data['observacion'] ?? null,
-        ]);
-
-        $pqrs->refresh();
-
-        $this->assertEquals('resuelta', $pqrs->estado);
-        $this->assertEquals('Luminaria reemplazada.', $pqrs->accion_tomada);
-        $this->assertNotNull($pqrs->fecha_respuesta);
-
+        $fresh = $pqrs->fresh();
+        $this->assertEquals('resuelta', $fresh->estado);
+        $this->assertEquals('Luminaria reemplazada.', $fresh->accion_tomada);
+        $this->assertNotNull($fresh->fecha_respuesta); // terminal state → fecha_respuesta set
         $this->assertDatabaseHas('pqrs_historial', [
             'pqrs_id'         => $pqrs->id,
             'estado_anterior' => 'en_proceso',
             'estado_nuevo'    => 'resuelta',
         ]);
+    }
+
+    public function test_cambiar_estado_to_cerrada_sets_fecha_respuesta(): void
+    {
+        $user = $this->adminUser();
+        $pqrs = Pqrs::factory()->create(['estado' => 'resuelta']);
+
+        \Livewire\Livewire::actingAs($user)
+            ->test(\App\Filament\Resources\PqrsResource\Pages\ListPqrs::class)
+            ->callTableAction('cambiarEstado', $pqrs, data: [
+                'estado_nuevo'  => 'cerrada',
+                'observacion'   => 'Expediente cerrado.',
+                'accion_tomada' => null,
+            ])
+            ->assertHasNoTableActionErrors();
+
+        $fresh = $pqrs->fresh();
+        $this->assertEquals('cerrada', $fresh->estado);
+        $this->assertNotNull($fresh->fecha_respuesta); // terminal state → fecha_respuesta set
     }
 }

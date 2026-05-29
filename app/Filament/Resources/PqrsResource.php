@@ -124,7 +124,7 @@ class PqrsResource extends Resource
                     ->options([
                         'radicada'   => 'Radicada',
                         'en_proceso' => 'En proceso',
-                        'resuelta' => 'Respondida',
+                        'resuelta' => 'Resuelta',
                         'cerrada'    => 'Cerrada',
                     ]),
                 SelectFilter::make('tipo_solicitud')
@@ -145,7 +145,7 @@ class PqrsResource extends Resource
                             ->label('Nuevo estado')
                             ->options([
                                 'en_proceso' => 'En proceso',
-                                'resuelta' => 'Respondida',
+                                'resuelta' => 'Resuelta',
                                 'cerrada'    => 'Cerrada',
                             ])
                             ->required(),
@@ -154,11 +154,14 @@ class PqrsResource extends Resource
                     ])
                     ->action(function (Pqrs $record, array $data): void {
                         $estadoAnterior = $record->estado;
-                        $record->update([
-                            'estado'          => $data['estado_nuevo'],
-                            'accion_tomada'   => $data['accion_tomada'] ?? $record->accion_tomada,
-                            'fecha_respuesta' => now(),
-                        ]);
+                        $update = [
+                            'estado'        => $data['estado_nuevo'],
+                            'accion_tomada' => $data['accion_tomada'] ?? $record->accion_tomada,
+                        ];
+                        if (in_array($data['estado_nuevo'], ['resuelta', 'cerrada'])) {
+                            $update['fecha_respuesta'] = now();
+                        }
+                        $record->update($update);
                         \App\Models\PqrsHistorial::create([
                             'pqrs_id'         => $record->id,
                             'usuario_id'      => auth()->id(),
