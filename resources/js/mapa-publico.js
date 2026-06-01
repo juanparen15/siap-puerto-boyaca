@@ -94,25 +94,32 @@ window.mapaPublico = function () {
                 campo_deportivo: 'Campo Deportivo',
                 luminaria_parque: 'Luminaria de Parque',
             };
-
-            const rotulo = escHtml(el.rotulo || 'Sin rótulo');
-            const tipo = escHtml(tipoLabel[el.tipo] || el.tipo);
+            const estadoBadge = {
+                operativa:    { bg: '#dcfce7', color: '#166534', label: 'Operativa' },
+                no_operativa: { bg: '#fee2e2', color: '#991b1b', label: 'No Operativa' },
+                desinstalada: { bg: '#f3f4f6', color: '#4b5563', label: 'Desinstalada' },
+            };
+            const badge  = estadoBadge[el.estado] || { bg: '#f3f4f6', color: '#4b5563', label: escHtml(el.estado) };
+            const rotulo = escHtml(el.rotulo || '');
+            const tipo   = escHtml(tipoLabel[el.tipo] || el.tipo || '');
+            const svgFlag = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;display:inline-block;vertical-align:middle;flex-shrink:0;"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>`;
 
             return `
-                <div style="font-family: system-ui, sans-serif; padding: 4px;">
-                    <div style="font-weight:700; font-size:14px; margin-bottom:6px;">${rotulo}</div>
-                    <div style="font-size:12px; color:#555; margin-bottom:2px;">Tipo: ${tipo}</div>
-                    ${el.marca ? `<div style="font-size:12px; color:#555; margin-bottom:2px;">Marca: ${escHtml(el.marca)}</div>` : ''}
-                    ${el.potencia_w ? `<div style="font-size:12px; color:#555; margin-bottom:6px;">Potencia: ${escHtml(el.potencia_w)} W</div>` : ''}
-                    <span style="font-size:11px; padding:2px 8px; border-radius:9999px; background:${el.estado === 'operativa' ? '#dcfce7' : el.estado === 'no_operativa' ? '#fee2e2' : '#f3f4f6'}; color:${el.estado === 'operativa' ? '#166534' : el.estado === 'no_operativa' ? '#991b1b' : '#4b5563'};">${escHtml(el.estado).replace('_', ' ')}</span>
-                    <div style="margin-top:10px;">
-                        <a href="/pqrs?elemento_id=${parseInt(el.id, 10)}"
-                           style="display:block; background:#1B6B2F; color:#fff; text-align:center; padding:6px 12px; border-radius:6px; font-size:12px; text-decoration:none; font-weight:600;">
-                            📋 Reportar problema
-                        </a>
-                    </div>
-                </div>
-            `;
+                <div style="font-family:system-ui,sans-serif;padding:10px 12px;min-width:175px;">
+                    <p style="font-weight:700;font-size:13px;color:#1B6B2F;margin:0 0 3px;line-height:1.3;">
+                        ${rotulo || 'Elemento #' + parseInt(el.id, 10)}
+                    </p>
+                    <p style="font-size:11px;color:#6b7280;margin:0 0 8px;">
+                        ${tipo}${el.potencia_w ? ' · ' + escHtml(el.potencia_w) + ' W' : ''}
+                    </p>
+                    <span style="display:inline-block;font-size:10px;font-weight:600;padding:2px 9px;border-radius:9999px;background:${badge.bg};color:${badge.color};margin-bottom:10px;">
+                        ${badge.label}
+                    </span>
+                    <a href="/pqrs?elemento_id=${parseInt(el.id, 10)}"
+                       style="display:flex;align-items:center;justify-content:center;gap:6px;background:#1B6B2F;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-size:12px;font-weight:600;width:100%;box-sizing:border-box;">
+                        ${svgFlag} Reportar problema
+                    </a>
+                </div>`;
         },
 
         actualizarFiltros(nuevosFiltros) {

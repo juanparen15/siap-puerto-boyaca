@@ -1,5 +1,130 @@
 /* SIAP Public Portal CSS */
 
+/* ─── Hero decorators (inspired by MINIMAL / 21st.dev) ────────────────────── */
+
+/* Subtle dot-grid overlay on hero */
+.hero-grid {
+    background-image:
+        linear-gradient(rgba(27,107,47,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(27,107,47,0.04) 1px, transparent 1px);
+    background-size: 80px 80px;
+}
+
+/* Top accent line that grows from left */
+.hero-accent-line {
+    height: 3px;
+    background: linear-gradient(90deg, #1B6B2F, #16a34a, transparent);
+    transform-origin: left;
+}
+
+/* Floating decorative circle */
+@keyframes floatRotate {
+    0%   { transform: scale(1) rotate(0deg); }
+    50%  { transform: scale(1.08) rotate(90deg); }
+    100% { transform: scale(1) rotate(0deg); }
+}
+.hero-circle {
+    animation: floatRotate 18s ease-in-out infinite;
+    border: 1.5px solid rgba(27,107,47,0.18);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+/* Floating small dot */
+@keyframes floatDot {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50%       { transform: translateY(-28px) scale(1.15); }
+}
+.hero-dot {
+    animation: floatDot 7s ease-in-out infinite;
+    background: rgba(27,107,47,0.18);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+/* Rotating diamond */
+@keyframes rotateDiamond {
+    from { transform: rotate(45deg); }
+    to   { transform: rotate(405deg); }
+}
+.hero-diamond {
+    animation: rotateDiamond 20s linear infinite;
+    border: 1px solid rgba(27,107,47,0.12);
+    pointer-events: none;
+}
+
+/* Pulsing badge dot */
+@keyframes pulseDot {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50%       { transform: scale(1.4); opacity: 0.7; }
+}
+.badge-dot {
+    animation: pulseDot 2s ease-in-out infinite;
+    background: #1B6B2F;
+    border-radius: 50%;
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+}
+
+/* ─── Card Decorator (Features 3 pattern from 21st.dev) ───────────────────── */
+.card-decorator {
+    position: relative;
+    margin: 0 auto;
+    width: 6rem;
+    height: 6rem;
+    /* radial mask: visible center, fades out edges */
+    -webkit-mask-image: radial-gradient(ellipse 55% 55% at 50% 50%, #000 65%, transparent 100%);
+    mask-image: radial-gradient(ellipse 55% 55% at 50% 50%, #000 65%, transparent 100%);
+}
+.card-decorator-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(27,107,47,0.12) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(27,107,47,0.12) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+.card-decorator-icon {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    background: white;
+    border-top: 1px solid rgba(27,107,47,0.2);
+    border-left: 1px solid rgba(27,107,47,0.2);
+}
+
+/* ─── Improved stat card with top accent bar ──────────────────────────────── */
+.stat-card-v2 {
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(27,107,47,0.15);
+    border-radius: 0.75rem;
+    padding: 1.5rem 1.25rem 1.25rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+.stat-card-v2::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 2.5rem;
+    height: 3px;
+}
+
+/* Bottom accent line that grows from right */
+.hero-accent-line-bottom {
+    height: 2px;
+    background: linear-gradient(270deg, #1B6B2F, transparent);
+    transform-origin: right;
+}
+
 .glass-card {
     background: rgba(255, 255, 255, 0.75);
     backdrop-filter: blur(10px);

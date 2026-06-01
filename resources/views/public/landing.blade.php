@@ -51,6 +51,75 @@
     </div>
 </section>
 
+{{-- ─── Interactive Map Section ─────────────────────────────────────────── --}}
+<section class="bg-white">
+
+    <div class="max-w-5xl mx-auto px-4 pt-16 pb-5 text-center">
+        <h2 class="section-heading text-3xl font-bold text-gray-800 mb-2">
+            Alumbrado Público en Tiempo Real
+        </h2>
+        <p class="animate-on-scroll text-gray-500 text-base">
+            Toca cualquier punto del mapa para ver su estado o reportar un problema directamente
+        </p>
+    </div>
+
+    {{-- Map wrapper --}}
+    <div class="relative" x-data="mapaLanding()" x-init="init()">
+
+        {{-- GPS Button --}}
+        <button @click="miUbicacion()"
+                class="absolute top-4 right-4 z-[1000] flex items-center gap-2
+                       bg-white hover:bg-green-50 border border-gray-200 hover:border-[#1B6B2F]
+                       text-gray-600 hover:text-[#1B6B2F] rounded-xl px-4 py-2.5
+                       shadow-md text-sm font-medium transition-all duration-200 group">
+            {{-- Crosshair / locate icon --}}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                 class="w-4 h-4 flex-shrink-0 group-hover:text-[#1B6B2F]">
+                <circle cx="12" cy="12" r="3"/>
+                <line x1="12" y1="2"  x2="12" y2="6"/>
+                <line x1="12" y1="18" x2="12" y2="22"/>
+                <line x1="2"  y1="12" x2="6"  y2="12"/>
+                <line x1="18" y1="12" x2="22" y2="12"/>
+            </svg>
+            Mi ubicación
+        </button>
+
+        {{-- Legend --}}
+        <div class="absolute bottom-4 left-4 z-[1000] bg-white/95 backdrop-blur-sm
+                    rounded-xl shadow-md px-4 py-3 border border-gray-100">
+            <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Estado</p>
+            <div class="space-y-1.5">
+                <div class="flex items-center gap-2 text-xs text-gray-700">
+                    <span class="w-2.5 h-2.5 rounded-full bg-green-600 flex-shrink-0"></span>
+                    Operativa
+                </div>
+                <div class="flex items-center gap-2 text-xs text-gray-700">
+                    <span class="w-2.5 h-2.5 rounded-full bg-red-500 flex-shrink-0"></span>
+                    No Operativa
+                </div>
+                <div class="flex items-center gap-2 text-xs text-gray-700">
+                    <span class="w-2.5 h-2.5 rounded-full bg-gray-400 flex-shrink-0"></span>
+                    Desinstalada
+                </div>
+            </div>
+        </div>
+
+        {{-- Map container --}}
+        <div id="mapa-landing" style="height:520px;width:100%;"></div>
+
+    </div>
+
+    {{-- Hint below map --}}
+    <div class="text-center py-4 border-b border-gray-100">
+        <p class="text-xs text-gray-400">
+            Puedes usar filtros avanzados y ver el inventario completo en
+            <a href="{{ route('mapa') }}" class="text-[#1B6B2F] font-medium hover:underline">Vista completa del mapa</a>
+        </p>
+    </div>
+
+</section>
+
 {{-- Quick Access Cards --}}
 <section class="py-20 bg-gray-50">
     <div class="max-w-6xl mx-auto px-4">
