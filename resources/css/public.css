@@ -1,5 +1,126 @@
 /* SIAP Public Portal CSS */
 
+/* ─── Shader Hero (WebGL2 fire/nebula) ────────────────────────────────────── */
+
+/* Gradient text — fire palette */
+.gradient-text-fire {
+    background: linear-gradient(to right, #fdba74, #fbbf24, #f59e0b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+}
+.gradient-text-amber {
+    background: linear-gradient(to right, #fcd34d, #fb923c, #ea580c);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+}
+
+/* Entrance animations */
+@keyframes heroFadeDown {
+    from { opacity: 0; transform: translateY(-22px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes heroFadeUp {
+    from { opacity: 0; transform: translateY(32px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.hero-anim-down { animation: heroFadeDown 0.8s ease-out forwards; }
+.hero-anim-up   { animation: heroFadeUp  0.8s ease-out forwards; opacity: 0; }
+.hero-d200 { animation-delay: 0.2s; }
+.hero-d400 { animation-delay: 0.4s; }
+.hero-d600 { animation-delay: 0.6s; }
+.hero-d800 { animation-delay: 0.8s; }
+
+/* Hero badge (fire version) */
+.hero-badge-fire {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 18px;
+    border-radius: 9999px;
+    background: rgba(249,115,22,0.12);
+    border: 1px solid rgba(253,186,116,0.35);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: #fed7aa;
+    text-transform: uppercase;
+}
+@keyframes pulseAmber {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50%       { transform: scale(1.5); opacity: 0.7; }
+}
+.badge-dot-fire {
+    animation: pulseAmber 2s ease-in-out infinite;
+    background: #f97316;
+    border-radius: 50%;
+    display: inline-block;
+    width: 7px; height: 7px;
+    flex-shrink: 0;
+}
+
+/* Hero CTA buttons */
+.btn-hero-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 32px;
+    background: linear-gradient(to right, #f97316, #eab308);
+    color: #000;
+    border-radius: 9999px;
+    font-weight: 700;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: none;
+}
+.btn-hero-primary:hover {
+    transform: scale(1.05);
+    box-shadow: 0 20px 40px rgba(249,115,22,0.3);
+    color: #000;
+}
+.btn-hero-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 32px;
+    background: rgba(249,115,22,0.1);
+    border: 1px solid rgba(253,186,116,0.35);
+    color: #fed7aa;
+    border-radius: 9999px;
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(8px);
+}
+.btn-hero-secondary:hover {
+    background: rgba(249,115,22,0.2);
+    border-color: rgba(253,186,116,0.6);
+    transform: scale(1.05);
+    color: #fff;
+}
+
+/* Dark stats bar below hero */
+.stat-dark-card {
+    text-align: center;
+    padding: 1.25rem 1rem;
+    position: relative;
+}
+.stat-dark-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%; transform: translateX(-50%);
+    width: 2.5rem; height: 2px;
+}
+.stat-dk-green::before  { background: #22c55e; }
+.stat-dk-green2::before { background: #4ade80; }
+.stat-dk-red::before    { background: #f87171; }
+.stat-dk-amber::before  { background: #fbbf24; }
+
 /* ─── Hero decorators (inspired by MINIMAL / 21st.dev) ────────────────────── */
 
 /* Subtle dot-grid overlay on hero */

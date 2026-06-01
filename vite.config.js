@@ -12,6 +12,7 @@ export default defineConfig({
                 'resources/js/landing.js',
                 'resources/js/mapa-publico.js',
                 'resources/js/public-animations.js',
+                'resources/js/shader-hero.js',
             ],
             refresh: true,
         }),
