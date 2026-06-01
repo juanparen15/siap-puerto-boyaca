@@ -150,7 +150,7 @@ class InfraestructuraRedResource extends Resource
             EditAction::make(),
             DeleteAction::make(),
         ])->bulkActions([
-            \Filament\Tables\Actions\DeleteBulkAction::make(),
+            \Filament\Actions\DeleteBulkAction::make(),
         ]);
     }
 
