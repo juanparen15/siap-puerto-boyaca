@@ -103,7 +103,7 @@
 .stat-card-v2 {
     background: rgba(255,255,255,0.92);
     backdrop-filter: blur(8px);
-    border: 1px solid rgba(27,107,47,0.15);
+    border: 1px solid rgba(27,107,47,0.12);
     border-radius: 0.75rem;
     padding: 1.5rem 1.25rem 1.25rem;
     text-align: center;
@@ -116,6 +116,27 @@
     top: 0; left: 0;
     width: 2.5rem;
     height: 3px;
+    background: #1B6B2F;
+}
+.stat-v2-green::before   { background: #1B6B2F; }
+.stat-v2-lightgreen::before { background: #16a34a; }
+.stat-v2-red::before     { background: #dc2626; }
+.stat-v2-yellow::before  { background: #d97706; }
+
+/* ─── Institutional badge ─────────────────────────────────────────────────── */
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    border-radius: 9999px;
+    background: rgba(27,107,47,0.07);
+    border: 1px solid rgba(27,107,47,0.2);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: #1B6B2F;
+    text-transform: uppercase;
 }
 
 /* Bottom accent line that grows from right */

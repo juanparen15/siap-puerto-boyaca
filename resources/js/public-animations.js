@@ -2,6 +2,26 @@ import { animate, inView, stagger } from 'motion'
 
 document.addEventListener('DOMContentLoaded', () => {
 
+    // ─── Hero top accent line ──────────────────────────────────────────────────
+    const accentLine = document.getElementById('hero-accent-line');
+    if (accentLine) {
+        animate(accentLine, { width: ['0%', '42%'] }, {
+            duration: 1.6,
+            delay: 0.3,
+            easing: [0.25, 0.1, 0.25, 1],
+        });
+    }
+
+    // ─── Hero bottom accent line ───────────────────────────────────────────────
+    const accentBottom = document.getElementById('hero-accent-bottom');
+    if (accentBottom) {
+        animate(accentBottom, { width: ['0%', '30%'] }, {
+            duration: 1.4,
+            delay: 0.6,
+            easing: [0.25, 0.1, 0.25, 1],
+        });
+    }
+
     // ─── Hero stat cards ──────────────────────────────────────────────────────
     const statCards = document.querySelectorAll('.stat-card')
     if (statCards.length) {
