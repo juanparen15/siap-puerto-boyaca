@@ -1,7 +1,13 @@
 <div class="max-w-3xl mx-auto px-4 py-10">
 
     {{-- Header --}}
-    <div class="mb-8 text-center">
+    <div class="mb-8 text-center animate-on-scroll">
+        <div class="flex justify-center mb-3">
+            <lord-icon src="https://cdn.lordicon.com/iuvnsegf.json"
+                trigger="loop" delay="800" stroke="bold"
+                colors="primary:#1B6B2F"
+                style="width:56px;height:56px"></lord-icon>
+        </div>
         <h1 class="text-2xl font-bold text-[#1B6B2F]">Consultar PQRS</h1>
         <p class="text-gray-500 text-sm mt-1">Consulte el estado de su Petición, Queja, Reclamo o Solicitud</p>
     </div>
@@ -128,9 +134,6 @@
 
             {{-- Map --}}
             @if ($pqrs->latitud && $pqrs->longitud)
-                @push('styles')
-                    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-                @endpush
                 <div>
                     <p class="text-xs text-gray-500 uppercase tracking-wide mb-2">Ubicación del reporte</p>
                     <div id="pqrs-map" style="height: 200px;"
@@ -140,6 +143,10 @@
                          wire:ignore></div>
                 </div>
             @endif
+
+            @push('styles')
+                <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+            @endpush
 
             @push('scripts')
                 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV/XN/sp38=" crossorigin=""></script>
@@ -163,7 +170,13 @@
             {{-- History timeline --}}
             @if ($pqrs->historial->isNotEmpty())
                 <div>
-                    <p class="text-xs text-gray-500 uppercase tracking-wide mb-4">Historial de estados</p>
+                    <div class="flex items-center gap-2 mb-4">
+                        <lord-icon src="https://cdn.lordicon.com/laobovmg.json"
+                            trigger="loop" delay="1500" stroke="bold"
+                            colors="primary:#6b7280"
+                            style="width:20px;height:20px"></lord-icon>
+                        <p class="text-xs text-gray-500 uppercase tracking-wide">Historial de estados</p>
+                    </div>
                     <ol class="relative border-l border-gray-200 ml-3 space-y-6">
                         @foreach ($pqrs->historial as $item)
                             <li class="ml-6">

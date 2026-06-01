@@ -8,6 +8,7 @@
     <link rel="icon" type="image/png" href="{{ asset('images/escudo.png') }}">
     <title>SIAP · Alcaldía de Puerto Boyacá</title>
     @vite(['resources/css/app.css', 'resources/css/public.css', 'resources/js/app.js'])
+    <script src="https://cdn.lordicon.com/lordicon.js"></script>
     @stack('styles')
 </head>
 <body class="bg-white text-gray-800">
@@ -23,11 +24,41 @@
                 </div>
             </div>
             <div class="hidden md:flex items-center gap-6 text-sm font-medium">
-                <a href="{{ route('landing') }}" class="text-gray-700 hover:text-[#1B6B2F] transition-colors">Inicio</a>
-                <a href="{{ route('mapa') }}" class="text-gray-700 hover:text-[#1B6B2F] transition-colors">Mapa</a>
-                <a href="{{ route('pqrs') }}" class="text-gray-700 hover:text-[#1B6B2F] transition-colors">Radicar PQRS</a>
-                <a href="{{ route('pqrs.consultar') }}" class="text-gray-700 hover:text-[#1B6B2F] transition-colors">Consultar PQRS</a>
-                <a href="{{ route('reportes') }}" class="text-gray-700 hover:text-[#1B6B2F] transition-colors">Reportes</a>
+                <a href="{{ route('landing') }}" class="flex items-center gap-1.5 text-gray-700 hover:text-[#1B6B2F] transition-colors">
+                    <lord-icon src="https://cdn.lordicon.com/pgirtdfe.json"
+                        trigger="loop" delay="2500" stroke="bold"
+                        colors="primary:#1B6B2F"
+                        style="width:22px;height:22px;pointer-events:none"></lord-icon>
+                    Inicio
+                </a>
+                <a href="{{ route('mapa') }}" class="flex items-center gap-1.5 text-gray-700 hover:text-[#1B6B2F] transition-colors">
+                    <lord-icon src="https://cdn.lordicon.com/dhmavvpz.json"
+                        trigger="loop" delay="3000" stroke="bold"
+                        colors="primary:#1B6B2F"
+                        style="width:22px;height:22px;pointer-events:none"></lord-icon>
+                    Mapa
+                </a>
+                <a href="{{ route('pqrs') }}" class="flex items-center gap-1.5 text-gray-700 hover:text-[#1B6B2F] transition-colors">
+                    <lord-icon src="https://cdn.lordicon.com/vwzukuhn.json"
+                        trigger="loop" delay="2000" stroke="bold"
+                        colors="primary:#1B6B2F"
+                        style="width:22px;height:22px;pointer-events:none"></lord-icon>
+                    Radicar PQRS
+                </a>
+                <a href="{{ route('pqrs.consultar') }}" class="flex items-center gap-1.5 text-gray-700 hover:text-[#1B6B2F] transition-colors">
+                    <lord-icon src="https://cdn.lordicon.com/iuvnsegf.json"
+                        trigger="loop" delay="3500" stroke="bold"
+                        colors="primary:#1B6B2F"
+                        style="width:22px;height:22px;pointer-events:none"></lord-icon>
+                    Consultar PQRS
+                </a>
+                <a href="{{ route('reportes') }}" class="flex items-center gap-1.5 text-gray-700 hover:text-[#1B6B2F] transition-colors">
+                    <lord-icon src="https://cdn.lordicon.com/wdztjihe.json"
+                        trigger="loop" delay="4000" stroke="bold"
+                        colors="primary:#1B6B2F"
+                        style="width:22px;height:22px;pointer-events:none"></lord-icon>
+                    Reportes
+                </a>
             </div>
         </div>
     </nav>
@@ -60,10 +91,11 @@
             </div>
         </div>
         <div class="text-center text-green-300 text-xs mt-8">
-            © {{ date('Y') }} Alcaldía de Puerto Boyacá. Todos los derechos reservados.
+            &copy; {{ date('Y') }} Alcaldía de Puerto Boyacá. Todos los derechos reservados.
         </div>
     </footer>
 
+    @vite(['resources/js/public-animations.js'])
     @stack('scripts')
 </body>
 </html>

@@ -7,6 +7,7 @@ use App\Models\PqrsHistorial;
 use App\Models\User;
 use Database\Seeders\RolesSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
@@ -39,6 +40,8 @@ class PqrsResourceTest extends TestCase
 
     public function test_cambiar_estado_action_changes_estado_and_creates_historial(): void
     {
+        Notification::fake();
+
         $user = $this->adminUser();
         $pqrs = Pqrs::factory()->create(['estado' => 'radicada']);
 
@@ -64,6 +67,8 @@ class PqrsResourceTest extends TestCase
 
     public function test_cambiar_estado_to_resuelta_sets_fecha_respuesta_and_historial(): void
     {
+        Notification::fake();
+
         $user = $this->adminUser();
         $pqrs = Pqrs::factory()->create(['estado' => 'en_proceso', 'accion_tomada' => null]);
 
@@ -89,6 +94,8 @@ class PqrsResourceTest extends TestCase
 
     public function test_cambiar_estado_to_cerrada_sets_fecha_respuesta(): void
     {
+        Notification::fake();
+
         $user = $this->adminUser();
         $pqrs = Pqrs::factory()->create(['estado' => 'resuelta']);
 

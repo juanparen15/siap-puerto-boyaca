@@ -16,10 +16,10 @@ class MapaController extends Controller
             'tipo'           => ['nullable', 'string', Rule::in(['luminaria', 'poste', 'reflector', 'sendero_peatonal', 'campo_deportivo', 'luminaria_parque'])],
             'estado'         => ['nullable', 'string', Rule::in(['operativa', 'no_operativa', 'desinstalada'])],
             'clasificacion'  => ['nullable', 'string', Rule::in(['casco_urbano', 'puerto_serviez'])],
-            'sw_lat'         => ['nullable', 'numeric', 'between:-4,13'],
-            'sw_lng'         => ['nullable', 'numeric', 'between:-82,-66'],
-            'ne_lat'         => ['nullable', 'numeric', 'between:-4,13'],
-            'ne_lng'         => ['nullable', 'numeric', 'between:-82,-66'],
+            'sw_lat'         => ['nullable', 'numeric', 'between:-90,90',   'required_with:ne_lat,sw_lng,ne_lng'],
+            'ne_lat'         => ['nullable', 'numeric', 'between:-90,90',   'required_with:sw_lat,sw_lng,ne_lng'],
+            'sw_lng'         => ['nullable', 'numeric', 'between:-180,180', 'required_with:sw_lat,ne_lat,ne_lng'],
+            'ne_lng'         => ['nullable', 'numeric', 'between:-180,180', 'required_with:sw_lat,ne_lat,sw_lng'],
         ]);
 
         $query = InfraestructuraElemento::select(

@@ -1,27 +1,62 @@
 <div class="max-w-2xl mx-auto px-4 py-10">
 
     {{-- Header --}}
-    <div class="mb-8 text-center">
+    <div class="mb-8 text-center animate-on-scroll">
+        <div class="flex justify-center mb-3">
+            <lord-icon src="https://cdn.lordicon.com/vwzukuhn.json"
+                trigger="loop" delay="1000" stroke="bold"
+                colors="primary:#1B6B2F"
+                style="width:56px;height:56px"></lord-icon>
+        </div>
         <h1 class="text-2xl font-bold text-[#1B6B2F]">Radicar PQRS</h1>
         <p class="text-gray-500 text-sm mt-1">Peticiones, Quejas, Reclamos y Solicitudes — Alumbrado Público</p>
     </div>
 
     {{-- Step indicator --}}
     <div class="flex items-center justify-center mb-8 gap-2">
-        @foreach ([1 => 'Datos', 2 => 'Solicitud', 3 => 'Confirmación'] as $num => $label)
-            <div class="flex items-center gap-2">
-                <div class="flex flex-col items-center">
-                    <div class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold border-2
-                        {{ $paso >= $num ? 'bg-[#1B6B2F] border-[#1B6B2F] text-white' : 'bg-white border-gray-300 text-gray-400' }}">
-                        {{ $num }}
-                    </div>
-                    <span class="text-xs mt-1 {{ $paso >= $num ? 'text-[#1B6B2F] font-semibold' : 'text-gray-400' }}">{{ $label }}</span>
+
+        {{-- Step 1 --}}
+        <div class="flex items-center gap-2">
+            <div class="flex flex-col items-center">
+                <div class="w-14 h-14 rounded-full flex items-center justify-center border-2 transition-colors
+                    {{ $paso >= 1 ? 'border-[#1B6B2F] bg-green-50' : 'border-gray-200 bg-white' }}">
+                    <lord-icon src="https://cdn.lordicon.com/gubjuhss.json"
+                        trigger="loop" delay="1200" stroke="bold"
+                        colors="primary:{{ $paso >= 1 ? '#1B6B2F' : '#9ca3af' }}"
+                        style="width:36px;height:36px"></lord-icon>
                 </div>
-                @if ($num < 3)
-                    <div class="w-12 h-0.5 mb-4 {{ $paso > $num ? 'bg-[#1B6B2F]' : 'bg-gray-200' }}"></div>
-                @endif
+                <span class="text-xs mt-1 {{ $paso >= 1 ? 'text-[#1B6B2F] font-semibold' : 'text-gray-400' }}">Datos</span>
             </div>
-        @endforeach
+            <div class="w-12 h-0.5 mb-4 transition-colors {{ $paso > 1 ? 'bg-[#1B6B2F]' : 'bg-gray-200' }}"></div>
+        </div>
+
+        {{-- Step 2 --}}
+        <div class="flex items-center gap-2">
+            <div class="flex flex-col items-center">
+                <div class="w-14 h-14 rounded-full flex items-center justify-center border-2 transition-colors
+                    {{ $paso >= 2 ? 'border-[#1B6B2F] bg-green-50' : 'border-gray-200 bg-white' }}">
+                    <lord-icon src="https://cdn.lordicon.com/tbabdzcy.json"
+                        trigger="loop" delay="1600" stroke="bold"
+                        colors="primary:{{ $paso >= 2 ? '#1B6B2F' : '#9ca3af' }}"
+                        style="width:36px;height:36px"></lord-icon>
+                </div>
+                <span class="text-xs mt-1 {{ $paso >= 2 ? 'text-[#1B6B2F] font-semibold' : 'text-gray-400' }}">Solicitud</span>
+            </div>
+            <div class="w-12 h-0.5 mb-4 transition-colors {{ $paso > 2 ? 'bg-[#1B6B2F]' : 'bg-gray-200' }}"></div>
+        </div>
+
+        {{-- Step 3 --}}
+        <div class="flex flex-col items-center">
+            <div class="w-14 h-14 rounded-full flex items-center justify-center border-2 transition-colors
+                {{ $paso >= 3 ? 'border-[#1B6B2F] bg-green-50' : 'border-gray-200 bg-white' }}">
+                <lord-icon src="https://cdn.lordicon.com/pxixoqxa.json"
+                    trigger="loop" delay="2000" stroke="bold"
+                    colors="primary:{{ $paso >= 3 ? '#1B6B2F' : '#9ca3af' }}"
+                    style="width:36px;height:36px"></lord-icon>
+            </div>
+            <span class="text-xs mt-1 {{ $paso >= 3 ? 'text-[#1B6B2F] font-semibold' : 'text-gray-400' }}">Confirmación</span>
+        </div>
+
     </div>
 
     {{-- Card --}}
@@ -94,7 +129,7 @@
             <div class="mt-8 flex justify-end">
                 <button wire:click="siguiente"
                         class="bg-[#1B6B2F] hover:bg-[#155724] text-white font-semibold px-6 py-2 rounded-lg transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-[#1B6B2F]">
-                    Siguiente →
+                    Siguiente
                 </button>
             </div>
         @endif
@@ -180,7 +215,7 @@
             <div class="mt-8 flex justify-between">
                 <button wire:click="anterior"
                         class="border border-gray-300 text-gray-700 hover:bg-gray-50 font-semibold px-6 py-2 rounded-lg transition-colors">
-                    ← Anterior
+                    Anterior
                 </button>
                 <button wire:click="enviar"
                         class="bg-[#1B6B2F] hover:bg-[#155724] text-white font-semibold px-6 py-2 rounded-lg transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-[#1B6B2F]">
@@ -192,13 +227,14 @@
         {{-- ─── STEP 3: Confirmation ─── --}}
         @if ($paso === 3)
             <div class="text-center py-4">
-                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <svg class="w-8 h-8 text-[#1B6B2F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                    </svg>
+                <div class="flex justify-center mb-4">
+                    <lord-icon src="https://cdn.lordicon.com/pxixoqxa.json"
+                        trigger="loop" delay="500" stroke="bold"
+                        colors="primary:#1B6B2F"
+                        style="width:80px;height:80px"></lord-icon>
                 </div>
 
-                <h2 class="text-xl font-bold text-gray-800 mb-2">¡PQRS radicada exitosamente!</h2>
+                <h2 class="text-xl font-bold text-gray-800 mb-2">PQRS radicada exitosamente</h2>
                 <p class="text-gray-500 text-sm mb-6">Su solicitud ha sido registrada en el sistema.</p>
 
                 <div class="bg-green-50 border border-[#1B6B2F] rounded-xl px-6 py-5 mb-6 inline-block">
@@ -245,7 +281,6 @@ function mapaPqrs({ lat, lng, hasPreciseLocation }) {
         map: null,
         marker: null,
         init() {
-            // Center: if precise location provided, use it; otherwise default to Puerto Boyacá center
             const centerLat = hasPreciseLocation ? lat : 5.9760;
             const centerLng = hasPreciseLocation ? lng : -74.5940;
             const zoom = hasPreciseLocation ? 17 : 14;
@@ -257,7 +292,6 @@ function mapaPqrs({ lat, lng, hasPreciseLocation }) {
                 attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
             }).addTo(this.map);
 
-            // Place initial marker if we have coordinates
             if (hasPreciseLocation) {
                 this.marker = L.marker([lat, lng], { draggable: true }).addTo(this.map);
                 this.marker.bindPopup('Ubicación del elemento').openPopup();
@@ -268,7 +302,6 @@ function mapaPqrs({ lat, lng, hasPreciseLocation }) {
                 });
             }
 
-            // Click to place/move pin
             this.map.on('click', (e) => {
                 const { lat, lng } = e.latlng;
                 if (this.marker) {

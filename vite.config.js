@@ -11,6 +11,7 @@ export default defineConfig({
                 'resources/js/app.js',
                 'resources/js/landing.js',
                 'resources/js/mapa-publico.js',
+                'resources/js/public-animations.js',
             ],
             refresh: true,
         }),

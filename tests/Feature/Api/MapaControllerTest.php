@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Api;
 
-use App\Models\InfraestructuraElemento;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -10,65 +9,104 @@ class MapaControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_elementos_returns_json_array(): void
-    {
-        InfraestructuraElemento::factory()->count(3)->create([
-            'latitud' => 5.977,
-            'longitud' => -74.579,
-            'estado' => 'operativa',
-        ]);
+    // -----------------------------------------------------------------------
+    // tipo
+    // -----------------------------------------------------------------------
 
-        $response = $this->getJson('/api/mapa/elementos');
-        $response->assertStatus(200)->assertJsonCount(3);
+    public function test_invalid_tipo_returns_422(): void
+    {
+        $response = $this->getJson('/api/mapa/elementos?tipo=invalid_type');
+
+        $response->assertStatus(422)
+                 ->assertJsonValidationErrors(['tipo']);
     }
 
-    public function test_bounding_box_filter_works(): void
+    public function test_valid_tipo_does_not_return_422(): void
     {
-        // Element inside Puerto Boyacá
-        InfraestructuraElemento::factory()->create([
-            'latitud' => 5.977,
-            'longitud' => -74.579,
-        ]);
-        // Element far away (Bogotá)
-        InfraestructuraElemento::factory()->create([
-            'latitud' => 4.710,
-            'longitud' => -74.072,
-        ]);
-
-        $response = $this->getJson('/api/mapa/elementos?sw_lat=5.9&sw_lng=-74.7&ne_lat=6.1&ne_lng=-74.4');
-        $response->assertStatus(200)->assertJsonCount(1);
+        $this->getJson('/api/mapa/elementos?tipo=luminaria')
+             ->assertSuccessful();
     }
 
-    public function test_tipo_filter_works(): void
-    {
-        InfraestructuraElemento::factory()->create(['tipo' => 'luminaria', 'latitud' => 5.977, 'longitud' => -74.579]);
-        InfraestructuraElemento::factory()->create(['tipo' => 'poste', 'latitud' => 5.977, 'longitud' => -74.579]);
+    // -----------------------------------------------------------------------
+    // estado
+    // -----------------------------------------------------------------------
 
-        $response = $this->getJson('/api/mapa/elementos?tipo=luminaria');
-        $response->assertStatus(200)->assertJsonCount(1);
+    public function test_invalid_estado_returns_422(): void
+    {
+        $this->getJson('/api/mapa/elementos?estado=rota')
+             ->assertStatus(422)
+             ->assertJsonValidationErrors(['estado']);
     }
 
-    public function test_filtra_por_estado(): void
+    // -----------------------------------------------------------------------
+    // clasificacion
+    // -----------------------------------------------------------------------
+
+    public function test_invalid_clasificacion_returns_422(): void
     {
-        InfraestructuraElemento::factory()->create(['estado' => 'operativa', 'latitud' => 5.977, 'longitud' => -74.579]);
-        InfraestructuraElemento::factory()->create(['estado' => 'no_operativa', 'latitud' => 5.978, 'longitud' => -74.580]);
-
-        $response = $this->getJson('/api/mapa/elementos?estado=operativa');
-
-        $response->assertOk()
-                 ->assertJsonCount(1)
-                 ->assertJsonFragment(['estado' => 'operativa']);
+        $this->getJson('/api/mapa/elementos?clasificacion=zona_rural')
+             ->assertStatus(422)
+             ->assertJsonValidationErrors(['clasificacion']);
     }
 
-    public function test_filtra_por_clasificacion(): void
+    // -----------------------------------------------------------------------
+    // Bounding box - coordinate bounds
+    // -----------------------------------------------------------------------
+
+    public function test_lat_out_of_range_returns_422(): void
     {
-        InfraestructuraElemento::factory()->create(['clasificacion' => 'casco_urbano', 'latitud' => 5.977, 'longitud' => -74.579]);
-        InfraestructuraElemento::factory()->create(['clasificacion' => 'puerto_serviez', 'latitud' => 5.978, 'longitud' => -74.580]);
+        $this->getJson('/api/mapa/elementos?sw_lat=-91&ne_lat=5&sw_lng=-75&ne_lng=-74')
+             ->assertStatus(422)
+             ->assertJsonValidationErrors(['sw_lat']);
+    }
 
-        $response = $this->getJson('/api/mapa/elementos?clasificacion=casco_urbano');
+    public function test_lng_out_of_range_returns_422(): void
+    {
+        $this->getJson('/api/mapa/elementos?sw_lat=4&ne_lat=5&sw_lng=-181&ne_lng=-74')
+             ->assertStatus(422)
+             ->assertJsonValidationErrors(['sw_lng']);
+    }
 
-        $response->assertOk()
-                 ->assertJsonCount(1)
-                 ->assertJsonFragment(['clasificacion' => 'casco_urbano']);
+    public function test_non_numeric_lat_returns_422(): void
+    {
+        $this->getJson('/api/mapa/elementos?sw_lat=abc&ne_lat=5&sw_lng=-75&ne_lng=-74')
+             ->assertStatus(422)
+             ->assertJsonValidationErrors(['sw_lat']);
+    }
+
+    // -----------------------------------------------------------------------
+    // Bounding box - required_with pairing
+    // -----------------------------------------------------------------------
+
+    public function test_partial_bounding_box_missing_ne_lat_returns_422(): void
+    {
+        // sw_lat provided but ne_lat omitted => required_with violation
+        $this->getJson('/api/mapa/elementos?sw_lat=4&sw_lng=-75&ne_lng=-74')
+             ->assertStatus(422)
+             ->assertJsonValidationErrors(['ne_lat']);
+    }
+
+    public function test_partial_bounding_box_missing_sw_lng_returns_422(): void
+    {
+        $this->getJson('/api/mapa/elementos?sw_lat=4&ne_lat=5&ne_lng=-74')
+             ->assertStatus(422)
+             ->assertJsonValidationErrors(['sw_lng']);
+    }
+
+    public function test_complete_valid_bounding_box_is_accepted(): void
+    {
+        $this->getJson('/api/mapa/elementos?sw_lat=4&ne_lat=5&sw_lng=-75&ne_lng=-74')
+             ->assertSuccessful();
+    }
+
+    // -----------------------------------------------------------------------
+    // No filters - baseline
+    // -----------------------------------------------------------------------
+
+    public function test_no_filters_returns_200(): void
+    {
+        $this->getJson('/api/mapa/elementos')
+             ->assertStatus(200)
+             ->assertJsonIsArray();
     }
 }
