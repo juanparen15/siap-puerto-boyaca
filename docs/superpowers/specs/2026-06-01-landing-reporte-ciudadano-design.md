@@ -27,6 +27,17 @@ Cumple con el marco regulatorio **RETILAP 580.1**.
 | Lenguaje | TypeScript |
 | Deploy | Vercel / servidor propio (static export posible) |
 
+## Herramientas de desarrollo activas
+
+| Herramienta | Rol en este proyecto |
+|---|---|
+| `@21st-dev/magic` MCP | Generar componentes UI de alta calidad desde 21st.dev (hero, cards, formularios) |
+| `ui-ux-pro-max` skill | Guía de diseño: paleta, tipografía, animaciones, accesibilidad |
+| `motion` v12 (framer-motion) | Animaciones hero (AnimatedRoadmap), transiciones de markers, entrada de Sheet |
+| `mapcn` | Componentes de mapa listos: `<Map>`, `<Marker>`, `<Popup>`, `<NavigationControl>` |
+
+El componente hero base (`hero-section-5`) se obtiene/refina vía Magic MCP directamente desde 21st.dev y se adapta al contexto de alumbrado público.
+
 ---
 
 ## Estructura del proyecto
