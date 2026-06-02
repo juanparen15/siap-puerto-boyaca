@@ -3,297 +3,131 @@
 @section('content')
 
 {{-- ═══════════════════════════════════════════════════════════════════════════
-     HERO — WebGL2 Shader (animated fire/nebula clouds)
-     Adapted from: animated-shader-hero by @atzedent
+     HERO — animated rotating word (adaptado de tommyjepsen/animated-hero)
 ═══════════════════════════════════════════════════════════════════════════ --}}
-<section class="relative w-full overflow-hidden bg-black" style="min-height:100vh;">
+<section class="relative w-full overflow-hidden bg-white">
+    {{-- Halo institucional --}}
+    <div class="pointer-events-none absolute left-1/2 top-0 h-[420px] w-[680px] -translate-x-1/2 rounded-full bg-[#1B6B2F]/10 blur-[130px]"></div>
 
-    {{-- WebGL canvas (full screen, behind everything) --}}
-    <canvas id="shader-hero-canvas"
-            class="absolute inset-0 touch-none"
-            style="background:#000;display:block;"></canvas>
+    <div class="container relative z-10 mx-auto px-4">
+        <div class="flex flex-col items-center justify-center gap-8 py-24 text-center lg:py-32">
 
-    {{-- Very subtle dark overlay to improve text contrast --}}
-    <div class="absolute inset-0 bg-black/30" style="z-index:1;"></div>
-
-    {{-- Content overlay --}}
-    <div class="relative flex flex-col items-center justify-center min-h-screen text-white text-center px-4"
-         style="z-index:2;">
-
-        {{-- Trust badge --}}
-        <div class="hero-badge-fire hero-anim-down mb-8">
-            <span class="badge-dot-fire"></span>
-            RETILAP 580.1 &mdash; Municipio de Puerto Boyacá
-        </div>
-
-        {{-- Escudo --}}
-        <img src="{{ asset('images/escudo.png') }}"
-             alt="Escudo de Puerto Boyacá"
-             class="h-20 mb-6 drop-shadow-2xl hero-anim-up hero-d200"
-             onerror="this.style.display='none'">
-
-        {{-- Headline --}}
-        <div class="space-y-1 mb-6">
-            <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold leading-none hero-anim-up hero-d400">
-                <span class="gradient-text-fire">Alumbrado Público</span>
-            </h1>
-            <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold leading-none hero-anim-up hero-d600">
-                <span class="gradient-text-amber">Puerto Boyacá</span>
-            </h1>
-        </div>
-
-        {{-- Subtitle --}}
-        <p class="max-w-2xl text-lg md:text-xl text-orange-100/80 leading-relaxed font-light hero-anim-up hero-d600 mb-10">
-            Plataforma oficial de gestión, consulta y reporte del servicio de alumbrado público municipal. Datos en tiempo real conforme al RETILAP.
-        </p>
-
-        {{-- CTA Buttons --}}
-        <div class="flex flex-col sm:flex-row gap-4 justify-center hero-anim-up hero-d800">
-            <a href="{{ route('mapa') }}" class="btn-hero-primary">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                     style="width:18px;height:18px;">
-                    <polygon points="3 11 22 2 13 21 11 13 3 11"/>
-                </svg>
-                Ver Mapa Interactivo
+            {{-- Badge --}}
+            <a href="{{ route('reportes') }}"
+               class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-4 py-1.5 text-sm font-medium text-slate-600 transition hover:border-[#1B6B2F] hover:text-[#1B6B2F]">
+                RETILAP 580.1 · Municipio de Puerto Boyacá
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
             </a>
-            <a href="{{ route('pqrs') }}" class="btn-hero-secondary">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                     style="width:18px;height:18px;">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                    <polyline points="14 2 14 8 20 8"/>
-                </svg>
-                Radicar PQRS
-            </a>
-        </div>
 
-        {{-- Scroll hint --}}
-        <div class="absolute bottom-8 scroll-hint" style="z-index:3;">
-            <lord-icon src="https://cdn.lordicon.com/dhmavvpz.json"
-                trigger="loop" delay="800" stroke="bold"
-                colors="primary:#fb923c"
-                style="width:32px;height:32px;opacity:0.6"></lord-icon>
-        </div>
+            {{-- Título con palabra rotante --}}
+            <div class="flex flex-col gap-4">
+                <h1 class="max-w-3xl text-center text-5xl font-semibold tracking-tight text-slate-900 md:text-7xl">
+                    <span class="text-slate-500">El alumbrado público</span>
+                    <span class="relative flex w-full justify-center overflow-hidden pb-3 pt-1 md:pb-5 text-center">
+                        &nbsp;
+                        @foreach (['transparente', 'cercano', 'eficiente', 'confiable', 'tuyo'] as $palabra)
+                            <span data-hero-word
+                                  class="absolute font-bold text-[#1B6B2F]">{{ $palabra }}</span>
+                        @endforeach
+                    </span>
+                </h1>
 
-    </div>
-</section>
-
-{{-- ═══════════════════════════════════════════════════════════════════════════
-     STATS BAR — dark background, counters
-═══════════════════════════════════════════════════════════════════════════ --}}
-<section class="bg-gray-950 border-b border-white/5">
-    <div class="max-w-5xl mx-auto px-4 py-10 grid grid-cols-2 md:grid-cols-4 gap-2 divide-x divide-white/5">
-
-        <div class="stat-dark-card stat-dk-green">
-            <span class="countup block text-4xl font-extrabold text-white"
-                  data-target="{{ $stats['total'] }}">0</span>
-            <p class="text-xs text-gray-500 mt-1.5 uppercase tracking-widest font-medium">Total Puntos</p>
-        </div>
-
-        <div class="stat-dark-card stat-dk-green2">
-            <span class="countup block text-4xl font-extrabold text-green-400"
-                  data-target="{{ $stats['operativos'] }}">0</span>
-            <p class="text-xs text-gray-500 mt-1.5 uppercase tracking-widest font-medium">Operativos</p>
-        </div>
-
-        <div class="stat-dark-card stat-dk-red">
-            <span class="countup block text-4xl font-extrabold text-red-400"
-                  data-target="{{ $stats['no_operativos'] }}">0</span>
-            <p class="text-xs text-gray-500 mt-1.5 uppercase tracking-widest font-medium">No Operativos</p>
-        </div>
-
-        <div class="stat-dark-card stat-dk-amber">
-            <span class="countup block text-4xl font-extrabold text-amber-400"
-                  data-target="{{ $stats['pqrs_activos'] }}">0</span>
-            <p class="text-xs text-gray-500 mt-1.5 uppercase tracking-widest font-medium">PQRS Activos</p>
-        </div>
-
-    </div>
-</section>
-
-{{-- ═══════════════════════════════════════════════════════════════════════════
-     INTERACTIVE MAP — real-time elements
-═══════════════════════════════════════════════════════════════════════════ --}}
-<section class="bg-white">
-
-    <div class="max-w-5xl mx-auto px-4 pt-16 pb-5 text-center">
-        <h2 class="section-heading text-3xl font-bold text-gray-800 mb-2">
-            Alumbrado Público en Tiempo Real
-        </h2>
-        <p class="animate-on-scroll text-gray-500 text-base">
-            Toca cualquier punto del mapa para ver su estado o reportar un problema directamente
-        </p>
-    </div>
-
-    <div class="relative" x-data="mapaLanding()" x-init="init()">
-
-        {{-- GPS Button --}}
-        <button @click="miUbicacion()"
-                class="absolute top-4 right-4 z-[1000] flex items-center gap-2
-                       bg-white hover:bg-green-50 border border-gray-200 hover:border-[#1B6B2F]
-                       text-gray-600 hover:text-[#1B6B2F] rounded-xl px-4 py-2.5
-                       shadow-md text-sm font-medium transition-all duration-200">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                 class="w-4 h-4 flex-shrink-0">
-                <circle cx="12" cy="12" r="3"/>
-                <line x1="12" y1="2"  x2="12" y2="6"/>
-                <line x1="12" y1="18" x2="12" y2="22"/>
-                <line x1="2"  y1="12" x2="6"  y2="12"/>
-                <line x1="18" y1="12" x2="22" y2="12"/>
-            </svg>
-            Mi ubicación
-        </button>
-
-        {{-- Legend --}}
-        <div class="absolute bottom-4 left-4 z-[1000] bg-white/95 backdrop-blur-sm
-                    rounded-xl shadow-md px-4 py-3 border border-gray-100">
-            <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Estado</p>
-            <div class="space-y-1.5">
-                <div class="flex items-center gap-2 text-xs text-gray-700">
-                    <span class="w-2.5 h-2.5 rounded-full bg-green-600 flex-shrink-0"></span>Operativa
-                </div>
-                <div class="flex items-center gap-2 text-xs text-gray-700">
-                    <span class="w-2.5 h-2.5 rounded-full bg-red-500 flex-shrink-0"></span>No Operativa
-                </div>
-                <div class="flex items-center gap-2 text-xs text-gray-700">
-                    <span class="w-2.5 h-2.5 rounded-full bg-gray-400 flex-shrink-0"></span>Desinstalada
-                </div>
+                <p class="mx-auto max-w-2xl text-lg leading-relaxed tracking-tight text-slate-500 md:text-xl">
+                    Reporta daños en el alumbrado de tu municipio en segundos. Ubica el poste o la
+                    luminaria en el mapa, cuéntanos qué ocurre y la Alcaldía lo recibe al instante.
+                </p>
             </div>
-        </div>
 
-        <div id="mapa-landing" style="height:520px;width:100%;"></div>
-    </div>
-
-    <div class="text-center py-4 border-b border-gray-100">
-        <p class="text-xs text-gray-400">
-            Filtros avanzados y vista completa en
-            <a href="{{ route('mapa') }}" class="text-[#1B6B2F] font-medium hover:underline">Mapa de Alumbrado</a>
-        </p>
-    </div>
-
-</section>
-
-{{-- ═══════════════════════════════════════════════════════════════════════════
-     SERVICES — CardDecorator pattern (Features 3 / 21st.dev)
-═══════════════════════════════════════════════════════════════════════════ --}}
-<section class="py-20 bg-gray-50">
-    <div class="max-w-6xl mx-auto px-4">
-        <h2 class="section-heading text-3xl font-bold text-center text-gray-800 mb-2">Servicios Disponibles</h2>
-        <p class="section-heading text-center text-gray-500 mb-12">Accede a la información del alumbrado público de Puerto Boyacá</p>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-
-            <a href="{{ route('mapa') }}" class="glass-card group">
-                <div class="card-decorator mb-5 mx-auto">
-                    <div class="card-decorator-grid"></div>
-                    <div class="card-decorator-icon">
-                        <lord-icon src="https://cdn.lordicon.com/dhmavvpz.json"
-                            trigger="loop" delay="500" stroke="bold"
-                            colors="primary:#1B6B2F"
-                            style="width:44px;height:44px"></lord-icon>
-                    </div>
-                </div>
-                <h3 class="font-bold text-lg text-[#1B6B2F] mb-2">Mapa Interactivo</h3>
-                <p class="text-sm text-gray-500">Consulta la ubicación de todos los puntos de alumbrado georeferenciados.</p>
-            </a>
-
-            <a href="{{ route('pqrs') }}" class="glass-card group">
-                <div class="card-decorator mb-5 mx-auto">
-                    <div class="card-decorator-grid"></div>
-                    <div class="card-decorator-icon">
-                        <lord-icon src="https://cdn.lordicon.com/vwzukuhn.json"
-                            trigger="loop" delay="1200" stroke="bold"
-                            colors="primary:#1B6B2F"
-                            style="width:44px;height:44px"></lord-icon>
-                    </div>
-                </div>
-                <h3 class="font-bold text-lg text-[#1B6B2F] mb-2">Radicar PQRS</h3>
-                <p class="text-sm text-gray-500">Reporta peticiones, quejas, reclamos o solicitudes sobre el alumbrado.</p>
-            </a>
-
-            <a href="{{ route('pqrs.consultar') }}" class="glass-card group">
-                <div class="card-decorator mb-5 mx-auto">
-                    <div class="card-decorator-grid"></div>
-                    <div class="card-decorator-icon">
-                        <lord-icon src="https://cdn.lordicon.com/iuvnsegf.json"
-                            trigger="loop" delay="900" stroke="bold"
-                            colors="primary:#1B6B2F"
-                            style="width:44px;height:44px"></lord-icon>
-                    </div>
-                </div>
-                <h3 class="font-bold text-lg text-[#1B6B2F] mb-2">Consultar PQRS</h3>
-                <p class="text-sm text-gray-500">Sigue el estado de tu solicitud con el radicado o número de cédula.</p>
-            </a>
-
-            <a href="{{ route('reportes') }}" class="glass-card group">
-                <div class="card-decorator mb-5 mx-auto">
-                    <div class="card-decorator-grid"></div>
-                    <div class="card-decorator-icon">
-                        <lord-icon src="https://cdn.lordicon.com/wdztjihe.json"
-                            trigger="loop" delay="1500" stroke="bold"
-                            colors="primary:#1B6B2F"
-                            style="width:44px;height:44px"></lord-icon>
-                    </div>
-                </div>
-                <h3 class="font-bold text-lg text-[#1B6B2F] mb-2">Reportes</h3>
-                <p class="text-sm text-gray-500">Estadísticas y reportes públicos sobre el servicio de alumbrado.</p>
-            </a>
-
+            {{-- CTAs --}}
+            <div class="flex flex-col gap-3 sm:flex-row">
+                <a href="{{ route('reportar') }}"
+                   class="inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-[#1B6B2F] px-8 text-base font-semibold text-white transition hover:bg-[#155724]">
+                    Reportar un daño
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </a>
+                <a href="#mapa"
+                   class="inline-flex h-12 items-center justify-center gap-2 rounded-lg border border-slate-300 px-8 text-base font-semibold text-slate-700 transition hover:bg-slate-50">
+                    Ver el mapa
+                </a>
+            </div>
         </div>
     </div>
 </section>
 
-{{-- ═══════════════════════════════════════════════════════════════════════════
-     ABOUT SIAP
-═══════════════════════════════════════════════════════════════════════════ --}}
-<section class="py-16 bg-white">
-    <div class="max-w-4xl mx-auto px-4 text-center">
-        <h2 class="section-heading text-3xl font-bold text-[#1B6B2F] mb-6">¿Qué es el SIAP?</h2>
-        <p class="animate-on-scroll text-lg text-gray-600 leading-relaxed">
-            El <strong>Sistema de Información de Alumbrado Público (SIAP)</strong> es la plataforma oficial
-            de la Alcaldía de Puerto Boyacá para la gestión y consulta del servicio de alumbrado público municipal,
-            en cumplimiento del <strong>Reglamento Técnico de Instalaciones Eléctricas RETILAP</strong>, Sección 580.1.
+{{-- ═══ STATS ═══ --}}
+<section class="border-y border-slate-100 bg-slate-50">
+    <div class="mx-auto grid max-w-5xl grid-cols-2 divide-x divide-slate-200 px-4 py-10 md:grid-cols-4">
+        @foreach ([
+            ['total', 'Puntos de luz', 'text-slate-900'],
+            ['operativos', 'Operativos', 'text-green-600'],
+            ['no_operativos', 'Fuera de servicio', 'text-red-500'],
+            ['pqrs_activos', 'Reportes activos', 'text-amber-600'],
+        ] as [$key, $label, $color])
+            <div class="px-2 text-center">
+                <span class="countup block text-4xl font-extrabold {{ $color }}" data-target="{{ $stats[$key] }}">0</span>
+                <p class="mt-1.5 text-xs font-semibold uppercase tracking-wide text-slate-400">{{ $label }}</p>
+            </div>
+        @endforeach
+    </div>
+</section>
+
+{{-- ═══ MAPA (MapLibre GL — estilo mapcn) ═══ --}}
+<section id="mapa" class="bg-white">
+    <div class="mx-auto max-w-5xl px-4 pb-6 pt-16 text-center">
+        <h2 class="text-3xl font-bold text-slate-900">Inventario en tiempo real</h2>
+        <p class="mt-2 text-slate-500">
+            Toca un punto para ver su estado. ¿Algo no funciona? Repórtalo en un clic.
         </p>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12 text-left">
+    </div>
 
-            <div class="feature-item flex gap-4">
-                <div class="flex-shrink-0">
-                    <lord-icon src="https://cdn.lordicon.com/aulzwxjp.json"
-                        trigger="loop" delay="1000" stroke="bold"
-                        colors="primary:#1B6B2F" style="width:48px;height:48px"></lord-icon>
-                </div>
-                <div>
-                    <h4 class="font-bold text-gray-800 mb-1">Inventario Actualizado</h4>
-                    <p class="text-sm text-gray-500">{{ number_format($stats['total']) }} elementos georeferenciados con tecnología GPS.</p>
-                </div>
+    <div class="mx-auto max-w-6xl px-4 pb-16">
+        <div class="relative overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
+
+            {{-- GPS --}}
+            <button type="button" id="landing-gps"
+                    class="absolute left-4 top-4 z-[5] flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-600 shadow-md transition hover:border-[#1B6B2F] hover:text-[#1B6B2F]">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg>
+                Mi ubicación
+            </button>
+
+            {{-- Leyenda --}}
+            <div class="absolute bottom-4 left-4 z-[5] rounded-xl border border-slate-100 bg-white/95 px-4 py-2.5 shadow-md backdrop-blur">
+                <p class="mb-1.5 text-[10px] font-semibold uppercase tracking-wide text-slate-400">Estado</p>
+                @foreach ([['#16a34a','Sin reportes'],['#ca8a04','Con reporte'],['#dc2626','Crítico'],['#94a3b8','Desinstalada']] as [$c,$l])
+                    <div class="flex items-center gap-2 text-xs text-slate-600">
+                        <span class="h-2.5 w-2.5 rounded-full" style="background:{{ $c }}"></span>{{ $l }}
+                    </div>
+                @endforeach
             </div>
 
-            <div class="feature-item flex gap-4">
-                <div class="flex-shrink-0">
-                    <lord-icon src="https://cdn.lordicon.com/kugoanlw.json"
-                        trigger="loop" delay="1800" stroke="bold"
-                        colors="primary:#1B6B2F" style="width:48px;height:48px"></lord-icon>
-                </div>
-                <div>
-                    <h4 class="font-bold text-gray-800 mb-1">Gestión Transparente</h4>
-                    <p class="text-sm text-gray-500">Seguimiento en tiempo real de sus solicitudes y reportes.</p>
-                </div>
-            </div>
+            <div id="landing-map" style="height:70vh;min-height:440px;width:100%;"></div>
+        </div>
+    </div>
+</section>
 
-            <div class="feature-item flex gap-4">
-                <div class="flex-shrink-0">
-                    <lord-icon src="https://cdn.lordicon.com/qctplryk.json"
-                        trigger="loop" delay="2500" stroke="bold"
-                        colors="primary:#1B6B2F" style="width:48px;height:48px"></lord-icon>
-                </div>
-                <div>
-                    <h4 class="font-bold text-gray-800 mb-1">Acceso Ciudadano</h4>
-                    <p class="text-sm text-gray-500">Información pública disponible 24/7 desde cualquier dispositivo.</p>
-                </div>
-            </div>
+{{-- ═══ SERVICIOS ═══ --}}
+<section class="bg-slate-50 py-20">
+    <div class="mx-auto max-w-6xl px-4">
+        <h2 class="text-center text-3xl font-bold text-slate-900">Servicios disponibles</h2>
+        <p class="mb-12 mt-2 text-center text-slate-500">Todo el alumbrado público de Puerto Boyacá, en un solo lugar</p>
 
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            @foreach ([
+                ['reportar', 'Reportar daño', 'Selecciona un elemento en el mapa y reporta el problema.', 'https://cdn.lordicon.com/tbabdzcy.json'],
+                ['mapa', 'Mapa interactivo', 'Consulta todos los puntos de alumbrado georeferenciados.', 'https://cdn.lordicon.com/dhmavvpz.json'],
+                ['pqrs.consultar', 'Consultar PQRS', 'Sigue el estado de tu reporte con el radicado.', 'https://cdn.lordicon.com/iuvnsegf.json'],
+                ['reportes', 'Reportes', 'Estadísticas públicas del servicio de alumbrado.', 'https://cdn.lordicon.com/wdztjihe.json'],
+            ] as $i => [$ruta, $titulo, $desc, $icono])
+                <a href="{{ route($ruta) }}"
+                   class="group rounded-2xl border border-slate-200 bg-white p-6 text-center transition hover:-translate-y-1 hover:border-[#1B6B2F] hover:shadow-lg">
+                    <div class="mb-4 flex justify-center">
+                        <lord-icon src="{{ $icono }}" trigger="loop" delay="{{ 600 + $i * 400 }}"
+                            stroke="bold" colors="primary:#1B6B2F" style="width:56px;height:56px"></lord-icon>
+                    </div>
+                    <h3 class="mb-1.5 font-bold text-[#1B6B2F]">{{ $titulo }}</h3>
+                    <p class="text-sm text-slate-500">{{ $desc }}</p>
+                </a>
+            @endforeach
         </div>
     </div>
 </section>
@@ -301,5 +135,5 @@
 @endsection
 
 @push('scripts')
-@vite(['resources/js/shader-hero.js', 'resources/js/landing.js'])
+@vite(['resources/js/landing.js'])
 @endpush
