@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\InfraestructuraElemento;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class MapaController extends Controller
@@ -25,6 +26,12 @@ class MapaController extends Controller
         $query = InfraestructuraElemento::select(
             'id', 'tipo', 'rotulo', 'estado', 'clasificacion',
             'latitud', 'longitud', 'marca', 'potencia_w'
+        )->selectSub(
+            DB::table('pqrs')
+                ->selectRaw('count(*)')
+                ->whereColumn('pqrs.elemento_id', 'infraestructura_elementos.id')
+                ->whereIn('pqrs.estado', ['radicada', 'en_proceso']),
+            'pqrs_activas'
         );
 
         if ($request->filled('tipo')) {
