@@ -13,6 +13,7 @@ export default defineConfig({
                 'resources/js/mapa-publico.js',
                 'resources/js/public-animations.js',
                 'resources/js/shader-hero.js',
+                'resources/js/reportar.js',
             ],
             refresh: true,
         }),

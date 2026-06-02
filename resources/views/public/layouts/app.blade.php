@@ -38,6 +38,13 @@
                         style="width:22px;height:22px;pointer-events:none"></lord-icon>
                     Mapa
                 </a>
+                <a href="{{ route('reportar') }}" class="flex items-center gap-1.5 text-gray-700 hover:text-[#1B6B2F] transition-colors">
+                    <lord-icon src="https://cdn.lordicon.com/tbabdzcy.json"
+                        trigger="loop" delay="2800" stroke="bold"
+                        colors="primary:#1B6B2F"
+                        style="width:22px;height:22px;pointer-events:none"></lord-icon>
+                    Reportar daño
+                </a>
                 <a href="{{ route('pqrs') }}" class="flex items-center gap-1.5 text-gray-700 hover:text-[#1B6B2F] transition-colors">
                     <lord-icon src="https://cdn.lordicon.com/vwzukuhn.json"
                         trigger="loop" delay="2000" stroke="bold"
