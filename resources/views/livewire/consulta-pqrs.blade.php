@@ -5,7 +5,7 @@
         <div class="mb-3 flex justify-center">
             <lord-icon src="https://cdn.lordicon.com/iuvnsegf.json"
                 trigger="loop" delay="800" stroke="bold"
-                colors="primary:#1B6B2F,secondary:#22c55e"
+                colors="primary:#3366CC,secondary:#22c55e"
                 style="width:64px;height:64px"></lord-icon>
         </div>
         <h1 class="font-display text-3xl font-bold tracking-tight" style="color:var(--siap-ink)">Consultar mi reporte</h1>
@@ -23,8 +23,8 @@
                 wire:click="$set('tipoBusqueda', 'radicado')"
                 class="flex-1 py-2 px-4 rounded-lg text-sm font-medium border transition-colors
                     {{ $tipoBusqueda === 'radicado'
-                        ? 'bg-[#1B6B2F] text-white border-[#1B6B2F]'
-                        : 'bg-white text-gray-600 border-gray-300 hover:border-[#1B6B2F] hover:text-[#1B6B2F]' }}">
+                        ? 'bg-[#3366CC] text-white border-[#3366CC]'
+                        : 'bg-white text-gray-600 border-gray-300 hover:border-[#3366CC] hover:text-[#3366CC]' }}">
                 Por número de radicado
             </button>
             <button
@@ -32,8 +32,8 @@
                 wire:click="$set('tipoBusqueda', 'cedula')"
                 class="flex-1 py-2 px-4 rounded-lg text-sm font-medium border transition-colors
                     {{ $tipoBusqueda === 'cedula'
-                        ? 'bg-[#1B6B2F] text-white border-[#1B6B2F]'
-                        : 'bg-white text-gray-600 border-gray-300 hover:border-[#1B6B2F] hover:text-[#1B6B2F]' }}">
+                        ? 'bg-[#3366CC] text-white border-[#3366CC]'
+                        : 'bg-white text-gray-600 border-gray-300 hover:border-[#3366CC] hover:text-[#3366CC]' }}">
                 Por número de cédula
             </button>
         </div>
@@ -74,7 +74,7 @@
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <div>
                     <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Número de radicado</p>
-                    <p class="text-xl font-bold text-[#1B6B2F] font-mono">{{ $pqrs->radicado }}</p>
+                    <p class="text-xl font-bold text-[#3366CC] font-mono">{{ $pqrs->radicado }}</p>
                 </div>
                 <div>
                     @php
@@ -161,7 +161,7 @@
                     <ol class="relative border-l border-gray-200 ml-3 space-y-6">
                         @foreach ($pqrs->historial as $item)
                             <li class="ml-6">
-                                <span class="absolute -left-2.5 flex items-center justify-center w-5 h-5 bg-[#1B6B2F] rounded-full ring-4 ring-white">
+                                <span class="absolute -left-2.5 flex items-center justify-center w-5 h-5 bg-[#3366CC] rounded-full ring-4 ring-white">
                                     <svg class="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
                                         <circle cx="10" cy="10" r="6"/>
                                     </svg>
@@ -172,7 +172,7 @@
                                             <span class="text-xs text-gray-500 capitalize">{{ str_replace('_', ' ', $item->estado_anterior) }}</span>
                                             <span class="text-gray-400 text-xs">→</span>
                                         @endif
-                                        <span class="text-xs font-semibold text-[#1B6B2F] capitalize">{{ str_replace('_', ' ', $item->estado_nuevo) }}</span>
+                                        <span class="text-xs font-semibold text-[#3366CC] capitalize">{{ str_replace('_', ' ', $item->estado_nuevo) }}</span>
                                         @if ($item->usuario)
                                             <span class="text-xs text-gray-400">por {{ $item->usuario->name }}</span>
                                         @endif

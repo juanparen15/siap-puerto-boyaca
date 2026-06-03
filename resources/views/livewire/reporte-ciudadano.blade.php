@@ -3,48 +3,44 @@
     {{-- ═══════════════════════════════════════════════════════════════════════
          HERO — base corporativa clara + toques de vidrio
     ═══════════════════════════════════════════════════════════════════════ --}}
-    <section class="relative overflow-hidden">
-        {{-- Acentos geométricos --}}
-        <div class="corp-dotgrid pointer-events-none absolute inset-0 opacity-50"></div>
-        <div class="corp-accent-blob pointer-events-none absolute -right-40 -top-40 h-[520px] w-[520px] rounded-full blur-2xl"></div>
+    <section class="px-3 pt-20 sm:px-4">
+        <div class="renbel-panel relative mx-auto max-w-7xl overflow-hidden px-6 py-20 sm:px-12 lg:py-28">
+            {{-- Texto fantasma de fondo --}}
+            <div class="hero-ghost"><span>Puerto Boyacá</span></div>
+            {{-- Acento de color --}}
+            <div class="corp-accent-blob pointer-events-none absolute -right-32 -top-32 h-[460px] w-[460px] rounded-full blur-2xl"></div>
 
-        <div class="relative z-10 mx-auto max-w-4xl px-4 pt-28 pb-10 text-center lg:pt-36">
-            <span class="corp-eyebrow">
-                <span class="relative flex h-2 w-2">
-                    <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#f59e0b] opacity-70"></span>
-                    <span class="relative inline-flex h-2 w-2 rounded-full bg-[#f59e0b]"></span>
+            <div class="relative z-10 max-w-3xl">
+                <span class="corp-eyebrow">
+                    <span class="relative flex h-2 w-2">
+                        <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#f59e0b] opacity-70"></span>
+                        <span class="relative inline-flex h-2 w-2 rounded-full bg-[#f59e0b]"></span>
+                    </span>
+                    Portal ciudadano · Puerto Boyacá
                 </span>
-                Alumbrado público · Puerto Boyacá
-            </span>
 
-            <h1 class="font-display mt-7 text-5xl font-bold leading-[1.05] tracking-tight md:text-7xl" style="color:var(--siap-ink)">
-                Tu reporte hace
-                <span class="relative mt-1 flex w-full justify-center overflow-hidden pb-3 pt-1 md:pb-5">
-                    &nbsp;
-                    @foreach (['la diferencia', 'la luz', 'el cambio', 'tu barrio mejor', 'comunidad'] as $palabra)
-                        <span data-hero-word class="font-display absolute font-extrabold text-[#1B6B2F]">{{ $palabra }}</span>
-                    @endforeach
-                </span>
-            </h1>
+                <h1 class="font-display mt-6 text-5xl font-extrabold uppercase leading-[0.95] tracking-tight sm:text-6xl lg:text-7xl" style="color:var(--siap-ink)">
+                    Reporta el<br>
+                    <span class="text-grad">alumbrado</span><br>
+                    público
+                </h1>
 
-            <p class="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-slate-500 md:text-xl">
-                ¿Una luminaria apagada, un poste caído o un cable expuesto? Ubícalo en el mapa,
-                cuéntanos qué pasa y la Alcaldía lo atiende. Toma menos de un minuto.
-            </p>
+                <p class="mt-7 max-w-xl text-base leading-relaxed text-slate-500 sm:text-lg">
+                    ¿Una luminaria apagada, un poste caído o un cable expuesto? Ubícalo en el mapa,
+                    cuéntanos qué pasa y la Alcaldía lo atiende. Toma menos de un minuto — incluso de forma anónima.
+                </p>
 
-            <div class="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                <a href="#mapa" class="btn-corp h-12 px-8 text-base">
-                    Reportar un daño
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-                </a>
-                <a href="{{ route('pqrs.consultar') }}" class="btn-corp-ghost h-12 px-8 text-base">
-                    Consultar mi reporte
-                </a>
+                <div class="mt-9 flex flex-col gap-3 sm:flex-row">
+                    <a href="#mapa" class="btn-pill">Reportar un daño</a>
+                    <a href="{{ route('pqrs.consultar') }}" class="btn-pill-ghost">Consultar mi reporte</a>
+                </div>
             </div>
         </div>
+    </section>
 
-        {{-- Stats — toque de vidrio --}}
-        <div class="relative z-10 mx-auto max-w-4xl px-4 pb-14">
+    <section class="relative overflow-hidden">
+        {{-- Stats --}}
+        <div class="relative z-10 mx-auto max-w-4xl px-4 pb-14 pt-14">
             <div class="lg-surface lg-sheen grid grid-cols-2 overflow-hidden rounded-3xl md:grid-cols-4">
                 @foreach ([
                     ['total', 'Puntos de luz', 'text-[#0f2540]'],
@@ -73,7 +69,7 @@
                     <div class="corp-card relative p-6">
                         <span class="font-display absolute right-5 top-4 text-4xl font-extrabold text-slate-100">{{ $i + 1 }}</span>
                         <lord-icon src="{{ $icono }}" trigger="loop" delay="{{ 800 + $i * 500 }}" stroke="bold"
-                            colors="primary:#1B6B2F,secondary:#22c55e" style="width:52px;height:52px"></lord-icon>
+                            colors="primary:#3366CC,secondary:#22c55e" style="width:52px;height:52px"></lord-icon>
                         <h3 class="font-display mt-4 text-lg font-bold" style="color:var(--siap-ink)">{{ $titulo }}</h3>
                         <p class="mt-1 text-sm text-slate-500">{{ $desc }}</p>
                     </div>
@@ -92,7 +88,7 @@
         <div class="mx-auto max-w-6xl px-4">
             <div class="corp-card relative overflow-hidden p-2">
                 <button type="button" onclick="window.reportarMiUbicacion && window.reportarMiUbicacion()"
-                        class="lg-surface lg-sheen absolute left-5 top-5 z-[5] flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:text-[#1B6B2F]">
+                        class="lg-surface lg-sheen absolute left-5 top-5 z-[5] flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:text-[#3366CC]">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg>
                     Mi ubicación
                 </button>

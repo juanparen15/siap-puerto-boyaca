@@ -5,10 +5,10 @@
     <title>Informes de Interventoría</title>
     <style>
         body { font-family: DejaVu Sans, Arial, sans-serif; font-size: 11px; color: #222; }
-        h1 { font-size: 16px; color: #1B6B2F; margin-bottom: 4px; }
+        h1 { font-size: 16px; color: #3366CC; margin-bottom: 4px; }
         p.subtitle { font-size: 10px; color: #666; margin-bottom: 20px; }
         table { width: 100%; border-collapse: collapse; margin-top: 12px; }
-        th { background-color: #1B6B2F; color: #fff; padding: 7px 6px; text-align: left; font-size: 10px; }
+        th { background-color: #3366CC; color: #fff; padding: 7px 6px; text-align: left; font-size: 10px; }
         td { padding: 6px; border-bottom: 1px solid #e5e7eb; vertical-align: top; font-size: 10px; }
         tr:nth-child(even) td { background-color: #f9fafb; }
         .badge { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 9px; font-weight: bold; }

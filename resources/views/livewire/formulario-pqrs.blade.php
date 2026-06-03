@@ -5,7 +5,7 @@
         <div class="mb-3 flex justify-center">
             <lord-icon src="https://cdn.lordicon.com/vwzukuhn.json"
                 trigger="loop" delay="1000" stroke="bold"
-                colors="primary:#1B6B2F,secondary:#22c55e"
+                colors="primary:#3366CC,secondary:#22c55e"
                 style="width:64px;height:64px"></lord-icon>
         </div>
         <h1 class="font-display text-3xl font-bold tracking-tight" style="color:var(--siap-ink)">Radicar PQRS</h1>
@@ -19,42 +19,42 @@
         <div class="flex items-center gap-2">
             <div class="flex flex-col items-center">
                 <div class="w-14 h-14 rounded-full flex items-center justify-center border-2 transition-colors
-                    {{ $paso >= 1 ? 'border-[#1B6B2F] bg-green-50' : 'border-gray-200 bg-white' }}">
+                    {{ $paso >= 1 ? 'border-[#3366CC] bg-green-50' : 'border-gray-200 bg-white' }}">
                     <lord-icon src="https://cdn.lordicon.com/gubjuhss.json"
                         trigger="loop" delay="1200" stroke="bold"
-                        colors="primary:{{ $paso >= 1 ? '#1B6B2F' : '#9ca3af' }}"
+                        colors="primary:{{ $paso >= 1 ? '#3366CC' : '#9ca3af' }}"
                         style="width:36px;height:36px"></lord-icon>
                 </div>
-                <span class="text-xs mt-1 {{ $paso >= 1 ? 'text-[#1B6B2F] font-semibold' : 'text-gray-400' }}">Datos</span>
+                <span class="text-xs mt-1 {{ $paso >= 1 ? 'text-[#3366CC] font-semibold' : 'text-gray-400' }}">Datos</span>
             </div>
-            <div class="w-12 h-0.5 mb-4 transition-colors {{ $paso > 1 ? 'bg-[#1B6B2F]' : 'bg-gray-200' }}"></div>
+            <div class="w-12 h-0.5 mb-4 transition-colors {{ $paso > 1 ? 'bg-[#3366CC]' : 'bg-gray-200' }}"></div>
         </div>
 
         {{-- Step 2 --}}
         <div class="flex items-center gap-2">
             <div class="flex flex-col items-center">
                 <div class="w-14 h-14 rounded-full flex items-center justify-center border-2 transition-colors
-                    {{ $paso >= 2 ? 'border-[#1B6B2F] bg-green-50' : 'border-gray-200 bg-white' }}">
+                    {{ $paso >= 2 ? 'border-[#3366CC] bg-green-50' : 'border-gray-200 bg-white' }}">
                     <lord-icon src="https://cdn.lordicon.com/tbabdzcy.json"
                         trigger="loop" delay="1600" stroke="bold"
-                        colors="primary:{{ $paso >= 2 ? '#1B6B2F' : '#9ca3af' }}"
+                        colors="primary:{{ $paso >= 2 ? '#3366CC' : '#9ca3af' }}"
                         style="width:36px;height:36px"></lord-icon>
                 </div>
-                <span class="text-xs mt-1 {{ $paso >= 2 ? 'text-[#1B6B2F] font-semibold' : 'text-gray-400' }}">Solicitud</span>
+                <span class="text-xs mt-1 {{ $paso >= 2 ? 'text-[#3366CC] font-semibold' : 'text-gray-400' }}">Solicitud</span>
             </div>
-            <div class="w-12 h-0.5 mb-4 transition-colors {{ $paso > 2 ? 'bg-[#1B6B2F]' : 'bg-gray-200' }}"></div>
+            <div class="w-12 h-0.5 mb-4 transition-colors {{ $paso > 2 ? 'bg-[#3366CC]' : 'bg-gray-200' }}"></div>
         </div>
 
         {{-- Step 3 --}}
         <div class="flex flex-col items-center">
             <div class="w-14 h-14 rounded-full flex items-center justify-center border-2 transition-colors
-                {{ $paso >= 3 ? 'border-[#1B6B2F] bg-green-50' : 'border-gray-200 bg-white' }}">
+                {{ $paso >= 3 ? 'border-[#3366CC] bg-green-50' : 'border-gray-200 bg-white' }}">
                 <lord-icon src="https://cdn.lordicon.com/pxixoqxa.json"
                     trigger="loop" delay="2000" stroke="bold"
-                    colors="primary:{{ $paso >= 3 ? '#1B6B2F' : '#9ca3af' }}"
+                    colors="primary:{{ $paso >= 3 ? '#3366CC' : '#9ca3af' }}"
                     style="width:36px;height:36px"></lord-icon>
             </div>
-            <span class="text-xs mt-1 {{ $paso >= 3 ? 'text-[#1B6B2F] font-semibold' : 'text-gray-400' }}">Confirmación</span>
+            <span class="text-xs mt-1 {{ $paso >= 3 ? 'text-[#3366CC] font-semibold' : 'text-gray-400' }}">Confirmación</span>
         </div>
 
     </div>
@@ -75,7 +75,7 @@
                     <input type="text"
                            wire:model="nombre_ciudadano"
                            placeholder="Ej. Juan Carlos Pérez"
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#1B6B2F] focus:border-transparent @error('nombre_ciudadano') border-red-400 @enderror">
+                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#3366CC] focus:border-transparent @error('nombre_ciudadano') border-red-400 @enderror">
                     @error('nombre_ciudadano')
                         <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                     @enderror
@@ -90,7 +90,7 @@
                            wire:model="numero_cedula"
                            placeholder="Ej. 12345678"
                            inputmode="numeric"
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#1B6B2F] focus:border-transparent @error('numero_cedula') border-red-400 @enderror">
+                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#3366CC] focus:border-transparent @error('numero_cedula') border-red-400 @enderror">
                     @error('numero_cedula')
                         <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                     @enderror
@@ -104,7 +104,7 @@
                     <input type="email"
                            wire:model="email"
                            placeholder="correo@ejemplo.com"
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#1B6B2F] focus:border-transparent @error('email') border-red-400 @enderror">
+                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#3366CC] focus:border-transparent @error('email') border-red-400 @enderror">
                     @error('email')
                         <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                     @enderror
@@ -119,7 +119,7 @@
                            wire:model="telefono"
                            placeholder="Ej. 3001234567"
                            inputmode="numeric"
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#1B6B2F] focus:border-transparent @error('telefono') border-red-400 @enderror">
+                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#3366CC] focus:border-transparent @error('telefono') border-red-400 @enderror">
                     @error('telefono')
                         <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                     @enderror
@@ -128,7 +128,7 @@
 
             <div class="mt-8 flex justify-end">
                 <button wire:click="siguiente"
-                        class="bg-[#1B6B2F] hover:bg-[#155724] text-white font-semibold px-6 py-2 rounded-lg transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-[#1B6B2F]">
+                        class="bg-[#3366CC] hover:bg-[#27429c] text-white font-semibold px-6 py-2 rounded-lg transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-[#3366CC]">
                     Siguiente
                 </button>
             </div>
@@ -145,7 +145,7 @@
                         Tipo de solicitud <span class="text-red-500">*</span>
                     </label>
                     <select wire:model="tipo_solicitud"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#1B6B2F] focus:border-transparent @error('tipo_solicitud') border-red-400 @enderror">
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#3366CC] focus:border-transparent @error('tipo_solicitud') border-red-400 @enderror">
                         <option value="">-- Seleccione --</option>
                         <option value="peticion">Petición</option>
                         <option value="queja">Queja</option>
@@ -166,7 +166,7 @@
                     <textarea wire:model="descripcion"
                               rows="5"
                               placeholder="Describa detalladamente su solicitud, incluyendo la ubicación del problema y el tiempo que lleva presentándose..."
-                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#1B6B2F] focus:border-transparent @error('descripcion') border-red-400 @enderror"></textarea>
+                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#3366CC] focus:border-transparent @error('descripcion') border-red-400 @enderror"></textarea>
                     <p class="text-xs text-gray-400 mt-1 text-right">{{ mb_strlen($descripcion) }} / 2000</p>
                     @error('descripcion')
                         <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
@@ -181,7 +181,7 @@
                     </label>
 
                     @if ($elemento_id)
-                        <p class="text-xs text-[#1B6B2F] bg-green-50 border border-green-200 rounded px-3 py-2 mb-2">
+                        <p class="text-xs text-[#3366CC] bg-green-50 border border-green-200 rounded px-3 py-2 mb-2">
                             Se ha pre-seleccionado el elemento de la infraestructura #{{ $elemento_id }}.
                             El mapa muestra su ubicación exacta.
                         </p>
@@ -218,7 +218,7 @@
                     Anterior
                 </button>
                 <button wire:click="enviar"
-                        class="bg-[#1B6B2F] hover:bg-[#155724] text-white font-semibold px-6 py-2 rounded-lg transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-[#1B6B2F]">
+                        class="bg-[#3366CC] hover:bg-[#27429c] text-white font-semibold px-6 py-2 rounded-lg transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-[#3366CC]">
                     Enviar solicitud
                 </button>
             </div>
@@ -230,37 +230,37 @@
                 <div class="flex justify-center mb-4">
                     <lord-icon src="https://cdn.lordicon.com/pxixoqxa.json"
                         trigger="loop" delay="500" stroke="bold"
-                        colors="primary:#1B6B2F"
+                        colors="primary:#3366CC"
                         style="width:80px;height:80px"></lord-icon>
                 </div>
 
                 <h2 class="text-xl font-bold text-gray-800 mb-2">PQRS radicada exitosamente</h2>
                 <p class="text-gray-500 text-sm mb-6">Su solicitud ha sido registrada en el sistema.</p>
 
-                <div class="bg-green-50 border border-[#1B6B2F] rounded-xl px-6 py-5 mb-6 inline-block">
+                <div class="bg-green-50 border border-[#3366CC] rounded-xl px-6 py-5 mb-6 inline-block">
                     <p class="text-sm text-gray-600 mb-1">Número de radicado</p>
-                    <p class="text-2xl font-bold text-[#1B6B2F] tracking-wider">{{ $radicadoGenerado }}</p>
+                    <p class="text-2xl font-bold text-[#3366CC] tracking-wider">{{ $radicadoGenerado }}</p>
                 </div>
 
                 <div class="text-left bg-gray-50 rounded-xl p-5 mb-6 space-y-3">
                     <p class="font-semibold text-gray-700 text-sm mb-2">Próximos pasos:</p>
                     <div class="flex items-start gap-3 text-sm text-gray-600">
-                        <span class="w-5 h-5 bg-[#1B6B2F] text-white rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold">1</span>
+                        <span class="w-5 h-5 bg-[#3366CC] text-white rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold">1</span>
                         <p>Guarde su número de radicado. Lo necesitará para consultar el estado de su solicitud.</p>
                     </div>
                     <div class="flex items-start gap-3 text-sm text-gray-600">
-                        <span class="w-5 h-5 bg-[#1B6B2F] text-white rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold">2</span>
+                        <span class="w-5 h-5 bg-[#3366CC] text-white rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold">2</span>
                         <p>La Secretaría de Obras Públicas revisará su solicitud en un plazo de 15 días hábiles.</p>
                     </div>
                     <div class="flex items-start gap-3 text-sm text-gray-600">
-                        <span class="w-5 h-5 bg-[#1B6B2F] text-white rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold">3</span>
+                        <span class="w-5 h-5 bg-[#3366CC] text-white rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold">3</span>
                         <p>Si proporcionó correo electrónico o teléfono, recibirá notificaciones sobre el avance.</p>
                     </div>
                 </div>
 
                 <div class="flex flex-col sm:flex-row gap-3 justify-center">
                     <a href="{{ route('pqrs.consultar') }}"
-                       class="bg-[#1B6B2F] hover:bg-[#155724] text-white font-semibold px-6 py-2 rounded-lg transition-colors text-sm">
+                       class="bg-[#3366CC] hover:bg-[#27429c] text-white font-semibold px-6 py-2 rounded-lg transition-colors text-sm">
                         Consultar estado de mi PQRS
                     </a>
                     <a href="{{ route('pqrs') }}"

@@ -2,12 +2,16 @@
 
 /* ─── Sistema de diseño ────────────────────────────────────────────────────── */
 :root {
-    --font-display: 'Bricolage Grotesque', system-ui, sans-serif;
+    --font-display: 'Sora', system-ui, sans-serif;
     --font-body: 'Public Sans', system-ui, sans-serif;
-    --siap-green: #1B6B2F;
-    --siap-green-dark: #155724;
+    /* Paleta gov.co / Puerto Boyacá: azul institucional + navy. */
+    --siap-blue: #3366CC;
+    --siap-blue-2: #5b8def;
+    --siap-green: #3366CC;       /* alias para compatibilidad de clases */
+    --siap-green-dark: #27429c;
     --siap-amber: #f59e0b;
-    --siap-night: #0f172a;
+    --siap-night: #0c2a43;
+    --siap-grad: linear-gradient(135deg, #3366CC 0%, #6c8cff 60%, #8a7bff 100%);
 }
 
 body {
@@ -26,12 +30,114 @@ body {
 
 /* ─── Estilo corporativo (base RENBEL: limpio, claro, navy + verde) ─────────── */
 :root {
-    --siap-ink: #0f2540;       /* navy para títulos/estructura */
+    --siap-ink: #0c2a43;       /* navy profundo (títulos, cards, footer) */
     --siap-ink-soft: #475569;  /* texto secundario */
 }
 
 .corp-bg {
-    background-color: #f5f8fb;
+    background-color: #eef1f6;
+}
+
+/* ─── Estilo RENBEL: hero bold + texto fantasma + píldora degradada ────────── */
+.renbel-panel {
+    background: #f1f3f7;
+    border-radius: 2rem;
+}
+.hero-ghost {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    pointer-events: none;
+    user-select: none;
+}
+.hero-ghost span {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(3rem, 13vw, 11rem);
+    letter-spacing: -0.04em;
+    white-space: nowrap;
+    color: rgba(12, 42, 67, 0.045);
+    text-transform: uppercase;
+    line-height: 1;
+}
+.text-grad {
+    background: var(--siap-grad);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+.btn-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.95rem 2rem;
+    border-radius: 9999px;
+    background: var(--siap-grad);
+    background-size: 160% 160%;
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    box-shadow: 0 12px 30px rgba(51, 102, 204, 0.35);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-position 0.6s ease;
+}
+.btn-pill:hover {
+    transform: translateY(-2px);
+    background-position: 100% 100%;
+    box-shadow: 0 16px 38px rgba(51, 102, 204, 0.45);
+    color: #fff;
+}
+.btn-pill-ghost {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.95rem 2rem;
+    border-radius: 9999px;
+    border: 1.5px solid transparent;
+    background:
+        linear-gradient(#eef1f6, #eef1f6) padding-box,
+        var(--siap-grad) border-box;
+    color: var(--siap-ink);
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: transform 0.3s ease;
+}
+.btn-pill-ghost:hover { transform: translateY(-2px); color: var(--siap-blue); }
+
+/* Tarjeta navy oscura tipo "bento" RENBEL */
+.bento-dark {
+    background: linear-gradient(160deg, #0c2a43, #0a1f33);
+    color: #fff;
+    border-radius: 1.75rem;
+    overflow: hidden;
+    position: relative;
+}
+.bento-soft {
+    background: linear-gradient(160deg, #eef0fb, #e7ecfb);
+    border-radius: 1.75rem;
+    overflow: hidden;
+}
+
+/* ─── Footer goteado (drip) navy ───────────────────────────────────────────── */
+.drip-footer {
+    background: var(--siap-ink);
+    color: #cbd5e1;
+    position: relative;
+}
+.drip-top {
+    display: block;
+    width: 100%;
+    height: 60px;
+    margin-bottom: -1px;
+    fill: var(--siap-ink);
 }
 
 /* Tarjeta corporativa limpia */

@@ -10,9 +10,9 @@
 
         <!-- Summary Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-            <div class="corp-card p-6 border-l-4 border-[#1B6B2F]">
+            <div class="corp-card p-6 border-l-4 border-[#3366CC]">
                 <p class="text-sm text-slate-500 uppercase tracking-wide">Total Elementos</p>
-                <p class="font-display text-4xl font-bold text-[#1B6B2F] mt-1">{{ $total_elementos }}</p>
+                <p class="font-display text-4xl font-bold text-[#3366CC] mt-1">{{ $total_elementos }}</p>
             </div>
 
             @php
@@ -152,8 +152,8 @@
         </div>
 
         <!-- Nota institucional -->
-        <div class="bg-[#1B6B2F]/5 border border-[#1B6B2F]/20 rounded-xl p-6">
-            <h3 class="font-semibold text-[#1B6B2F] mb-2">Información pública</h3>
+        <div class="bg-[#3366CC]/5 border border-[#3366CC]/20 rounded-xl p-6">
+            <h3 class="font-semibold text-[#3366CC] mb-2">Información pública</h3>
             <p class="text-sm text-gray-600">
                 La Alcaldía de Puerto Boyacá publica el inventario del sistema de alumbrado público, los indicadores
                 de calidad del servicio y la información financiera asociada a su prestación. Los datos presentados

@@ -41,7 +41,7 @@
                         <option value="puerto_serviez">Puerto Serviez</option>
                     </select>
                     <span class="ml-auto hidden items-center gap-1 self-center pr-1 text-sm text-slate-500 sm:flex">
-                        <span id="contador-elementos" class="font-semibold text-[#1B6B2F]">—</span> visibles
+                        <span id="contador-elementos" class="font-semibold text-[#3366CC]">—</span> visibles
                     </span>
                 </div>
 
