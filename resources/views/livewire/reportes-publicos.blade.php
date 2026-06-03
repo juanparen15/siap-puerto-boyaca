@@ -1,40 +1,41 @@
-<div class="min-h-screen bg-gray-50 py-12">
-    <div class="max-w-7xl mx-auto px-4">
+<div class="min-h-screen pb-16 pt-28 lg:pt-32">
+    <div class="mx-auto max-w-7xl px-4">
 
         <!-- Header -->
         <div class="mb-10">
-            <h1 class="text-3xl font-bold text-[#1B6B2F]">Reportes de Alumbrado Público</h1>
-            <p class="text-gray-500 mt-1">Municipio de Puerto Boyacá — Información pública del servicio de alumbrado</p>
+            <span class="corp-eyebrow">Transparencia</span>
+            <h1 class="font-display mt-4 text-4xl font-bold tracking-tight md:text-5xl" style="color:var(--siap-ink)">Reportes del alumbrado público</h1>
+            <p class="mt-2 text-slate-500">Municipio de Puerto Boyacá — Información pública del servicio de alumbrado</p>
         </div>
 
         <!-- Summary Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-            <div class="bg-white rounded-xl shadow p-6 border-l-4 border-[#1B6B2F]">
-                <p class="text-sm text-gray-500 uppercase tracking-wide">Total Elementos</p>
-                <p class="text-4xl font-bold text-[#1B6B2F] mt-1">{{ $total_elementos }}</p>
+            <div class="corp-card p-6 border-l-4 border-[#1B6B2F]">
+                <p class="text-sm text-slate-500 uppercase tracking-wide">Total Elementos</p>
+                <p class="font-display text-4xl font-bold text-[#1B6B2F] mt-1">{{ $total_elementos }}</p>
             </div>
 
             @php
                 $operativos = $por_estado['operativa'] ?? 0;
                 $pctOperativos = $total_elementos > 0 ? round($operativos / $total_elementos * 100, 1) : 0;
             @endphp
-            <div class="bg-white rounded-xl shadow p-6 border-l-4 border-green-500">
-                <p class="text-sm text-gray-500 uppercase tracking-wide">Operativos</p>
-                <p class="text-4xl font-bold text-green-600 mt-1">{{ $pctOperativos }}%</p>
-                <p class="text-xs text-gray-400 mt-1">{{ $operativos }} de {{ $total_elementos }}</p>
+            <div class="corp-card p-6 border-l-4 border-green-500">
+                <p class="text-sm text-slate-500 uppercase tracking-wide">Operativos</p>
+                <p class="font-display text-4xl font-bold text-green-600 mt-1">{{ $pctOperativos }}%</p>
+                <p class="text-xs text-slate-400 mt-1">{{ $operativos }} de {{ $total_elementos }}</p>
             </div>
 
             @php
                 $pqrsPendientes = ($pqrs_por_estado['radicada'] ?? 0) + ($pqrs_por_estado['en_proceso'] ?? 0);
             @endphp
-            <div class="bg-white rounded-xl shadow p-6 border-l-4 border-yellow-500">
-                <p class="text-sm text-gray-500 uppercase tracking-wide">PQRS Pendientes</p>
-                <p class="text-4xl font-bold text-yellow-600 mt-1">{{ $pqrsPendientes }}</p>
+            <div class="corp-card p-6 border-l-4 border-yellow-500">
+                <p class="text-sm text-slate-500 uppercase tracking-wide">PQRS Pendientes</p>
+                <p class="font-display text-4xl font-bold text-yellow-600 mt-1">{{ $pqrsPendientes }}</p>
             </div>
 
-            <div class="bg-white rounded-xl shadow p-6 border-l-4 border-blue-500">
-                <p class="text-sm text-gray-500 uppercase tracking-wide">PQRS Resueltas</p>
-                <p class="text-4xl font-bold text-blue-600 mt-1">{{ $pqrs_por_estado['resuelta'] ?? 0 }}</p>
+            <div class="corp-card p-6 border-l-4 border-blue-500">
+                <p class="text-sm text-slate-500 uppercase tracking-wide">PQRS Resueltas</p>
+                <p class="font-display text-4xl font-bold text-blue-600 mt-1">{{ $pqrs_por_estado['resuelta'] ?? 0 }}</p>
             </div>
         </div>
 

@@ -1,15 +1,15 @@
-<div class="max-w-2xl mx-auto px-4 py-10">
+<div class="mx-auto max-w-2xl px-4 pb-12 pt-28 lg:pt-32">
 
     {{-- Header --}}
-    <div class="mb-8 text-center animate-on-scroll">
-        <div class="flex justify-center mb-3">
+    <div class="mb-8 text-center">
+        <div class="mb-3 flex justify-center">
             <lord-icon src="https://cdn.lordicon.com/vwzukuhn.json"
                 trigger="loop" delay="1000" stroke="bold"
-                colors="primary:#1B6B2F"
-                style="width:56px;height:56px"></lord-icon>
+                colors="primary:#1B6B2F,secondary:#22c55e"
+                style="width:64px;height:64px"></lord-icon>
         </div>
-        <h1 class="text-2xl font-bold text-[#1B6B2F]">Radicar PQRS</h1>
-        <p class="text-gray-500 text-sm mt-1">Peticiones, Quejas, Reclamos y Solicitudes — Alumbrado Público</p>
+        <h1 class="font-display text-3xl font-bold tracking-tight" style="color:var(--siap-ink)">Radicar PQRS</h1>
+        <p class="mt-1 text-slate-500">Peticiones, Quejas, Reclamos y Solicitudes — Alumbrado Público</p>
     </div>
 
     {{-- Step indicator --}}
@@ -60,7 +60,7 @@
     </div>
 
     {{-- Card --}}
-    <div class="bg-white rounded-2xl shadow-md border border-gray-100 p-6 md:p-8">
+    <div class="corp-card p-6 md:p-8">
 
         {{-- ─── STEP 1: Citizen data ─── --}}
         @if ($paso === 1)

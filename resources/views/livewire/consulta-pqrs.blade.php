@@ -1,20 +1,20 @@
-<div class="max-w-3xl mx-auto px-4 py-10">
+<div class="mx-auto max-w-3xl px-4 pb-12 pt-28 lg:pt-32">
 
     {{-- Header --}}
-    <div class="mb-8 text-center animate-on-scroll">
-        <div class="flex justify-center mb-3">
+    <div class="mb-8 text-center">
+        <div class="mb-3 flex justify-center">
             <lord-icon src="https://cdn.lordicon.com/iuvnsegf.json"
                 trigger="loop" delay="800" stroke="bold"
-                colors="primary:#1B6B2F"
-                style="width:56px;height:56px"></lord-icon>
+                colors="primary:#1B6B2F,secondary:#22c55e"
+                style="width:64px;height:64px"></lord-icon>
         </div>
-        <h1 class="text-2xl font-bold text-[#1B6B2F]">Consultar PQRS</h1>
-        <p class="text-gray-500 text-sm mt-1">Consulte el estado de su Petición, Queja, Reclamo o Solicitud</p>
+        <h1 class="font-display text-3xl font-bold tracking-tight" style="color:var(--siap-ink)">Consultar mi reporte</h1>
+        <p class="mt-1 text-slate-500">Consulta el estado de tu Petición, Queja, Reclamo o Solicitud</p>
     </div>
 
     {{-- Search form --}}
-    <div class="bg-white rounded-2xl shadow-md border border-gray-100 p-6 md:p-8 mb-6">
-        <h2 class="text-lg font-semibold text-gray-800 mb-5">Búsqueda</h2>
+    <div class="corp-card p-6 md:p-8 mb-6">
+        <h2 class="font-display mb-5 text-lg font-semibold" style="color:var(--siap-ink)">Búsqueda</h2>
 
         {{-- Type toggle --}}
         <div class="flex gap-3 mb-5">
@@ -46,13 +46,13 @@
                     wire:model="busqueda"
                     wire:keydown.enter="consultar"
                     placeholder="{{ $tipoBusqueda === 'radicado' ? 'Ej. PQRS-2026-000001' : 'Ej. 12345678' }}"
-                    class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#1B6B2F] focus:border-transparent">
+                    class="lg-input w-full rounded-lg px-3 py-2 text-sm text-slate-700">
             </div>
             <button
                 type="button"
                 wire:click="consultar"
                 wire:loading.attr="disabled"
-                class="bg-[#1B6B2F] hover:bg-[#155a26] text-white font-medium text-sm px-5 py-2 rounded-lg transition-colors disabled:opacity-60">
+                class="btn-corp px-5 py-2 text-sm disabled:opacity-60">
                 <span wire:loading.remove wire:target="consultar">Consultar</span>
                 <span wire:loading wire:target="consultar">Buscando…</span>
             </button>
@@ -68,7 +68,7 @@
 
     {{-- Result --}}
     @if ($pqrs)
-        <div class="bg-white rounded-2xl shadow-md border border-gray-100 p-6 md:p-8 space-y-6">
+        <div class="corp-card p-6 md:p-8 space-y-6">
 
             {{-- Radicado and estado --}}
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">

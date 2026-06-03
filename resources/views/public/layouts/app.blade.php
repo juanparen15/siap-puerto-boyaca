@@ -16,7 +16,7 @@
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
     @stack('styles')
 </head>
-<body class="lg-bg-mesh text-slate-800 antialiased">
+<body class="corp-bg text-slate-700 antialiased">
 
     {{-- Filtro de distorsión para el efecto liquid glass --}}
     <svg width="0" height="0" style="position:absolute" aria-hidden="true">

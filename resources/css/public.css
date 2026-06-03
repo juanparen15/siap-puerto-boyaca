@@ -24,6 +24,95 @@ body {
     letter-spacing: -0.03em;
 }
 
+/* ─── Estilo corporativo (base RENBEL: limpio, claro, navy + verde) ─────────── */
+:root {
+    --siap-ink: #0f2540;       /* navy para títulos/estructura */
+    --siap-ink-soft: #475569;  /* texto secundario */
+}
+
+.corp-bg {
+    background-color: #f5f8fb;
+}
+
+/* Tarjeta corporativa limpia */
+.corp-card {
+    background: #ffffff;
+    border: 1px solid rgba(15, 37, 64, 0.08);
+    border-radius: 1.25rem;
+    box-shadow: 0 1px 2px rgba(15, 37, 64, 0.04), 0 10px 28px rgba(15, 37, 64, 0.05);
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+}
+.corp-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 16px 40px rgba(15, 37, 64, 0.12);
+    border-color: rgba(27, 107, 47, 0.3);
+}
+
+/* Rejilla de puntos (acento geométrico) */
+.corp-dotgrid {
+    background-image: radial-gradient(rgba(15, 37, 64, 0.10) 1px, transparent 1px);
+    background-size: 22px 22px;
+}
+
+/* Línea/acento diagonal del hero */
+.corp-accent-blob {
+    background:
+        radial-gradient(closest-side, rgba(27, 107, 47, 0.16), transparent),
+        radial-gradient(closest-side, rgba(245, 158, 11, 0.12), transparent);
+}
+
+/* Botones corporativos */
+.btn-corp {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: var(--siap-green);
+    color: #fff;
+    font-weight: 600;
+    border-radius: 0.85rem;
+    box-shadow: 0 8px 20px rgba(27, 107, 47, 0.22);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+.btn-corp:hover {
+    background: var(--siap-green-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(27, 107, 47, 0.30);
+    color: #fff;
+}
+.btn-corp-ghost {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: #fff;
+    color: var(--siap-ink);
+    font-weight: 600;
+    border: 1px solid rgba(15, 37, 64, 0.14);
+    border-radius: 0.85rem;
+    transition: all 0.25s ease;
+}
+.btn-corp-ghost:hover {
+    border-color: var(--siap-green);
+    color: var(--siap-green);
+    transform: translateY(-2px);
+}
+
+/* Píldora etiqueta (eyebrow) */
+.corp-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.9rem;
+    border-radius: 9999px;
+    background: rgba(27, 107, 47, 0.08);
+    border: 1px solid rgba(27, 107, 47, 0.18);
+    color: var(--siap-green);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
 /* ─── Liquid Glass REAL (filtro de distorsión SVG + capas) ─────────────────── */
 .lg-glass {
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28), 0 0 26px rgba(0, 0, 0, 0.14);
