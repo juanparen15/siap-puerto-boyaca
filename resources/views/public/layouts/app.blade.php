@@ -16,62 +16,61 @@
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
     @stack('styles')
 </head>
-<body class="bg-[#fafaf7] text-slate-800 antialiased">
+<body class="lg-bg-mesh text-slate-800 antialiased">
 
-    {{-- Navbar --}}
-    <nav x-data="{ abierto: false }"
-         class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/70 bg-[#fafaf7]/85 backdrop-blur-md">
-        <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
-            <a href="{{ route('landing') }}" class="flex items-center gap-3">
-                <img src="{{ asset('images/escudo.png') }}" alt="Escudo Puerto Boyacá" class="h-10 w-auto" onerror="this.style.display='none'">
+    @php
+        $nav = [
+            ['landing', 'Inicio', 'https://cdn.lordicon.com/pgirtdfe.json'],
+            ['mapa', 'Mapa', 'https://cdn.lordicon.com/dhmavvpz.json'],
+            ['reportes', 'Reportes', 'https://cdn.lordicon.com/wdztjihe.json'],
+            ['pqrs.consultar', 'Consultar', 'https://cdn.lordicon.com/iuvnsegf.json'],
+        ];
+    @endphp
+
+    {{-- Header flotante de vidrio líquido (estilo Apple) --}}
+    <nav x-data="{ abierto: false }" class="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-4 sm:pt-4">
+        <div class="lg-surface lg-sheen mx-auto flex h-14 max-w-6xl items-center justify-between rounded-2xl px-3 sm:px-5">
+            <a href="{{ route('landing') }}" class="flex items-center gap-2.5">
+                <img src="{{ asset('images/escudo.png') }}" alt="Escudo Puerto Boyacá" class="h-9 w-auto" onerror="this.style.display='none'">
                 <div class="leading-tight">
-                    <span class="block font-display text-lg font-bold text-[#1B6B2F]">SIAP</span>
-                    <span class="block text-[11px] text-slate-500">Alcaldía de Puerto Boyacá</span>
+                    <span class="block font-display text-base font-bold text-[#1B6B2F]">SIAP</span>
+                    <span class="hidden text-[11px] text-slate-500 sm:block">Alcaldía de Puerto Boyacá</span>
                 </div>
             </a>
 
             {{-- Desktop --}}
             <div class="hidden items-center gap-1 md:flex">
-                @php
-                    $nav = [
-                        ['landing', 'Inicio', 'https://cdn.lordicon.com/pgirtdfe.json'],
-                        ['mapa', 'Mapa', 'https://cdn.lordicon.com/dhmavvpz.json'],
-                        ['reportes', 'Reportes', 'https://cdn.lordicon.com/wdztjihe.json'],
-                        ['pqrs.consultar', 'Consultar', 'https://cdn.lordicon.com/iuvnsegf.json'],
-                    ];
-                @endphp
                 @foreach ($nav as $i => [$ruta, $label, $icono])
                     <a href="{{ route($ruta) }}"
-                       class="flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-[#1B6B2F]/8 hover:text-[#1B6B2F] {{ request()->routeIs($ruta) ? 'text-[#1B6B2F] bg-[#1B6B2F]/8' : '' }}">
+                       class="flex items-center gap-1.5 rounded-full px-3.5 py-2 text-sm font-medium transition {{ request()->routeIs($ruta) ? 'bg-white/80 text-[#1B6B2F] shadow-sm' : 'text-slate-600 hover:bg-white/50 hover:text-[#1B6B2F]' }}">
                         <lord-icon src="{{ $icono }}" trigger="loop" delay="{{ 2200 + $i * 600 }}" stroke="bold"
-                            colors="primary:#1B6B2F" style="width:20px;height:20px;pointer-events:none"></lord-icon>
+                            colors="primary:#1B6B2F" style="width:19px;height:19px;pointer-events:none"></lord-icon>
                         {{ $label }}
                     </a>
                 @endforeach
                 <a href="{{ route('landing') }}#mapa"
-                   class="ml-2 inline-flex items-center gap-2 rounded-lg bg-[#1B6B2F] px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#155724]">
+                   class="lg-btn-primary ml-2 inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold">
                     Reportar daño
                 </a>
             </div>
 
-            {{-- Mobile toggle --}}
-            <button @click="abierto = !abierto" class="rounded-lg p-2 text-slate-600 md:hidden" aria-label="Menú">
+            <button @click="abierto = !abierto" class="rounded-full p-2 text-slate-600 md:hidden" aria-label="Menú">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="h-6 w-6"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
             </button>
         </div>
 
         {{-- Mobile menu --}}
-        <div x-show="abierto" x-collapse class="border-t border-slate-200 bg-[#fafaf7] md:hidden" style="display:none;">
-            <div class="space-y-1 px-4 py-3">
+        <div x-show="abierto" x-collapse class="lg-surface lg-sheen mx-auto mt-2 max-w-6xl rounded-2xl p-3 md:hidden" style="display:none;">
+            <div class="space-y-1">
                 @foreach ($nav as [$ruta, $label, $icono])
-                    <a href="{{ route($ruta) }}" class="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-[#1B6B2F]/8 hover:text-[#1B6B2F]">{{ $label }}</a>
+                    <a href="{{ route($ruta) }}" class="block rounded-xl px-3 py-2 text-sm font-medium text-slate-700 hover:bg-white/60 hover:text-[#1B6B2F]">{{ $label }}</a>
                 @endforeach
-                <a href="{{ route('landing') }}#mapa" class="mt-1 block rounded-lg bg-[#1B6B2F] px-3 py-2 text-center text-sm font-semibold text-white">Reportar daño</a>
+                <a href="{{ route('landing') }}#mapa" class="lg-btn-primary mt-1 block rounded-xl px-3 py-2 text-center text-sm font-semibold">Reportar daño</a>
             </div>
         </div>
     </nav>
 
-    <main class="pt-16">
+    <main class="pt-20">
         @yield('content')
     </main>
 

@@ -3,7 +3,7 @@
     {{-- ═══════════════════════════════════════════════════════════════════════
          HERO
     ═══════════════════════════════════════════════════════════════════════ --}}
-    <section class="relative overflow-hidden bg-[#fafaf7]">
+    <section class="relative overflow-hidden">
         {{-- Glow ámbar (luz) + halo verde --}}
         <div class="pointer-events-none absolute -right-24 -top-24 h-[460px] w-[460px] rounded-full bg-[#f59e0b]/15 blur-[130px]"></div>
         <div class="pointer-events-none absolute left-1/2 top-1/2 h-[420px] w-[640px] -translate-x-1/2 rounded-full bg-[#1B6B2F]/10 blur-[130px]"></div>
@@ -12,7 +12,7 @@
              style="background-image:linear-gradient(#0f172a 1px,transparent 1px),linear-gradient(90deg,#0f172a 1px,transparent 1px);background-size:56px 56px;"></div>
 
         <div class="relative z-10 mx-auto max-w-4xl px-4 py-24 text-center lg:py-32">
-            <span class="inline-flex items-center gap-2 rounded-full border border-[#1B6B2F]/25 bg-white/70 px-4 py-1.5 text-sm font-medium text-[#1B6B2F] backdrop-blur">
+            <span class="lg-surface lg-pill inline-flex items-center gap-2 px-4 py-1.5 text-sm font-medium text-[#1B6B2F]">
                 <span class="relative flex h-2 w-2">
                     <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#f59e0b] opacity-70"></span>
                     <span class="relative inline-flex h-2 w-2 rounded-full bg-[#f59e0b]"></span>
@@ -49,8 +49,8 @@
         </div>
 
         {{-- Stats --}}
-        <div class="relative z-10 border-t border-slate-200/70">
-            <div class="mx-auto grid max-w-4xl grid-cols-2 divide-x divide-slate-200/70 md:grid-cols-4">
+        <div class="relative z-10 mx-auto -mb-10 max-w-4xl px-4 pb-12">
+            <div class="lg-surface lg-sheen grid grid-cols-2 gap-px overflow-hidden rounded-3xl md:grid-cols-4">
                 @foreach ([
                     ['total', 'Puntos de luz', 'text-slate-900'],
                     ['operativos', 'Operativos', 'text-[#16a34a]'],
@@ -59,7 +59,7 @@
                 ] as [$key, $label, $color])
                     <div class="px-2 py-6 text-center">
                         <span class="countup font-display block text-3xl font-extrabold md:text-4xl {{ $color }}" data-target="{{ $stats[$key] }}">0</span>
-                        <p class="mt-1 text-[11px] font-semibold uppercase tracking-wide text-slate-400">{{ $label }}</p>
+                        <p class="mt-1 text-[11px] font-semibold uppercase tracking-wide text-slate-500">{{ $label }}</p>
                     </div>
                 @endforeach
             </div>
@@ -67,7 +67,7 @@
     </section>
 
     {{-- ═══ CÓMO FUNCIONA ═══ --}}
-    <section class="bg-white py-16">
+    <section class="py-16 pt-20">
         <div class="mx-auto max-w-5xl px-4">
             <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
                 @foreach ([
@@ -75,8 +75,8 @@
                     ['https://cdn.lordicon.com/tbabdzcy.json', 'Describe el daño', 'Elige el tipo de problema y agrega los detalles. Puedes ser anónimo.'],
                     ['https://cdn.lordicon.com/pxixoqxa.json', 'Recibe tu radicado', 'Te damos un número para seguir el estado de tu reporte.'],
                 ] as $i => [$icono, $titulo, $desc])
-                    <div class="relative rounded-2xl border border-slate-200 bg-[#fafaf7] p-6">
-                        <span class="font-display absolute right-5 top-4 text-4xl font-extrabold text-slate-200">{{ $i + 1 }}</span>
+                    <div class="lg-surface lg-sheen lg-card relative p-6">
+                        <span class="font-display absolute right-5 top-4 text-4xl font-extrabold text-slate-300/60">{{ $i + 1 }}</span>
                         <lord-icon src="{{ $icono }}" trigger="loop" delay="{{ 800 + $i * 500 }}" stroke="bold"
                             colors="primary:#1B6B2F" style="width:48px;height:48px"></lord-icon>
                         <h3 class="font-display mt-4 text-lg font-bold text-slate-900">{{ $titulo }}</h3>
@@ -88,7 +88,7 @@
     </section>
 
     {{-- ═══ MAPA ═══ --}}
-    <section id="mapa" class="scroll-mt-20 bg-white pb-20">
+    <section id="mapa" class="scroll-mt-24 pb-20">
         <div class="mx-auto max-w-5xl px-4 pb-6 text-center">
             <h2 class="font-display text-3xl font-bold text-slate-900 md:text-4xl">Selecciona en el mapa</h2>
             <p class="mt-2 text-slate-500">Toca un punto de luz para ver su estado y reportar el problema.</p>
@@ -98,12 +98,12 @@
             <div class="relative overflow-hidden rounded-3xl border border-slate-200 shadow-xl shadow-slate-200/50">
 
                 <button type="button" onclick="window.reportarMiUbicacion && window.reportarMiUbicacion()"
-                        class="absolute left-4 top-4 z-[5] flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-600 shadow-md transition hover:border-[#1B6B2F] hover:text-[#1B6B2F]">
+                        class="lg-surface lg-sheen absolute left-4 top-4 z-[5] flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:text-[#1B6B2F]">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg>
                     Mi ubicación
                 </button>
 
-                <div class="absolute bottom-4 left-4 z-[5] rounded-xl border border-slate-100 bg-white/95 px-4 py-2.5 shadow-md backdrop-blur">
+                <div class="lg-surface lg-sheen absolute bottom-4 left-4 z-[5] rounded-xl px-4 py-2.5">
                     <p class="mb-1.5 text-[10px] font-semibold uppercase tracking-wide text-slate-400">Estado</p>
                     @foreach ([['#16a34a','Sin reportes'],['#f59e0b','Con reporte'],['#dc2626','Crítico'],['#94a3b8','Desinstalada']] as [$c,$l])
                         <div class="flex items-center gap-2 text-xs text-slate-600">
@@ -122,7 +122,7 @@
         <div class="fixed inset-0 z-[1000] flex justify-end">
             <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" wire:click="cerrarForm"></div>
 
-            <div class="relative flex h-full w-full max-w-md flex-col overflow-y-auto bg-white p-6 shadow-2xl">
+            <div class="lg-sheen relative flex h-full w-full max-w-md flex-col overflow-y-auto border-l border-white/60 bg-white/85 p-6 shadow-2xl backdrop-blur-2xl">
                 <button wire:click="cerrarForm" class="absolute right-4 top-4 rounded-md p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
@@ -193,7 +193,7 @@
     @if ($radicadoGenerado)
         <div class="fixed inset-0 z-[1100] flex items-center justify-center p-4">
             <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" wire:click="reiniciar"></div>
-            <div class="relative w-full max-w-md rounded-2xl bg-white p-7 text-center shadow-2xl">
+            <div class="lg-sheen relative w-full max-w-md rounded-3xl border border-white/60 bg-white/90 p-7 text-center shadow-2xl backdrop-blur-2xl">
                 <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="h-9 w-9"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                 </div>
