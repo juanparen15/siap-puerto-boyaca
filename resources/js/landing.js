@@ -1,38 +1,19 @@
-import "maplibre-gl/dist/maplibre-gl.css";
-import maplibregl from "maplibre-gl";
+import {
+  maplibregl,
+  OSM_STYLE,
+  PUERTO_BOYACA,
+  TIPO_LABEL,
+  escHtml,
+  colorElemento,
+  toFeatureCollection,
+  addElementosLayers,
+  wireClusterBehavior,
+  boundsParams,
+} from "./maplibre-common.js";
 import { animate } from "motion";
 import { CountUp } from "countup.js";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Helpers
-// ─────────────────────────────────────────────────────────────────────────────
-function escHtml(str) {
-  return String(str ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
-
-const TIPO_LABEL = {
-  luminaria: "Luminaria",
-  poste: "Poste",
-  reflector: "Reflector",
-  sendero_peatonal: "Sendero peatonal",
-  campo_deportivo: "Campo deportivo",
-  luminaria_parque: "Luminaria de parque",
-};
-
-function colorElemento(el) {
-  if (el.estado === "desinstalada") return "#94a3b8";
-  if (el.estado === "no_operativa" || el.pqrs_activas >= 2) return "#dc2626";
-  if (el.pqrs_activas >= 1) return "#ca8a04";
-  return "#16a34a";
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Contadores
-// ─────────────────────────────────────────────────────────────────────────────
+// ─── Contadores ───────────────────────────────────────────────────────────────
 function initCounters() {
   const els = document.querySelectorAll(".countup");
   if (!els.length) return;
@@ -55,9 +36,7 @@ function initCounters() {
   els.forEach((el) => obs.observe(el));
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Hero — palabra rotante (adaptado de animated-hero, con motion)
-// ─────────────────────────────────────────────────────────────────────────────
+// ─── Hero — palabra rotante (animated-hero, con motion spring) ──────────────────
 function initHeroRotator() {
   const words = Array.from(document.querySelectorAll("[data-hero-word]"));
   if (!words.length) return;
@@ -80,38 +59,7 @@ function initHeroRotator() {
   }, 2200);
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Mapa MapLibre GL (estilo mapcn-marker-popup)
-// ─────────────────────────────────────────────────────────────────────────────
-const OSM_STYLE = {
-  version: 8,
-  sources: {
-    osm: {
-      type: "raster",
-      tiles: ["https://a.tile.openstreetmap.org/{z}/{x}/{y}.png"],
-      tileSize: 256,
-      attribution: "© OpenStreetMap contributors",
-    },
-  },
-  layers: [{ id: "osm", type: "raster", source: "osm" }],
-};
-
-function toFeatureCollection(elementos) {
-  return {
-    type: "FeatureCollection",
-    features: elementos
-      .filter((e) => e.latitud && e.longitud)
-      .map((e) => ({
-        type: "Feature",
-        geometry: {
-          type: "Point",
-          coordinates: [Number(e.longitud), Number(e.latitud)],
-        },
-        properties: { ...e, color: colorElemento(e) },
-      })),
-  };
-}
-
+// ─── Mapa MapLibre (estilo mapcn-marker-popup) ──────────────────────────────────
 function buildPopupHtml(el) {
   const estadoLabel =
     el.estado === "operativa"
@@ -140,14 +88,13 @@ function buildPopupHtml(el) {
 }
 
 function initMap() {
-  const el = document.getElementById("landing-map");
-  if (!el) return;
+  if (!document.getElementById("landing-map")) return;
 
   const map = new maplibregl.Map({
     container: "landing-map",
     style: OSM_STYLE,
-    center: [-74.5869, 5.9731],
-    zoom: 14,
+    center: [PUERTO_BOYACA.lng, PUERTO_BOYACA.lat],
+    zoom: PUERTO_BOYACA.zoom,
     attributionControl: { compact: true },
   });
 
@@ -162,20 +109,13 @@ function initMap() {
   const btnGps = document.getElementById("landing-gps");
   if (btnGps) btnGps.addEventListener("click", () => geolocate.trigger());
 
-  let abortController = null;
   const popup = new maplibregl.Popup({ closeButton: true, maxWidth: "260px", offset: 14 });
+  let abortController = null;
 
   function cargar() {
-    const b = map.getBounds();
-    const params = new URLSearchParams({
-      sw_lat: b.getSouth(),
-      sw_lng: b.getWest(),
-      ne_lat: b.getNorth(),
-      ne_lng: b.getEast(),
-    });
     abortController?.abort();
     abortController = new AbortController();
-    fetch("/api/mapa/elementos?" + params, { signal: abortController.signal })
+    fetch("/api/mapa/elementos?" + boundsParams(map), { signal: abortController.signal })
       .then((r) => r.json())
       .then((elementos) => {
         const src = map.getSource("elementos");
@@ -187,67 +127,15 @@ function initMap() {
   }
 
   map.on("load", () => {
-    map.addSource("elementos", {
-      type: "geojson",
-      data: { type: "FeatureCollection", features: [] },
-      cluster: true,
-      clusterRadius: 50,
-      clusterMaxZoom: 15,
-    });
-
-    map.addLayer({
-      id: "clusters",
-      type: "circle",
-      source: "elementos",
-      filter: ["has", "point_count"],
-      paint: {
-        "circle-color": "#1B6B2F",
-        "circle-opacity": 0.85,
-        "circle-radius": ["step", ["get", "point_count"], 16, 25, 22, 100, 30],
-        "circle-stroke-width": 3,
-        "circle-stroke-color": "#ffffff",
-      },
-    });
-    map.addLayer({
-      id: "cluster-count",
-      type: "symbol",
-      source: "elementos",
-      filter: ["has", "point_count"],
-      layout: { "text-field": ["get", "point_count_abbreviated"], "text-size": 13 },
-      paint: { "text-color": "#ffffff" },
-    });
-    map.addLayer({
-      id: "punto",
-      type: "circle",
-      source: "elementos",
-      filter: ["!", ["has", "point_count"]],
-      paint: {
-        "circle-color": ["get", "color"],
-        "circle-radius": 7,
-        "circle-stroke-width": 2,
-        "circle-stroke-color": "#ffffff",
-      },
-    });
-
-    map.on("click", "clusters", (e) => {
-      const f = map.queryRenderedFeatures(e.point, { layers: ["clusters"] });
-      const id = f[0].properties.cluster_id;
-      map.getSource("elementos").getClusterExpansionZoom(id).then((zoom) => {
-        map.easeTo({ center: f[0].geometry.coordinates, zoom });
-      });
-    });
+    addElementosLayers(map);
+    wireClusterBehavior(map);
 
     map.on("click", "punto", (e) => {
-      const feat = e.features[0];
-      const props = feat.properties;
-      popup.setLngLat(feat.geometry.coordinates.slice()).setHTML(buildPopupHtml(props)).addTo(map);
+      popup
+        .setLngLat(e.features[0].geometry.coordinates.slice())
+        .setHTML(buildPopupHtml(e.features[0].properties))
+        .addTo(map);
     });
-
-    const cur = (c) => () => (map.getCanvas().style.cursor = c);
-    map.on("mouseenter", "punto", cur("pointer"));
-    map.on("mouseleave", "punto", cur(""));
-    map.on("mouseenter", "clusters", cur("pointer"));
-    map.on("mouseleave", "clusters", cur(""));
 
     cargar();
   });
@@ -255,7 +143,6 @@ function initMap() {
   map.on("moveend", cargar);
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", () => {
   initCounters();
   initHeroRotator();

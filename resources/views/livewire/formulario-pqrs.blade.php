@@ -275,50 +275,5 @@
 </div>
 
 @push('scripts')
-<script>
-function mapaPqrs({ lat, lng, hasPreciseLocation }) {
-    return {
-        map: null,
-        marker: null,
-        init() {
-            const centerLat = hasPreciseLocation ? lat : 5.9760;
-            const centerLng = hasPreciseLocation ? lng : -74.5940;
-            const zoom = hasPreciseLocation ? 17 : 14;
-
-            this.map = L.map(this.$el).setView([centerLat, centerLng], zoom);
-
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-                attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            }).addTo(this.map);
-
-            if (hasPreciseLocation) {
-                this.marker = L.marker([lat, lng], { draggable: true }).addTo(this.map);
-                this.marker.bindPopup('Ubicación del elemento').openPopup();
-                this.marker.on('dragend', (e) => {
-                    const pos = e.target.getLatLng();
-                    $wire.set('latitud', pos.lat);
-                    $wire.set('longitud', pos.lng);
-                });
-            }
-
-            this.map.on('click', (e) => {
-                const { lat, lng } = e.latlng;
-                if (this.marker) {
-                    this.marker.setLatLng(e.latlng);
-                } else {
-                    this.marker = L.marker(e.latlng, { draggable: true }).addTo(this.map);
-                    this.marker.on('dragend', (ev) => {
-                        const pos = ev.target.getLatLng();
-                        $wire.set('latitud', pos.lat);
-                        $wire.set('longitud', pos.lng);
-                    });
-                }
-                $wire.set('latitud', lat);
-                $wire.set('longitud', lng);
-            });
-        }
-    };
-}
-</script>
+@vite(['resources/js/pqrs-pin-map.js'])
 @endpush

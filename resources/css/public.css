@@ -306,9 +306,20 @@
     animation: fadeIn 0.8s ease forwards;
 }
 
-/* Leaflet overrides */
-.leaflet-container {
+/* MapLibre overrides */
+.maplibregl-map {
     font-family: inherit;
+}
+.maplibregl-popup-content {
+    border-radius: 0.75rem;
+    padding: 0;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.18);
+}
+.maplibregl-popup-close-button {
+    font-size: 1.1rem;
+    padding: 0 6px;
+    color: #64748b;
 }
 
 /* Responsive: small screens (rural Colombia often uses low-end Android) */
