@@ -1,5 +1,29 @@
 /* SIAP Public Portal CSS */
 
+/* ─── Sistema de diseño ────────────────────────────────────────────────────── */
+:root {
+    --font-display: 'Bricolage Grotesque', system-ui, sans-serif;
+    --font-body: 'Public Sans', system-ui, sans-serif;
+    --siap-green: #1B6B2F;
+    --siap-green-dark: #155724;
+    --siap-amber: #f59e0b;
+    --siap-night: #0f172a;
+}
+
+body {
+    font-family: var(--font-body);
+}
+
+.font-display {
+    font-family: var(--font-display);
+}
+
+/* Títulos del portal público con la fuente display */
+.public-h, h1.font-display, h2.font-display, h3.font-display {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+}
+
 /* ─── Shader Hero (WebGL2 fire/nebula) ────────────────────────────────────── */
 
 /* Gradient text — fire palette */

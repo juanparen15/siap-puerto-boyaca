@@ -14,7 +14,7 @@ use Livewire\Component;
 
 class ReporteCiudadano extends Component
 {
-    /** Tipos de problema según RETILAP 580.1 */
+    /** Tipos de problema del alumbrado público */
     public const TIPOS_PROBLEMA = [
         'luminaria_apagada'      => 'Luminaria apagada',
         'luminaria_intermitente' => 'Luminaria intermitente',
@@ -142,8 +142,16 @@ class ReporteCiudadano extends Component
 
     public function render(): View
     {
+        $stats = cache()->remember('home_stats', now()->addMinutes(10), fn () => [
+            'total'         => (int) InfraestructuraElemento::count(),
+            'operativos'    => (int) InfraestructuraElemento::where('estado', 'operativa')->count(),
+            'no_operativos' => (int) InfraestructuraElemento::where('estado', 'no_operativa')->count(),
+            'pqrs_activos'  => (int) Pqrs::whereIn('estado', ['radicada', 'en_proceso'])->count(),
+        ]);
+
         return view('livewire.reporte-ciudadano', [
             'tiposProblema' => self::TIPOS_PROBLEMA,
+            'stats'         => $stats,
         ])->extends('public.layouts.app')->section('content');
     }
 }

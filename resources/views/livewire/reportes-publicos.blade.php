@@ -4,7 +4,7 @@
         <!-- Header -->
         <div class="mb-10">
             <h1 class="text-3xl font-bold text-[#1B6B2F]">Reportes de Alumbrado Público</h1>
-            <p class="text-gray-500 mt-1">Municipio de Puerto Boyacá — Información pública conforme a RETILAP Sección 580.1.2</p>
+            <p class="text-gray-500 mt-1">Municipio de Puerto Boyacá — Información pública del servicio de alumbrado</p>
         </div>
 
         <!-- Summary Cards -->
@@ -150,14 +150,12 @@
             </div>
         </div>
 
-        <!-- RETILAP Note -->
+        <!-- Nota institucional -->
         <div class="bg-[#1B6B2F]/5 border border-[#1B6B2F]/20 rounded-xl p-6">
-            <h3 class="font-semibold text-[#1B6B2F] mb-2">Nota Institucional — RETILAP 580.1.2</h3>
+            <h3 class="font-semibold text-[#1B6B2F] mb-2">Información pública</h3>
             <p class="text-sm text-gray-600">
-                La Alcaldía de Puerto Boyacá publica esta información en cumplimiento del Reglamento Técnico de
-                Iluminación y Alumbrado Público (RETILAP), Sección 580.1.2, que establece la obligatoriedad de
-                mantener y publicar el inventario del sistema de alumbrado público, los indicadores de calidad del
-                servicio y la información financiera asociada a la prestación del servicio. Los datos presentados
+                La Alcaldía de Puerto Boyacá publica el inventario del sistema de alumbrado público, los indicadores
+                de calidad del servicio y la información financiera asociada a su prestación. Los datos presentados
                 corresponden al Sistema de Información de Alumbrado Público (SIAP) municipal y son actualizados
                 periódicamente por la Secretaría de Obras Públicas.
             </p>

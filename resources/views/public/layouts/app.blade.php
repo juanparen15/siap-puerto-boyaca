@@ -3,101 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Sistema de Información de Alumbrado Público — Alcaldía de Puerto Boyacá, Boyacá, Colombia. Consulte el inventario, radique PQRS y acceda a reportes del servicio de alumbrado público municipal.">
+    <meta name="description" content="Reporta daños en el alumbrado público de Puerto Boyacá. Selecciona el punto en el mapa, describe el problema y la Alcaldía lo recibe al instante.">
     <meta name="robots" content="index, follow">
     <link rel="icon" type="image/png" href="{{ asset('images/escudo.png') }}">
-    <title>SIAP · Alcaldía de Puerto Boyacá</title>
+    <title>SIAP · Alumbrado Público de Puerto Boyacá</title>
+
+    {{-- Fuentes distintivas (Bunny Fonts — privacidad para sitio gov) --}}
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=bricolage-grotesque:400,500,600,700,800|public-sans:400,500,600,700" rel="stylesheet">
+
     @vite(['resources/css/app.css', 'resources/css/public.css', 'resources/js/app.js'])
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
     @stack('styles')
 </head>
-<body class="bg-white text-gray-800">
+<body class="bg-[#fafaf7] text-slate-800 antialiased">
 
-    <!-- Sticky Navbar -->
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-white shadow-md border-b-2 border-[#1B6B2F]">
-        <div class="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
-            <div class="flex items-center gap-3">
+    {{-- Navbar --}}
+    <nav x-data="{ abierto: false }"
+         class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/70 bg-[#fafaf7]/85 backdrop-blur-md">
+        <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
+            <a href="{{ route('landing') }}" class="flex items-center gap-3">
                 <img src="{{ asset('images/escudo.png') }}" alt="Escudo Puerto Boyacá" class="h-10 w-auto" onerror="this.style.display='none'">
-                <div>
-                    <span class="font-bold text-[#1B6B2F] text-lg leading-tight block">SIAP</span>
-                    <span class="text-xs text-gray-500 leading-tight block">Alcaldía de Puerto Boyacá</span>
+                <div class="leading-tight">
+                    <span class="block font-display text-lg font-bold text-[#1B6B2F]">SIAP</span>
+                    <span class="block text-[11px] text-slate-500">Alcaldía de Puerto Boyacá</span>
                 </div>
-            </div>
-            <div class="hidden md:flex items-center gap-6 text-sm font-medium">
-                <a href="{{ route('landing') }}" class="flex items-center gap-1.5 text-gray-700 hover:text-[#1B6B2F] transition-colors">
-                    <lord-icon src="https://cdn.lordicon.com/pgirtdfe.json"
-                        trigger="loop" delay="2500" stroke="bold"
-                        colors="primary:#1B6B2F"
-                        style="width:22px;height:22px;pointer-events:none"></lord-icon>
-                    Inicio
-                </a>
-                <a href="{{ route('mapa') }}" class="flex items-center gap-1.5 text-gray-700 hover:text-[#1B6B2F] transition-colors">
-                    <lord-icon src="https://cdn.lordicon.com/dhmavvpz.json"
-                        trigger="loop" delay="3000" stroke="bold"
-                        colors="primary:#1B6B2F"
-                        style="width:22px;height:22px;pointer-events:none"></lord-icon>
-                    Mapa
-                </a>
-                <a href="{{ route('reportar') }}" class="flex items-center gap-1.5 text-gray-700 hover:text-[#1B6B2F] transition-colors">
-                    <lord-icon src="https://cdn.lordicon.com/tbabdzcy.json"
-                        trigger="loop" delay="2800" stroke="bold"
-                        colors="primary:#1B6B2F"
-                        style="width:22px;height:22px;pointer-events:none"></lord-icon>
+            </a>
+
+            {{-- Desktop --}}
+            <div class="hidden items-center gap-1 md:flex">
+                @php
+                    $nav = [
+                        ['landing', 'Inicio', 'https://cdn.lordicon.com/pgirtdfe.json'],
+                        ['mapa', 'Mapa', 'https://cdn.lordicon.com/dhmavvpz.json'],
+                        ['reportes', 'Reportes', 'https://cdn.lordicon.com/wdztjihe.json'],
+                        ['pqrs.consultar', 'Consultar', 'https://cdn.lordicon.com/iuvnsegf.json'],
+                    ];
+                @endphp
+                @foreach ($nav as $i => [$ruta, $label, $icono])
+                    <a href="{{ route($ruta) }}"
+                       class="flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-[#1B6B2F]/8 hover:text-[#1B6B2F] {{ request()->routeIs($ruta) ? 'text-[#1B6B2F] bg-[#1B6B2F]/8' : '' }}">
+                        <lord-icon src="{{ $icono }}" trigger="loop" delay="{{ 2200 + $i * 600 }}" stroke="bold"
+                            colors="primary:#1B6B2F" style="width:20px;height:20px;pointer-events:none"></lord-icon>
+                        {{ $label }}
+                    </a>
+                @endforeach
+                <a href="{{ route('landing') }}#mapa"
+                   class="ml-2 inline-flex items-center gap-2 rounded-lg bg-[#1B6B2F] px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#155724]">
                     Reportar daño
                 </a>
-                <a href="{{ route('pqrs') }}" class="flex items-center gap-1.5 text-gray-700 hover:text-[#1B6B2F] transition-colors">
-                    <lord-icon src="https://cdn.lordicon.com/vwzukuhn.json"
-                        trigger="loop" delay="2000" stroke="bold"
-                        colors="primary:#1B6B2F"
-                        style="width:22px;height:22px;pointer-events:none"></lord-icon>
-                    Radicar PQRS
-                </a>
-                <a href="{{ route('pqrs.consultar') }}" class="flex items-center gap-1.5 text-gray-700 hover:text-[#1B6B2F] transition-colors">
-                    <lord-icon src="https://cdn.lordicon.com/iuvnsegf.json"
-                        trigger="loop" delay="3500" stroke="bold"
-                        colors="primary:#1B6B2F"
-                        style="width:22px;height:22px;pointer-events:none"></lord-icon>
-                    Consultar PQRS
-                </a>
-                <a href="{{ route('reportes') }}" class="flex items-center gap-1.5 text-gray-700 hover:text-[#1B6B2F] transition-colors">
-                    <lord-icon src="https://cdn.lordicon.com/wdztjihe.json"
-                        trigger="loop" delay="4000" stroke="bold"
-                        colors="primary:#1B6B2F"
-                        style="width:22px;height:22px;pointer-events:none"></lord-icon>
-                    Reportes
-                </a>
+            </div>
+
+            {{-- Mobile toggle --}}
+            <button @click="abierto = !abierto" class="rounded-lg p-2 text-slate-600 md:hidden" aria-label="Menú">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="h-6 w-6"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+            </button>
+        </div>
+
+        {{-- Mobile menu --}}
+        <div x-show="abierto" x-collapse class="border-t border-slate-200 bg-[#fafaf7] md:hidden" style="display:none;">
+            <div class="space-y-1 px-4 py-3">
+                @foreach ($nav as [$ruta, $label, $icono])
+                    <a href="{{ route($ruta) }}" class="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-[#1B6B2F]/8 hover:text-[#1B6B2F]">{{ $label }}</a>
+                @endforeach
+                <a href="{{ route('landing') }}#mapa" class="mt-1 block rounded-lg bg-[#1B6B2F] px-3 py-2 text-center text-sm font-semibold text-white">Reportar daño</a>
             </div>
         </div>
     </nav>
 
-    <!-- Main Content (padded for sticky nav) -->
     <main class="pt-16">
         @yield('content')
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-[#1B6B2F] text-white py-10 mt-0">
-        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
+    {{-- Footer --}}
+    <footer class="border-t border-slate-800 bg-[#0f172a] py-12 text-slate-300">
+        <div class="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-4 md:grid-cols-3">
             <div class="flex items-center gap-4">
-                <img src="{{ asset('images/escudo.png') }}" alt="Escudo" class="h-16 w-auto opacity-90" onerror="this.style.display='none'">
+                <img src="{{ asset('images/escudo.png') }}" alt="Escudo" class="h-14 w-auto opacity-90" onerror="this.style.display='none'">
                 <div>
-                    <p class="font-bold text-lg">Alcaldía de Puerto Boyacá</p>
-                    <p class="text-sm text-green-200">Boyacá, Colombia</p>
+                    <p class="font-display text-lg font-bold text-white">Alcaldía de Puerto Boyacá</p>
+                    <p class="text-sm text-slate-400">Boyacá, Colombia</p>
                 </div>
             </div>
             <div>
-                <p class="font-semibold mb-2">SIAP — Alumbrado Público</p>
-                <p class="text-sm text-green-200">Sistema de Información de Alumbrado Público</p>
-                <p class="text-sm text-green-200 mt-1">Conforme a RETILAP Sección 580.1</p>
+                <p class="mb-2 font-semibold text-white">SIAP — Alumbrado Público</p>
+                <p class="text-sm text-slate-400">Sistema de Información de Alumbrado Público.</p>
+                <p class="mt-1 text-sm text-slate-400">Reporta, consulta y haz seguimiento en línea.</p>
             </div>
             <div>
-                <p class="font-semibold mb-2">Contacto</p>
-                <p class="text-sm text-green-200">Secretaría de Obras Públicas</p>
-                <p class="text-sm text-green-200">Carrera 4 No. 12-55, Puerto Boyacá</p>
-                <p class="text-sm text-green-200">Tel: (608) 555-0000</p>
+                <p class="mb-2 font-semibold text-white">Contacto</p>
+                <p class="text-sm text-slate-400">Secretaría de Obras Públicas</p>
+                <p class="text-sm text-slate-400">Carrera 4 No. 12-55, Puerto Boyacá</p>
+                <p class="text-sm text-slate-400">Tel: (608) 555-0000</p>
             </div>
         </div>
-        <div class="text-center text-green-300 text-xs mt-8">
+        <div class="mt-10 text-center text-xs text-slate-500">
             &copy; {{ date('Y') }} Alcaldía de Puerto Boyacá. Todos los derechos reservados.
         </div>
     </footer>

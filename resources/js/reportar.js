@@ -10,8 +10,52 @@ import {
   wireClusterBehavior,
   boundsParams,
 } from "./maplibre-common.js";
+import { animate } from "motion";
+import { CountUp } from "countup.js";
+
+// ─── Contadores ───────────────────────────────────────────────────────────────
+function initCounters() {
+  const els = document.querySelectorAll(".countup");
+  if (!els.length) return;
+  const obs = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          new CountUp(e.target, parseInt(e.target.dataset.target || "0", 10), {
+            duration: 2.2,
+            separator: ".",
+            decimal: ",",
+          }).start();
+          obs.unobserve(e.target);
+        }
+      });
+    },
+    { threshold: 0.2 }
+  );
+  els.forEach((el) => obs.observe(el));
+}
+
+// ─── Hero — palabra rotante (animated-hero, motion spring) ──────────────────────
+function initHeroRotator() {
+  const words = Array.from(document.querySelectorAll("[data-hero-word]"));
+  if (!words.length) return;
+  words.forEach((w, i) =>
+    animate(w, { y: i === 0 ? 0 : 150, opacity: i === 0 ? 1 : 0 }, { duration: 0 })
+  );
+  let active = 0;
+  setInterval(() => {
+    active = (active + 1) % words.length;
+    words.forEach((w, i) => {
+      const y = i === active ? 0 : i < active ? -150 : 150;
+      animate(w, { y, opacity: i === active ? 1 : 0 }, { type: "spring", stiffness: 50, damping: 14 });
+    });
+  }, 2200);
+}
 
 document.addEventListener("DOMContentLoaded", () => {
+  initCounters();
+  initHeroRotator();
+
   const el = document.getElementById("mapa-reportar");
   if (!el) return;
 

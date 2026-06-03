@@ -9,7 +9,6 @@ export default defineConfig({
                 'resources/css/app.css',
                 'resources/css/public.css',
                 'resources/js/app.js',
-                'resources/js/landing.js',
                 'resources/js/mapa-publico.js',
                 'resources/js/public-animations.js',
                 'resources/js/reportar.js',

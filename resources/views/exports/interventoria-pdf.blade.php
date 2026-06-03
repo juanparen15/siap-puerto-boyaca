@@ -60,7 +60,7 @@
     </table>
 
     <footer>
-        Sistema de Información de Alumbrado Público (SIAP) &mdash; Alcaldía de Puerto Boyacá &mdash; Conforme a RETILAP Sección 580.1
+        Sistema de Información de Alumbrado Público (SIAP) &mdash; Alcaldía de Puerto Boyacá
     </footer>
 </body>
 </html>
