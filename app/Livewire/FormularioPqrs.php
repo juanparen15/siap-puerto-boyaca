@@ -7,6 +7,7 @@ use App\Models\Pqrs;
 use App\Models\PqrsHistorial;
 use App\Notifications\PqrsRadicadaNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Component;
 
 class FormularioPqrs extends Component
@@ -46,6 +47,37 @@ class FormularioPqrs extends Component
         };
     }
 
+    protected function messages(): array
+    {
+        return [
+            'nombre_ciudadano.required' => 'El nombre completo es obligatorio.',
+            'nombre_ciudadano.min'      => 'El nombre debe tener al menos 3 caracteres.',
+            'nombre_ciudadano.max'      => 'El nombre es demasiado largo.',
+            'numero_cedula.required'    => 'El número de cédula es obligatorio.',
+            'numero_cedula.digits_between' => 'La cédula debe tener entre 6 y 15 dígitos.',
+            'email.email'               => 'El correo electrónico no es válido.',
+            'email.max'                 => 'El correo electrónico es demasiado largo.',
+            'telefono.regex'            => 'El teléfono debe tener 10 dígitos.',
+            'tipo_solicitud.required'   => 'Selecciona el tipo de solicitud.',
+            'tipo_solicitud.in'         => 'El tipo de solicitud no es válido.',
+            'descripcion.required'      => 'La descripción es obligatoria.',
+            'descripcion.min'           => 'La descripción debe tener al menos 20 caracteres.',
+            'descripcion.max'           => 'La descripción no puede superar los 2000 caracteres.',
+        ];
+    }
+
+    protected function validationAttributes(): array
+    {
+        return [
+            'nombre_ciudadano' => 'nombre completo',
+            'numero_cedula'    => 'número de cédula',
+            'email'            => 'correo electrónico',
+            'telefono'         => 'teléfono',
+            'tipo_solicitud'   => 'tipo de solicitud',
+            'descripcion'      => 'descripción',
+        ];
+    }
+
     public function mount(Request $request): void
     {
         // Pre-fill from map click
@@ -76,6 +108,14 @@ class FormularioPqrs extends Component
 
         $this->validate();
 
+        // Control anti-spam: máx. 3 radicados por IP cada 10 minutos.
+        $key = 'pqrs-submit:' . request()->ip();
+        if (RateLimiter::tooManyAttempts($key, 3)) {
+            $minutos = (int) ceil(RateLimiter::availableIn($key) / 60);
+            $this->addError('general', "Has radicado varias PQRS recientemente. Inténtalo de nuevo en {$minutos} minuto(s).");
+            return;
+        }
+
         try {
             $pqrs = \DB::transaction(function () {
                 $pqrs = Pqrs::crearConRadicado([
@@ -100,6 +140,9 @@ class FormularioPqrs extends Component
 
                 return $pqrs;
             });
+
+            // Registrar el intento exitoso para el control anti-spam
+            RateLimiter::hit($key, 600);
 
             // Notify after transaction commits
             $pqrs->notify(new PqrsRadicadaNotification($pqrs));

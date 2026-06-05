@@ -52,6 +52,18 @@ function initHeroRotator() {
   }, 2200);
 }
 
+// ─── Scroll suave compatible con ScrollSmoother (GSAP) ──────────────────────────
+window.siapScrollTo = (target) => {
+  const el = typeof target === "string" ? document.querySelector(target) : target;
+  if (!el) return;
+  const smoother = window.ScrollSmoother && window.ScrollSmoother.get && window.ScrollSmoother.get();
+  if (smoother) {
+    smoother.scrollTo(el, true, "top 90px");
+  } else {
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+};
+
 document.addEventListener("DOMContentLoaded", () => {
   initCounters();
   initHeroRotator();
@@ -107,7 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <p style="margin:0 0 10px;font-size:11px;color:#64748b;">Estado: ${estadoLabel}${
           elm.pqrs_activas > 0 ? " · " + elm.pqrs_activas + " reporte(s) activo(s)" : ""
         }</p>
-        <button type="button" style="width:100%;background:#1B6B2F;color:#fff;border:none;padding:9px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;">Reportar un problema</button>
+        <button type="button" style="width:100%;background:#3366CC;color:#fff;border:none;padding:9px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;">Reportar un problema</button>
       </div>`;
 
     node.querySelector("button").addEventListener("click", () => {

@@ -1,277 +1,171 @@
-<div class="mx-auto max-w-2xl px-4 pb-12 pt-28 lg:pt-32">
-
-    {{-- Header --}}
-    <div class="mb-8 text-center">
-        <div class="mb-3 flex justify-center">
-            <lord-icon src="https://cdn.lordicon.com/vwzukuhn.json"
-                trigger="loop" delay="1000" stroke="bold"
-                colors="primary:#3366CC,secondary:#22c55e"
-                style="width:64px;height:64px"></lord-icon>
+<div>
+    {{-- Encabezado --}}
+    <section class="page-title-area">
+        <div class="container large">
+            <div class="page-title-area-inner section-spacing-top">
+                <div class="page-title-wrapper">
+                    <h2 class="page-title fade-anim">PQRS</h2>
+                </div>
+            </div>
         </div>
-        <h1 class="font-display text-3xl font-bold tracking-tight" style="color:var(--siap-ink)">Radicar PQRS</h1>
-        <p class="mt-1 text-slate-500">Peticiones, Quejas, Reclamos y Solicitudes — Alumbrado Público</p>
-    </div>
+    </section>
 
-    {{-- Step indicator --}}
-    <div class="flex items-center justify-center mb-8 gap-2">
-
-        {{-- Step 1 --}}
-        <div class="flex items-center gap-2">
-            <div class="flex flex-col items-center">
-                <div class="w-14 h-14 rounded-full flex items-center justify-center border-2 transition-colors
-                    {{ $paso >= 1 ? 'border-[#3366CC] bg-green-50' : 'border-gray-200 bg-white' }}">
-                    <lord-icon src="https://cdn.lordicon.com/gubjuhss.json"
-                        trigger="loop" delay="1200" stroke="bold"
-                        colors="primary:{{ $paso >= 1 ? '#3366CC' : '#9ca3af' }}"
-                        style="width:36px;height:36px"></lord-icon>
-                </div>
-                <span class="text-xs mt-1 {{ $paso >= 1 ? 'text-[#3366CC] font-semibold' : 'text-gray-400' }}">Datos</span>
-            </div>
-            <div class="w-12 h-0.5 mb-4 transition-colors {{ $paso > 1 ? 'bg-[#3366CC]' : 'bg-gray-200' }}"></div>
-        </div>
-
-        {{-- Step 2 --}}
-        <div class="flex items-center gap-2">
-            <div class="flex flex-col items-center">
-                <div class="w-14 h-14 rounded-full flex items-center justify-center border-2 transition-colors
-                    {{ $paso >= 2 ? 'border-[#3366CC] bg-green-50' : 'border-gray-200 bg-white' }}">
-                    <lord-icon src="https://cdn.lordicon.com/tbabdzcy.json"
-                        trigger="loop" delay="1600" stroke="bold"
-                        colors="primary:{{ $paso >= 2 ? '#3366CC' : '#9ca3af' }}"
-                        style="width:36px;height:36px"></lord-icon>
-                </div>
-                <span class="text-xs mt-1 {{ $paso >= 2 ? 'text-[#3366CC] font-semibold' : 'text-gray-400' }}">Solicitud</span>
-            </div>
-            <div class="w-12 h-0.5 mb-4 transition-colors {{ $paso > 2 ? 'bg-[#3366CC]' : 'bg-gray-200' }}"></div>
-        </div>
-
-        {{-- Step 3 --}}
-        <div class="flex flex-col items-center">
-            <div class="w-14 h-14 rounded-full flex items-center justify-center border-2 transition-colors
-                {{ $paso >= 3 ? 'border-[#3366CC] bg-green-50' : 'border-gray-200 bg-white' }}">
-                <lord-icon src="https://cdn.lordicon.com/pxixoqxa.json"
-                    trigger="loop" delay="2000" stroke="bold"
-                    colors="primary:{{ $paso >= 3 ? '#3366CC' : '#9ca3af' }}"
-                    style="width:36px;height:36px"></lord-icon>
-            </div>
-            <span class="text-xs mt-1 {{ $paso >= 3 ? 'text-[#3366CC] font-semibold' : 'text-gray-400' }}">Confirmación</span>
-        </div>
-
-    </div>
-
-    {{-- Card --}}
-    <div class="corp-card p-6 md:p-8">
-
-        {{-- ─── STEP 1: Citizen data ─── --}}
-        @if ($paso === 1)
-            <h2 class="text-lg font-semibold text-gray-800 mb-6">Datos del ciudadano</h2>
-
-            <div class="space-y-5">
-                {{-- Nombre --}}
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Nombre completo <span class="text-red-500">*</span>
-                    </label>
-                    <input type="text"
-                           wire:model="nombre_ciudadano"
-                           placeholder="Ej. Juan Carlos Pérez"
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#3366CC] focus:border-transparent @error('nombre_ciudadano') border-red-400 @enderror">
-                    @error('nombre_ciudadano')
-                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                {{-- Cédula --}}
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Número de cédula <span class="text-red-500">*</span>
-                    </label>
-                    <input type="text"
-                           wire:model="numero_cedula"
-                           placeholder="Ej. 12345678"
-                           inputmode="numeric"
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#3366CC] focus:border-transparent @error('numero_cedula') border-red-400 @enderror">
-                    @error('numero_cedula')
-                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                {{-- Email --}}
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Correo electrónico <span class="text-gray-400 font-normal">(opcional)</span>
-                    </label>
-                    <input type="email"
-                           wire:model="email"
-                           placeholder="correo@ejemplo.com"
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#3366CC] focus:border-transparent @error('email') border-red-400 @enderror">
-                    @error('email')
-                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                {{-- Teléfono --}}
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Teléfono celular <span class="text-gray-400 font-normal">(opcional)</span>
-                    </label>
-                    <input type="tel"
-                           wire:model="telefono"
-                           placeholder="Ej. 3001234567"
-                           inputmode="numeric"
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#3366CC] focus:border-transparent @error('telefono') border-red-400 @enderror">
-                    @error('telefono')
-                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-            </div>
-
-            <div class="mt-8 flex justify-end">
-                <button wire:click="siguiente"
-                        class="bg-[#3366CC] hover:bg-[#27429c] text-white font-semibold px-6 py-2 rounded-lg transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-[#3366CC]">
-                    Siguiente
-                </button>
-            </div>
-        @endif
-
-        {{-- ─── STEP 2: Request details ─── --}}
-        @if ($paso === 2)
-            <h2 class="text-lg font-semibold text-gray-800 mb-6">Detalles de la solicitud</h2>
-
-            <div class="space-y-5">
-                {{-- Tipo de solicitud --}}
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Tipo de solicitud <span class="text-red-500">*</span>
-                    </label>
-                    <select wire:model="tipo_solicitud"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#3366CC] focus:border-transparent @error('tipo_solicitud') border-red-400 @enderror">
-                        <option value="">-- Seleccione --</option>
-                        <option value="peticion">Petición</option>
-                        <option value="queja">Queja</option>
-                        <option value="reclamo">Reclamo</option>
-                        <option value="solicitud">Solicitud</option>
-                    </select>
-                    @error('tipo_solicitud')
-                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                {{-- Descripción --}}
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Descripción <span class="text-red-500">*</span>
-                        <span class="text-gray-400 font-normal">(mínimo 20 caracteres)</span>
-                    </label>
-                    <textarea wire:model="descripcion"
-                              rows="5"
-                              placeholder="Describa detalladamente su solicitud, incluyendo la ubicación del problema y el tiempo que lleva presentándose..."
-                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#3366CC] focus:border-transparent @error('descripcion') border-red-400 @enderror"></textarea>
-                    <p class="text-xs text-gray-400 mt-1 text-right">{{ mb_strlen($descripcion) }} / 2000</p>
-                    @error('descripcion')
-                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                {{-- Map pin --}}
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Ubicación en el mapa
-                        <span class="text-gray-400 font-normal">(opcional — haga clic para colocar el pin)</span>
-                    </label>
-
-                    @if ($elemento_id)
-                        <p class="text-xs text-[#3366CC] bg-green-50 border border-green-200 rounded px-3 py-2 mb-2">
-                            Se ha pre-seleccionado el elemento de la infraestructura #{{ $elemento_id }}.
-                            El mapa muestra su ubicación exacta.
-                        </p>
-                    @endif
-
-                    <div id="mapa-pqrs"
-                         style="height: 300px; border-radius: 0.5rem; overflow: hidden; border: 1px solid #d1d5db;"
-                         wire:ignore
-                         x-data="mapaPqrs({
-                             lat: {{ $latitud ?? 5.976 }},
-                             lng: {{ $longitud ?? -74.594 }},
-                             hasPreciseLocation: {{ ($latitud !== null) ? 'true' : 'false' }}
-                         })"
-                         x-init="init()">
-                    </div>
-
-                    @if ($latitud !== null && $longitud !== null)
-                        <p class="text-xs text-gray-500 mt-1">
-                            Pin en: {{ number_format((float) $latitud, 6) }}, {{ number_format((float) $longitud, 6) }}
-                        </p>
-                    @else
-                        <p class="text-xs text-gray-400 mt-1">No se ha colocado ningún pin.</p>
-                    @endif
-                </div>
-            </div>
-
-            @error('general')
-                <p class="text-red-600 text-sm mt-4 text-center">{{ $message }}</p>
-            @enderror
-
-            <div class="mt-8 flex justify-between">
-                <button wire:click="anterior"
-                        class="border border-gray-300 text-gray-700 hover:bg-gray-50 font-semibold px-6 py-2 rounded-lg transition-colors">
-                    Anterior
-                </button>
-                <button wire:click="enviar"
-                        class="bg-[#3366CC] hover:bg-[#27429c] text-white font-semibold px-6 py-2 rounded-lg transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-[#3366CC]">
-                    Enviar solicitud
-                </button>
-            </div>
-        @endif
-
-        {{-- ─── STEP 3: Confirmation ─── --}}
-        @if ($paso === 3)
-            <div class="text-center py-4">
-                <div class="flex justify-center mb-4">
-                    <lord-icon src="https://cdn.lordicon.com/pxixoqxa.json"
-                        trigger="loop" delay="500" stroke="bold"
-                        colors="primary:#3366CC"
-                        style="width:80px;height:80px"></lord-icon>
-                </div>
-
-                <h2 class="text-xl font-bold text-gray-800 mb-2">PQRS radicada exitosamente</h2>
-                <p class="text-gray-500 text-sm mb-6">Su solicitud ha sido registrada en el sistema.</p>
-
-                <div class="bg-green-50 border border-[#3366CC] rounded-xl px-6 py-5 mb-6 inline-block">
-                    <p class="text-sm text-gray-600 mb-1">Número de radicado</p>
-                    <p class="text-2xl font-bold text-[#3366CC] tracking-wider">{{ $radicadoGenerado }}</p>
-                </div>
-
-                <div class="text-left bg-gray-50 rounded-xl p-5 mb-6 space-y-3">
-                    <p class="font-semibold text-gray-700 text-sm mb-2">Próximos pasos:</p>
-                    <div class="flex items-start gap-3 text-sm text-gray-600">
-                        <span class="w-5 h-5 bg-[#3366CC] text-white rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold">1</span>
-                        <p>Guarde su número de radicado. Lo necesitará para consultar el estado de su solicitud.</p>
-                    </div>
-                    <div class="flex items-start gap-3 text-sm text-gray-600">
-                        <span class="w-5 h-5 bg-[#3366CC] text-white rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold">2</span>
-                        <p>La Secretaría de Obras Públicas revisará su solicitud en un plazo de 15 días hábiles.</p>
-                    </div>
-                    <div class="flex items-start gap-3 text-sm text-gray-600">
-                        <span class="w-5 h-5 bg-[#3366CC] text-white rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold">3</span>
-                        <p>Si proporcionó correo electrónico o teléfono, recibirá notificaciones sobre el avance.</p>
+    <section>
+        <div class="container large">
+            <div class="section-header fade-anim" style="padding-top:24px;text-align:center;">
+                <div class="section-title-wrapper">
+                    <div class="subtitle-wrapper"><span class="section-subtitle">Trámite ciudadano</span></div>
+                    <div class="title-wrapper">
+                        <h2 class="section-title font-instrumentsans-medium">Radicar PQRS</h2>
                     </div>
                 </div>
-
-                <div class="flex flex-col sm:flex-row gap-3 justify-center">
-                    <a href="{{ route('pqrs.consultar') }}"
-                       class="bg-[#3366CC] hover:bg-[#27429c] text-white font-semibold px-6 py-2 rounded-lg transition-colors text-sm">
-                        Consultar estado de mi PQRS
-                    </a>
-                    <a href="{{ route('pqrs') }}"
-                       class="border border-gray-300 text-gray-700 hover:bg-gray-50 font-semibold px-6 py-2 rounded-lg transition-colors text-sm">
-                        Radicar otra PQRS
-                    </a>
+                <div class="text-wrapper">
+                    <p class="text">Peticiones, Quejas, Reclamos y Solicitudes — Alumbrado Público.</p>
                 </div>
             </div>
-        @endif
+        </div>
+    </section>
 
-    </div>
+    <section class="section-spacing-bottom">
+        <div class="container large">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+
+                    {{-- Indicador de pasos --}}
+                    <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:34px;">
+                        @foreach ([['knzzcfyy','Datos',1],['hmpomorl','Solicitud',2],['lvrxlmju','Confirmación',3]] as $idx => [$ic,$lbl,$n])
+                            <div style="display:flex;flex-direction:column;align-items:center;">
+                                <div style="width:56px;height:56px;border-radius:9999px;display:flex;align-items:center;justify-content:center;border:2px solid;{{ $paso >= $n ? 'border-color:#3366CC;background:rgba(51,102,204,.08);' : 'border-color:#e2e8f0;background:#fff;' }}">
+                                    <lord-icon src="https://cdn.lordicon.com/{{ $ic }}.json" trigger="loop" delay="{{ 1200 + $idx*400 }}"
+                                        colors="primary:#121331,secondary:#000000" style="width:34px;height:34px;{{ $paso >= $n ? '' : 'opacity:.4;' }}"></lord-icon>
+                                </div>
+                                <span style="font-size:12px;margin-top:6px;{{ $paso >= $n ? 'color:#3366CC;font-weight:600;' : 'color:#94a3b8;' }}">{{ $lbl }}</span>
+                            </div>
+                            @if ($n < 3)
+                                <div style="width:48px;height:2px;margin-bottom:18px;{{ $paso > $n ? 'background:#3366CC;' : 'background:#e2e8f0;' }}"></div>
+                            @endif
+                        @endforeach
+                    </div>
+
+                    <div class="siap-panel fade-anim" style="padding:40px;">
+
+                        {{-- PASO 1 --}}
+                        @if ($paso === 1)
+                            <h3 style="font-family:'Thunder',sans-serif;font-weight:600;font-size:28px;color:var(--siap-ink);margin:0 0 24px;">Datos del ciudadano</h3>
+                            <div class="row" style="--bs-gutter-y:18px;">
+                                <div class="col-12">
+                                    <label class="siap-label">Nombre completo <span style="color:#dc2626;">*</span></label>
+                                    <input type="text" wire:model="nombre_ciudadano" placeholder="Ej. Juan Carlos Pérez" class="siap-input">
+                                    @error('nombre_ciudadano') <p style="color:#dc2626;font-size:13px;margin-top:6px;">{{ $message }}</p> @enderror
+                                </div>
+                                <div class="col-12">
+                                    <label class="siap-label">Número de cédula <span style="color:#dc2626;">*</span></label>
+                                    <input type="text" wire:model="numero_cedula" inputmode="numeric" placeholder="Ej. 12345678" class="siap-input">
+                                    @error('numero_cedula') <p style="color:#dc2626;font-size:13px;margin-top:6px;">{{ $message }}</p> @enderror
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="siap-label">Correo electrónico <span style="color:#94a3b8;font-weight:400;">(opcional)</span></label>
+                                    <input type="email" wire:model="email" placeholder="correo@ejemplo.com" class="siap-input">
+                                    @error('email') <p style="color:#dc2626;font-size:13px;margin-top:6px;">{{ $message }}</p> @enderror
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="siap-label">Teléfono celular <span style="color:#94a3b8;font-weight:400;">(opcional)</span></label>
+                                    <input type="tel" wire:model="telefono" inputmode="numeric" placeholder="Ej. 3001234567" class="siap-input">
+                                    @error('telefono') <p style="color:#dc2626;font-size:13px;margin-top:6px;">{{ $message }}</p> @enderror
+                                </div>
+                            </div>
+                            <div style="margin-top:28px;display:flex;justify-content:flex-end;">
+                                <button wire:click="siguiente" class="siap-btn">Siguiente</button>
+                            </div>
+                        @endif
+
+                        {{-- PASO 2 --}}
+                        @if ($paso === 2)
+                            <h3 style="font-family:'Thunder',sans-serif;font-weight:600;font-size:28px;color:var(--siap-ink);margin:0 0 24px;">Detalles de la solicitud</h3>
+                            <div class="row" style="--bs-gutter-y:18px;">
+                                <div class="col-12">
+                                    <label class="siap-label">Tipo de solicitud <span style="color:#dc2626;">*</span></label>
+                                    <select wire:model="tipo_solicitud" class="siap-select" style="width:100%;height:auto;min-height:44px;">
+                                        <option value="">-- Seleccione --</option>
+                                        <option value="peticion">Petición</option>
+                                        <option value="queja">Queja</option>
+                                        <option value="reclamo">Reclamo</option>
+                                        <option value="solicitud">Solicitud</option>
+                                    </select>
+                                    @error('tipo_solicitud') <p style="color:#dc2626;font-size:13px;margin-top:6px;">{{ $message }}</p> @enderror
+                                </div>
+                                <div class="col-12">
+                                    <label class="siap-label">Descripción <span style="color:#dc2626;">*</span> <span style="color:#94a3b8;font-weight:400;">(mínimo 20 caracteres)</span></label>
+                                    <textarea wire:model="descripcion" rows="5" placeholder="Describa detalladamente su solicitud, incluyendo la ubicación del problema y el tiempo que lleva presentándose..." class="siap-input" style="resize:none;"></textarea>
+                                    <p style="font-size:12px;color:#94a3b8;margin:6px 0 0;text-align:right;">{{ mb_strlen($descripcion) }} / 2000</p>
+                                    @error('descripcion') <p style="color:#dc2626;font-size:13px;margin-top:6px;">{{ $message }}</p> @enderror
+                                </div>
+                                <div class="col-12">
+                                    <label class="siap-label">Ubicación en el mapa <span style="color:#94a3b8;font-weight:400;">(opcional — haga clic para colocar el pin)</span></label>
+                                    @if ($elemento_id)
+                                        <p style="font-size:13px;color:var(--siap-blue);background:rgba(51,102,204,.06);border:1px solid rgba(51,102,204,.2);border-radius:10px;padding:8px 12px;margin:0 0 10px;">
+                                            Se ha pre-seleccionado el elemento de infraestructura #{{ $elemento_id }}. El mapa muestra su ubicación exacta.
+                                        </p>
+                                    @endif
+                                    <div id="mapa-pqrs" class="siap-map-canvas" style="height:300px;border-radius:14px;overflow:hidden;border:1px solid rgba(12,42,67,.12);"
+                                         wire:ignore
+                                         x-data="mapaPqrs({ lat: {{ $latitud ?? 5.976 }}, lng: {{ $longitud ?? -74.594 }}, hasPreciseLocation: {{ ($latitud !== null) ? 'true' : 'false' }} })"
+                                         x-init="init()"></div>
+                                    @if ($latitud !== null && $longitud !== null)
+                                        <p style="font-size:12px;color:#64748b;margin:6px 0 0;">Pin en: {{ number_format((float) $latitud, 6) }}, {{ number_format((float) $longitud, 6) }}</p>
+                                    @else
+                                        <p style="font-size:12px;color:#94a3b8;margin:6px 0 0;">No se ha colocado ningún pin.</p>
+                                    @endif
+                                </div>
+                            </div>
+                            @error('general') <p style="color:#dc2626;font-size:14px;margin-top:16px;text-align:center;">{{ $message }}</p> @enderror
+                            <div style="margin-top:28px;display:flex;justify-content:space-between;gap:12px;">
+                                <button wire:click="anterior" class="siap-btn siap-btn-ghost">Anterior</button>
+                                <button wire:click="enviar" class="siap-btn">Enviar solicitud</button>
+                            </div>
+                        @endif
+
+                        {{-- PASO 3 --}}
+                        @if ($paso === 3)
+                            <div style="text-align:center;padding:8px 0;">
+                                <div style="display:flex;justify-content:center;margin-bottom:14px;">
+                                    <lord-icon src="https://cdn.lordicon.com/lvrxlmju.json" trigger="loop" delay="500"
+                                        style="width:110px;height:110px"></lord-icon>
+                                </div>
+                                <h3 style="font-family:'Thunder',sans-serif;font-weight:600;font-size:32px;color:var(--siap-ink);margin:0 0 6px;">PQRS radicada exitosamente</h3>
+                                <p style="color:#475569;font-size:14px;margin:0 0 22px;">Su solicitud ha sido registrada en el sistema.</p>
+
+                                <div style="background:#f0fdf4;border:1px solid rgba(51,102,204,.4);border-radius:18px;padding:18px 28px;display:inline-block;margin-bottom:24px;">
+                                    <p style="font-size:13px;color:#64748b;margin:0 0 4px;">Número de radicado</p>
+                                    <p class="siap-stat-num" style="font-size:28px;color:var(--siap-ink);margin:0;letter-spacing:1px;">{{ $radicadoGenerado }}</p>
+                                </div>
+
+                                <div style="text-align:left;background:#f8fafc;border-radius:16px;padding:22px;margin-bottom:24px;">
+                                    <p style="font-weight:700;color:var(--siap-ink);font-size:14px;margin:0 0 14px;">Próximos pasos:</p>
+                                    @foreach ([
+                                        'Guarde su número de radicado. Lo necesitará para consultar el estado de su solicitud.',
+                                        'La Secretaría de Obras Públicas revisará su solicitud en un plazo de 15 días hábiles.',
+                                        'Si proporcionó correo electrónico o teléfono, recibirá notificaciones sobre el avance.',
+                                    ] as $i => $paso_txt)
+                                        <div style="display:flex;align-items:flex-start;gap:12px;font-size:14px;color:#475569;margin-bottom:10px;">
+                                            <span style="width:22px;height:22px;background:var(--siap-blue);color:#fff;border-radius:9999px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;font-weight:700;">{{ $i + 1 }}</span>
+                                            <p style="margin:0;">{{ $paso_txt }}</p>
+                                        </div>
+                                    @endforeach
+                                </div>
+
+                                <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+                                    <a href="{{ route('pqrs.consultar') }}" class="siap-btn">Consultar estado de mi PQRS</a>
+                                    <a href="{{ route('pqrs') }}" class="siap-btn siap-btn-ghost">Radicar otra PQRS</a>
+                                </div>
+                            </div>
+                        @endif
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </div>
 
 @push('scripts')

@@ -1,165 +1,151 @@
-<div class="min-h-screen pb-16 pt-28 lg:pt-32">
-    <div class="mx-auto max-w-7xl px-4">
-
-        <!-- Header -->
-        <div class="mb-10">
-            <span class="corp-eyebrow">Transparencia</span>
-            <h1 class="font-display mt-4 text-4xl font-bold tracking-tight md:text-5xl" style="color:var(--siap-ink)">Reportes del alumbrado público</h1>
-            <p class="mt-2 text-slate-500">Municipio de Puerto Boyacá — Información pública del servicio de alumbrado</p>
-        </div>
-
-        <!-- Summary Cards -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-            <div class="corp-card p-6 border-l-4 border-[#3366CC]">
-                <p class="text-sm text-slate-500 uppercase tracking-wide">Total Elementos</p>
-                <p class="font-display text-4xl font-bold text-[#3366CC] mt-1">{{ $total_elementos }}</p>
+<div>
+    {{-- Encabezado --}}
+    <section class="page-title-area">
+        <div class="container large">
+            <div class="page-title-area-inner section-spacing-top">
+                <div class="page-title-wrapper">
+                    <h2 class="page-title fade-anim">Reportes</h2>
+                </div>
             </div>
+        </div>
+    </section>
 
+    <section>
+        <div class="container large">
+            <div class="section-header fade-anim" style="padding-top:24px;">
+                <div class="section-title-wrapper">
+                    <div class="subtitle-wrapper"><span class="section-subtitle">Transparencia</span></div>
+                    <div class="title-wrapper">
+                        <h2 class="section-title font-instrumentsans-medium">Reportes del alumbrado público</h2>
+                    </div>
+                </div>
+                <div class="text-wrapper">
+                    <p class="text">Municipio de Puerto Boyacá — Información pública del servicio de alumbrado.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-spacing-bottom">
+        <div class="container large">
+
+            {{-- Tarjetas resumen --}}
             @php
                 $operativos = $por_estado['operativa'] ?? 0;
                 $pctOperativos = $total_elementos > 0 ? round($operativos / $total_elementos * 100, 1) : 0;
-            @endphp
-            <div class="corp-card p-6 border-l-4 border-green-500">
-                <p class="text-sm text-slate-500 uppercase tracking-wide">Operativos</p>
-                <p class="font-display text-4xl font-bold text-green-600 mt-1">{{ $pctOperativos }}%</p>
-                <p class="text-xs text-slate-400 mt-1">{{ $operativos }} de {{ $total_elementos }}</p>
-            </div>
-
-            @php
                 $pqrsPendientes = ($pqrs_por_estado['radicada'] ?? 0) + ($pqrs_por_estado['en_proceso'] ?? 0);
             @endphp
-            <div class="corp-card p-6 border-l-4 border-yellow-500">
-                <p class="text-sm text-slate-500 uppercase tracking-wide">PQRS Pendientes</p>
-                <p class="font-display text-4xl font-bold text-yellow-600 mt-1">{{ $pqrsPendientes }}</p>
+            <div class="row fade-anim" style="--bs-gutter-y:24px;margin-bottom:32px;">
+                @foreach ([
+                    ['Total elementos', $total_elementos, '#3366CC', null],
+                    ['Operativos', $pctOperativos.'%', '#16a34a', $operativos.' de '.$total_elementos],
+                    ['PQRS pendientes', $pqrsPendientes, '#f59e0b', null],
+                    ['PQRS resueltas', ($pqrs_por_estado['resuelta'] ?? 0), '#3366CC', null],
+                ] as [$label, $valor, $color, $sub])
+                    <div class="col-lg-3 col-md-6">
+                        <div class="siap-panel" style="padding:30px 28px;height:100%;">
+                            <p class="siap-stat-num" style="font-size:46px;color:var(--siap-ink);margin:0;line-height:1;">{{ $valor }}</p>
+                            <p style="font-size:13px;font-weight:600;color:var(--siap-ink);margin:12px 0 0;">{{ $label }}</p>
+                            @if ($sub)<p style="font-size:12px;color:#94a3b8;margin:3px 0 0;">{{ $sub }}</p>@endif
+                        </div>
+                    </div>
+                @endforeach
             </div>
 
-            <div class="corp-card p-6 border-l-4 border-blue-500">
-                <p class="text-sm text-slate-500 uppercase tracking-wide">PQRS Resueltas</p>
-                <p class="font-display text-4xl font-bold text-blue-600 mt-1">{{ $pqrs_por_estado['resuelta'] ?? 0 }}</p>
+            {{-- Inventario por tipo / estado --}}
+            <div class="row fade-anim" style="--bs-gutter-y:24px;margin-bottom:32px;">
+                <div class="col-lg-6">
+                    <div class="siap-panel" style="padding:30px;height:100%;">
+                        <h3 style="font-family:'Thunder',sans-serif;font-weight:600;font-size:26px;color:var(--siap-ink);margin:0 0 18px;">Elementos por tipo</h3>
+                        <table class="siap-table">
+                            <thead><tr><th>Tipo</th><th style="text-align:right;">Cantidad</th></tr></thead>
+                            <tbody>
+                                @forelse ($por_tipo as $tipo => $cantidad)
+                                    <tr><td style="text-transform:capitalize;">{{ str_replace('_', ' ', $tipo) }}</td><td style="text-align:right;font-weight:600;">{{ $cantidad }}</td></tr>
+                                @empty
+                                    <tr><td colspan="2" style="text-align:center;color:#94a3b8;">Sin datos</td></tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="siap-panel" style="padding:30px;height:100%;">
+                        <h3 style="font-family:'Thunder',sans-serif;font-weight:600;font-size:26px;color:var(--siap-ink);margin:0 0 18px;">Elementos por estado</h3>
+                        <table class="siap-table">
+                            <thead><tr><th>Estado</th><th style="text-align:right;">Cantidad</th></tr></thead>
+                            <tbody>
+                                @forelse ($por_estado as $estado => $cantidad)
+                                    <tr><td style="text-transform:capitalize;">{{ str_replace('_', ' ', $estado) }}</td><td style="text-align:right;font-weight:600;">{{ $cantidad }}</td></tr>
+                                @empty
+                                    <tr><td colspan="2" style="text-align:center;color:#94a3b8;">Sin datos</td></tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <!-- Inventario por Tipo -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
-            <div class="bg-white rounded-xl shadow p-6">
-                <h2 class="text-lg font-semibold text-gray-700 mb-4">Elementos por Tipo</h2>
-                <table class="w-full text-sm">
-                    <thead>
-                        <tr class="text-left text-gray-500 border-b">
-                            <th class="pb-2">Tipo</th>
-                            <th class="pb-2 text-right">Cantidad</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($por_tipo as $tipo => $cantidad)
-                        <tr class="border-b last:border-0">
-                            <td class="py-2 capitalize">{{ str_replace('_', ' ', $tipo) }}</td>
-                            <td class="py-2 text-right font-medium">{{ $cantidad }}</td>
-                        </tr>
-                        @empty
-                        <tr><td colspan="2" class="py-4 text-center text-gray-400">Sin datos</td></tr>
-                        @endforelse
-                    </tbody>
-                </table>
+            {{-- Facturación reciente --}}
+            <div class="siap-panel fade-anim" style="padding:30px;margin-bottom:32px;">
+                <h3 style="font-family:'Thunder',sans-serif;font-weight:600;font-size:26px;color:var(--siap-ink);margin:0 0 18px;">Facturación reciente (últimos 6 períodos)</h3>
+                <div style="overflow-x:auto;">
+                    <table class="siap-table">
+                        <thead><tr><th>Período</th><th>Empresa</th><th>kWh consumidos</th><th>Valor facturado</th><th>Estado</th></tr></thead>
+                        <tbody>
+                            @forelse ($facturacion_reciente as $f)
+                                <tr>
+                                    <td>{{ $f->periodo }}</td>
+                                    <td>{{ $f->empresa_energetica ?? '—' }}</td>
+                                    <td>{{ number_format($f->kwh_consumidos ?? 0, 0, ',', '.') }}</td>
+                                    <td>$ {{ number_format($f->valor_facturado ?? 0, 0, ',', '.') }}</td>
+                                    <td>
+                                        <span style="padding:2px 10px;border-radius:9999px;font-size:12px;font-weight:600;
+                                            {{ $f->estado === 'pagada' ? 'background:#dcfce7;color:#15803d;' : ($f->estado === 'vencida' ? 'background:#fee2e2;color:#b91c1c;' : 'background:#fef9c3;color:#a16207;') }}">
+                                            {{ ucfirst($f->estado ?? 'pendiente') }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr><td colspan="5" style="text-align:center;color:#94a3b8;">Sin registros de facturación</td></tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
-            <div class="bg-white rounded-xl shadow p-6">
-                <h2 class="text-lg font-semibold text-gray-700 mb-4">Elementos por Estado</h2>
-                <table class="w-full text-sm">
-                    <thead>
-                        <tr class="text-left text-gray-500 border-b">
-                            <th class="pb-2">Estado</th>
-                            <th class="pb-2 text-right">Cantidad</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($por_estado as $estado => $cantidad)
-                        <tr class="border-b last:border-0">
-                            <td class="py-2 capitalize">{{ str_replace('_', ' ', $estado) }}</td>
-                            <td class="py-2 text-right font-medium">{{ $cantidad }}</td>
-                        </tr>
-                        @empty
-                        <tr><td colspan="2" class="py-4 text-center text-gray-400">Sin datos</td></tr>
-                        @endforelse
-                    </tbody>
-                </table>
+            {{-- Recaudos recientes --}}
+            <div class="siap-panel fade-anim" style="padding:30px;margin-bottom:32px;">
+                <h3 style="font-family:'Thunder',sans-serif;font-weight:600;font-size:26px;color:var(--siap-ink);margin:0 0 18px;">Recaudos recientes (últimos 6)</h3>
+                <div style="overflow-x:auto;">
+                    <table class="siap-table">
+                        <thead><tr><th>Período</th><th>Concepto</th><th>Valor</th><th>Fuente</th></tr></thead>
+                        <tbody>
+                            @forelse ($recaudos_recientes as $r)
+                                <tr>
+                                    <td>{{ $r->periodo ?? '—' }}</td>
+                                    <td>{{ $r->concepto ?? '—' }}</td>
+                                    <td>$ {{ number_format($r->valor_recaudado ?? 0, 0, ',', '.') }}</td>
+                                    <td>{{ $r->fuente_pago ?? '—' }}</td>
+                                </tr>
+                            @empty
+                                <tr><td colspan="4" style="text-align:center;color:#94a3b8;">Sin registros de recaudo</td></tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
 
-        <!-- Facturación Reciente -->
-        <div class="bg-white rounded-xl shadow p-6 mb-10">
-            <h2 class="text-lg font-semibold text-gray-700 mb-4">Facturación Reciente (últimos 6 períodos)</h2>
-            <div class="overflow-x-auto">
-                <table class="w-full text-sm">
-                    <thead>
-                        <tr class="text-left text-gray-500 border-b">
-                            <th class="pb-2 pr-4">Período</th>
-                            <th class="pb-2 pr-4">Empresa</th>
-                            <th class="pb-2 pr-4">kWh Consumidos</th>
-                            <th class="pb-2 pr-4">Valor Facturado</th>
-                            <th class="pb-2">Estado</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($facturacion_reciente as $f)
-                        <tr class="border-b last:border-0">
-                            <td class="py-2 pr-4">{{ $f->periodo }}</td>
-                            <td class="py-2 pr-4">{{ $f->empresa_energetica ?? '—' }}</td>
-                            <td class="py-2 pr-4">{{ number_format($f->kwh_consumidos ?? 0, 0, ',', '.') }}</td>
-                            <td class="py-2 pr-4">$ {{ number_format($f->valor_facturado ?? 0, 0, ',', '.') }}</td>
-                            <td class="py-2">
-                                <span class="px-2 py-0.5 rounded-full text-xs font-medium
-                                    {{ $f->estado === 'pagada' ? 'bg-green-100 text-green-700' : ($f->estado === 'vencida' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700') }}">
-                                    {{ ucfirst($f->estado ?? 'pendiente') }}
-                                </span>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr><td colspan="5" class="py-4 text-center text-gray-400">Sin registros de facturación</td></tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Recaudos Recientes -->
-        <div class="bg-white rounded-xl shadow p-6 mb-10">
-            <h2 class="text-lg font-semibold text-gray-700 mb-4">Recaudos Recientes (últimos 6)</h2>
-            <div class="overflow-x-auto">
-                <table class="w-full text-sm">
-                    <thead>
-                        <tr class="text-left text-gray-500 border-b">
-                            <th class="pb-2 pr-4">Período</th>
-                            <th class="pb-2 pr-4">Concepto</th>
-                            <th class="pb-2 pr-4">Valor</th>
-                            <th class="pb-2">Fuente</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($recaudos_recientes as $r)
-                        <tr class="border-b last:border-0">
-                            <td class="py-2 pr-4">{{ $r->periodo ?? '—' }}</td>
-                            <td class="py-2 pr-4">{{ $r->concepto ?? '—' }}</td>
-                            <td class="py-2 pr-4">$ {{ number_format($r->valor_recaudado ?? 0, 0, ',', '.') }}</td>
-                            <td class="py-2">{{ $r->fuente_pago ?? '—' }}</td>
-                        </tr>
-                        @empty
-                        <tr><td colspan="4" class="py-4 text-center text-gray-400">Sin registros de recaudo</td></tr>
-                        @endforelse
-                    </tbody>
-                </table>
+            {{-- Nota institucional --}}
+            <div class="siap-panel fade-anim" style="padding:30px;background:rgba(51,102,204,.04);border-color:rgba(51,102,204,.2);">
+                <h3 style="font-family:'Thunder',sans-serif;font-weight:600;font-size:24px;color:var(--siap-blue);margin:0 0 10px;">Información pública</h3>
+                <p style="font-size:14px;color:#475569;margin:0;">
+                    La Alcaldía de Puerto Boyacá publica el inventario del sistema de alumbrado público, los indicadores
+                    de calidad del servicio y la información financiera asociada a su prestación. Los datos presentados
+                    corresponden al Sistema de Información de Alumbrado Público (SIAP) municipal y son actualizados
+                    periódicamente por la Secretaría de Obras Públicas.
+                </p>
             </div>
         </div>
-
-        <!-- Nota institucional -->
-        <div class="bg-[#3366CC]/5 border border-[#3366CC]/20 rounded-xl p-6">
-            <h3 class="font-semibold text-[#3366CC] mb-2">Información pública</h3>
-            <p class="text-sm text-gray-600">
-                La Alcaldía de Puerto Boyacá publica el inventario del sistema de alumbrado público, los indicadores
-                de calidad del servicio y la información financiera asociada a su prestación. Los datos presentados
-                corresponden al Sistema de Información de Alumbrado Público (SIAP) municipal y son actualizados
-                periódicamente por la Secretaría de Obras Públicas.
-            </p>
-        </div>
-    </div>
+    </section>
 </div>

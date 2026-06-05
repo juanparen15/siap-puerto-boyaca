@@ -1,154 +1,280 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Reporta daños en el alumbrado público de Puerto Boyacá. Selecciona el punto en el mapa, describe el problema y la Alcaldía lo recibe al instante.">
+    <meta name="description" content="Reporta daños en el alumbrado público de Puerto Boyacá. Ubica el punto en el mapa, describe el problema y la Alcaldía lo recibe al instante.">
     <meta name="robots" content="index, follow">
-    <link rel="icon" type="image/png" href="{{ asset('images/escudo.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('images/LOGO ALCALDIA.png') }}">
     <title>SIAP · Alumbrado Público de Puerto Boyacá</title>
 
-    {{-- Fuentes distintivas (Bunny Fonts — privacidad para sitio gov) --}}
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=sora:400,600,700,800|public-sans:400,500,600,700" rel="stylesheet">
+    {{-- Vendor CSS (plantilla Redox) --}}
+    <link rel="stylesheet" href="{{ asset('redox/vendor/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('redox/vendor/fontawesome.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('redox/vendor/swiper-bundle.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('redox/vendor/meanmenu.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('redox/vendor/magnific-popup.css') }}">
+    <link rel="stylesheet" href="{{ asset('redox/vendor/animate.min.css') }}">
 
+    {{-- CSS principal de la plantilla --}}
+    <link rel="stylesheet" href="{{ asset('redox/css/style.css') }}?v=1.0">
+
+    {{-- Tailwind + estilos de mapa/popup --}}
     @vite(['resources/css/app.css', 'resources/css/public.css', 'resources/js/app.js'])
+
+    {{-- Ajustes SIAP (deben ir DESPUÉS de todo para ganar especificidad) --}}
+    <link rel="stylesheet" href="{{ asset('redox/siap-redox.css') }}?v=1.0">
+
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
     @stack('styles')
 </head>
-<body class="corp-bg text-slate-700 antialiased">
 
-    {{-- Filtro de distorsión para el efecto liquid glass --}}
-    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-        <filter id="glass-distortion" x="0%" y="0%" width="100%" height="100%" filterUnits="objectBoundingBox">
-            <feTurbulence type="fractalNoise" baseFrequency="0.001 0.005" numOctaves="1" seed="17" result="turbulence"/>
-            <feComponentTransfer in="turbulence" result="mapped">
-                <feFuncR type="gamma" amplitude="1" exponent="10" offset="0.5"/>
-                <feFuncG type="gamma" amplitude="0" exponent="1" offset="0"/>
-                <feFuncB type="gamma" amplitude="0" exponent="1" offset="0.5"/>
-            </feComponentTransfer>
-            <feGaussianBlur in="turbulence" stdDeviation="3" result="softMap"/>
-            <feSpecularLighting in="softMap" surfaceScale="5" specularConstant="1" specularExponent="100" lighting-color="white" result="specLight">
-                <fePointLight x="-200" y="-200" z="300"/>
-            </feSpecularLighting>
-            <feComposite in="specLight" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" result="litImage"/>
-            <feDisplacementMap in="SourceGraphic" in2="softMap" scale="180" xChannelSelector="R" yChannelSelector="G"/>
-        </filter>
-    </svg>
+<body class="body-wrapper body-digital-agency">
+
+    {{-- Preloader --}}
+    <div id="preloader">
+        <div id="container" class="container-preloader">
+            <div class="animation-preloader">
+                <div class="spinner"></div>
+            </div>
+            <div class="loader-section section-left"></div>
+            <div class="loader-section section-right"></div>
+        </div>
+    </div>
+
+    {{-- Scroll to top --}}
+    <div class="progress-wrap">
+        <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+            <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"></path>
+        </svg>
+    </div>
+
+    {{-- Cursor animado --}}
+    <div class="cursor-wrapper relative">
+        <div class="cursor"></div>
+        <div class="cursor-follower"></div>
+    </div>
 
     @php
         $nav = [
-            ['landing', 'Inicio', 'https://cdn.lordicon.com/pgirtdfe.json'],
-            ['mapa', 'Mapa', 'https://cdn.lordicon.com/dhmavvpz.json'],
-            ['reportes', 'Reportes', 'https://cdn.lordicon.com/wdztjihe.json'],
-            ['pqrs.consultar', 'Consultar', 'https://cdn.lordicon.com/iuvnsegf.json'],
+            ['landing', 'Inicio'],
+            ['mapa', 'Mapa'],
+            ['reportes', 'Reportes'],
+            ['pqrs.consultar', 'Consultar'],
+            ['pqrs', 'Radicar PQRS'],
         ];
     @endphp
 
-    {{-- Header flotante de vidrio líquido (estilo Apple) --}}
-    <nav x-data="{ abierto: false }" class="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-4 sm:pt-4">
-        <div class="lg-surface lg-sheen mx-auto flex h-14 max-w-6xl items-center justify-between rounded-2xl px-3 sm:px-5">
-            <a href="{{ route('landing') }}" class="flex items-center gap-2.5">
-                <img src="{{ asset('images/escudo.png') }}" alt="Escudo Puerto Boyacá" class="h-9 w-auto" onerror="this.style.display='none'">
-                <div class="leading-tight">
-                    <span class="block font-display text-base font-bold text-[#3366CC]">SIAP</span>
-                    <span class="hidden text-[11px] text-slate-500 sm:block">Alcaldía de Puerto Boyacá</span>
+    {{-- Panel lateral (menú móvil) --}}
+    <aside class="fix">
+        <div class="side-info">
+            <div class="side-info-content">
+                <div class="offset-widget offset-header">
+                    <div class="offset-logo">
+                        <a href="{{ route('landing') }}">
+                            <img src="{{ asset('images/LOGO ALCALDIA.png') }}" alt="Escudo Puerto Boyacá" style="height:48px;width:auto;">
+                        </a>
+                    </div>
+                    <button id="side-info-close" class="side-info-close">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
-            </a>
-
-            {{-- Desktop --}}
-            <div class="hidden items-center gap-1 md:flex">
-                @foreach ($nav as $i => [$ruta, $label, $icono])
-                    <a href="{{ route($ruta) }}"
-                       class="flex items-center gap-1.5 rounded-full px-3.5 py-2 text-sm font-medium transition {{ request()->routeIs($ruta) ? 'bg-white/80 text-[#3366CC] shadow-sm' : 'text-slate-600 hover:bg-white/50 hover:text-[#3366CC]' }}">
-                        <lord-icon src="{{ $icono }}" trigger="loop" delay="{{ 2200 + $i * 600 }}" stroke="bold"
-                            colors="primary:#3366CC" style="width:19px;height:19px;pointer-events:none"></lord-icon>
-                        {{ $label }}
+                <div class="mobile-menu d-xl-none fix"></div>
+                <div class="offset-button">
+                    <a href="{{ route('pqrs') }}" class="rr-btn hover-bg-theme">
+                        <span class="btn-wrap">
+                            <span class="text-one">Reportar daño</span>
+                            <span class="text-two">Reportar daño</span>
+                        </span>
                     </a>
-                @endforeach
-                <a href="{{ route('landing') }}#mapa"
-                   class="lg-btn-primary ml-2 inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold">
-                    Reportar daño
-                </a>
-            </div>
-
-            <button @click="abierto = !abierto" class="rounded-full p-2 text-slate-600 md:hidden" aria-label="Menú">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="h-6 w-6"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
-            </button>
-        </div>
-
-        {{-- Mobile menu --}}
-        <div x-show="abierto" x-collapse class="lg-surface lg-sheen mx-auto mt-2 max-w-6xl rounded-2xl p-3 md:hidden" style="display:none;">
-            <div class="space-y-1">
-                @foreach ($nav as [$ruta, $label, $icono])
-                    <a href="{{ route($ruta) }}" class="block rounded-xl px-3 py-2 text-sm font-medium text-slate-700 hover:bg-white/60 hover:text-[#3366CC]">{{ $label }}</a>
-                @endforeach
-                <a href="{{ route('landing') }}#mapa" class="lg-btn-primary mt-1 block rounded-xl px-3 py-2 text-center text-sm font-semibold">Reportar daño</a>
-            </div>
-        </div>
-    </nav>
-
-    <main class="pt-20">
-        @yield('content')
-    </main>
-
-    {{-- Footer goteado (drip) navy --}}
-    <footer class="drip-footer mt-16">
-        <svg class="drip-top" viewBox="0 0 1200 80" preserveAspectRatio="none" aria-hidden="true">
-            <path fill="#eef1f6" d="M0,0 H1200 V18
-                Q1140,55 1080,18 Q1020,30 960,18 Q900,62 840,18 Q780,38 720,18
-                Q660,50 600,18 Q540,28 480,18 Q420,58 360,18 Q300,34 240,18
-                Q180,48 120,18 Q60,30 0,18 V0 Z"/>
-        </svg>
-
-        <div class="mx-auto max-w-7xl px-4 pb-12 pt-6">
-            <div class="grid grid-cols-1 gap-10 md:grid-cols-12">
-                {{-- Marca --}}
-                <div class="md:col-span-5">
-                    <div class="flex items-center gap-4">
-                        <img src="{{ asset('images/escudo.png') }}" alt="Escudo" class="h-14 w-auto" onerror="this.style.display='none'">
-                        <div>
-                            <p class="font-display text-lg font-bold text-white">Alcaldía de Puerto Boyacá</p>
-                            <p class="text-sm text-slate-400">SIAP · Alumbrado Público</p>
+                </div>
+                <div class="offset-widget-box">
+                    <h2 class="title">Contacto</h2>
+                    <div class="contact-meta">
+                        <div class="contact-item">
+                            <span class="icon"><i class="fa-solid fa-location-dot"></i></span>
+                            <span class="text">Secretaría de Obras Públicas, Puerto Boyacá</span>
+                        </div>
+                        <div class="contact-item">
+                            <span class="icon"><i class="fa-solid fa-envelope"></i></span>
+                            <span class="text"><a href="mailto:obraspublicas@puertoboyaca-boyaca.gov.co">obraspublicas@puertoboyaca-boyaca.gov.co</a></span>
+                        </div>
+                        <div class="contact-item">
+                            <span class="icon"><i class="fa-solid fa-phone"></i></span>
+                            <span class="text"><a href="tel:6085550000">(608) 555-0000</a></span>
                         </div>
                     </div>
-                    <p class="mt-5 max-w-sm text-sm leading-relaxed text-slate-400">
-                        Reporta, consulta y haz seguimiento en línea a los reportes del servicio
-                        de alumbrado público del municipio.
-                    </p>
                 </div>
-
-                {{-- Servicios --}}
-                <div class="md:col-span-3">
-                    <p class="font-display mb-4 font-bold text-white">Servicios</p>
-                    <ul class="space-y-2.5 text-sm">
-                        <li><a href="{{ route('landing') }}#mapa" class="text-slate-400 transition hover:text-white">Reportar daño</a></li>
-                        <li><a href="{{ route('mapa') }}" class="text-slate-400 transition hover:text-white">Mapa de alumbrado</a></li>
-                        <li><a href="{{ route('pqrs.consultar') }}" class="text-slate-400 transition hover:text-white">Consultar reporte</a></li>
-                        <li><a href="{{ route('reportes') }}" class="text-slate-400 transition hover:text-white">Reportes públicos</a></li>
-                    </ul>
-                </div>
-
-                {{-- Contacto --}}
-                <div class="md:col-span-4">
-                    <p class="font-display mb-4 font-bold text-white">Contacto</p>
-                    <ul class="space-y-2.5 text-sm text-slate-400">
-                        <li>Secretaría de Obras Públicas</li>
-                        <li>Carrera 4 No. 12-55, Puerto Boyacá</li>
-                        <li>Boyacá, Colombia</li>
-                        <li>Tel: (608) 555-0000</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="mt-10 flex flex-col items-center justify-between gap-2 border-t border-white/10 pt-6 text-xs text-slate-500 sm:flex-row">
-                <span>&copy; {{ date('Y') }} Alcaldía de Puerto Boyacá. Todos los derechos reservados.</span>
-                <span>Desarrollado por <a href="https://renbel.com.co" target="_blank" rel="noopener" class="font-semibold text-slate-300 transition hover:text-white">RENBEL S.A.S.</a></span>
             </div>
         </div>
-    </footer>
+    </aside>
+    <div class="offcanvas-overlay"></div>
 
-    @vite(['resources/js/public-animations.js'])
+    {{-- Header --}}
+    <header class="header-area header-sticky">
+        <div class="header-main">
+            <div class="container large">
+                <div class="header-area__inner">
+                    <div class="header__logo">
+                        <a href="{{ route('landing') }}" class="d-flex align-items-center" style="gap:12px;">
+                            <img src="{{ asset('images/LOGO ALCALDIA.png') }}" class="siap-logo" alt="Escudo Puerto Boyacá" onerror="this.style.display='none'">
+                            {{-- <span class="header-brand-text">
+                                <span class="brand-name">SIAP</span>
+                                <span class="brand-sub">Alumbrado Público</span>
+                            </span> --}}
+                        </a>
+                    </div>
+                    <div class="header__nav">
+                        <nav class="main-menu">
+                            <ul>
+                                @foreach ($nav as [$ruta, $label])
+                                    <li class="{{ request()->routeIs($ruta) ? 'current' : '' }}">
+                                        <a href="{{ route($ruta) }}">{{ $label }}</a>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </nav>
+                    </div>
+                    <div class="header__button">
+                        <a href="{{ route('pqrs') }}" class="rr-btn hover-bg-theme">
+                            <span class="btn-wrap">
+                                <span class="text-one">Reportar daño</span>
+                                <span class="text-two">Reportar daño</span>
+                            </span>
+                        </a>
+                    </div>
+                    <div class="header__navicon d-xl-none">
+                        <button class="side-toggle">
+                            <i class="fa-solid fa-bars"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="has-smooth" id="has_smooth"></div>
+    <div id="smooth-wrapper">
+        <div id="smooth-content">
+
+            <main>
+                @yield('content')
+            </main>
+
+            {{-- Footer --}}
+            <footer class="footer-area">
+                <div class="container large">
+                    <div class="footer-top-inner">
+                        <div class="footer-logo">
+                            <a href="{{ route('landing') }}">
+                                <img src="{{ asset('images/LOGO ALCALDIA.png') }}" alt="Escudo Puerto Boyacá" style="height:70px;width:auto;">
+                            </a>
+                        </div>
+                        <div class="info-text">
+                            <div class="text-wrapper">
+                                <p class="text">El SIAP es el Sistema de Información de Alumbrado Público del municipio de
+                                    Puerto Boyacá: reporta, consulta y haz seguimiento en línea al servicio.</p>
+                            </div>
+                            <div class="info-link">
+                                <a href="mailto:obraspublicas@puertoboyaca-boyaca.gov.co">obraspublicas@puertoboyaca-boyaca.gov.co</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="footer-widget-wrapper-box">
+                        <div class="footer-widget-wrapper">
+                            <div class="footer-widget-box">
+                                <h2 class="title">Servicios</h2>
+                                <ul class="footer-nav-list">
+                                    <li><a href="{{ route('pqrs') }}">Reportar daño</a></li>
+                                    <li><a href="{{ route('mapa') }}">Mapa de alumbrado</a></li>
+                                    <li><a href="{{ route('pqrs.consultar') }}">Consultar reporte</a></li>
+                                    <li><a href="{{ route('pqrs') }}">Radicar PQRS</a></li>
+                                    <li><a href="{{ route('reportes') }}">Reportes públicos</a></li>
+                                </ul>
+                            </div>
+                            <div class="footer-widget-box">
+                                <h2 class="title">Municipio</h2>
+                                <ul class="footer-nav-list">
+                                    <li><a href="https://www.puertoboyaca-boyaca.gov.co" target="_blank" rel="noopener">Alcaldía de Puerto Boyacá</a></li>
+                                    <li><a href="https://www.puertoboyaca-boyaca.gov.co" target="_blank" rel="noopener">Trámites y servicios</a></li>
+                                    <li><a href="{{ route('reportes') }}">Transparencia</a></li>
+                                    <li><a href="{{ url('/admin') }}"><i class="fa-solid fa-lock" style="font-size:11px;margin-right:6px;"></i>Acceso funcionarios</a></li>
+                                </ul>
+                            </div>
+                            <div class="footer-widget-box">
+                                <h2 class="title">Contacto</h2>
+                                <ul class="footer-nav-list">
+                                    <li>Secretaría de Obras Públicas</li>
+                                    <li>Puerto Boyacá, Boyacá</li>
+                                    <li><a href="tel:6085550000">(608) 555-0000</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="copyright-area">
+                    <div class="copyright-area-inner">
+                        <div class="copyright-text">
+                            <p class="text">© {{ date('Y') }} Alcaldía de Puerto Boyacá ·
+                                <a href="{{ url('/admin') }}">Acceso funcionarios</a> ·
+                                Desarrollado por <a href="https://renbel.com.co" target="_blank" rel="noopener">RENBEL S.A.S.</a></p>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+
+        </div>
+    </div>
+
+    {{-- Vendor JS (plantilla Redox) --}}
+    <script src="{{ asset('redox/vendor/jquery-3.7.1.min.js') }}"></script>
+    <script src="{{ asset('redox/vendor/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('redox/vendor/jquery.magnific-popup.min.js') }}"></script>
+    <script src="{{ asset('redox/vendor/swiper-bundle.min.js') }}"></script>
+    <script src="{{ asset('redox/vendor/gsap.min.js') }}"></script>
+    <script src="{{ asset('redox/vendor/ScrollTrigger.min.js') }}"></script>
+    <script src="{{ asset('redox/vendor/ScrollSmoother.min.js') }}"></script>
+    <script src="{{ asset('redox/vendor/ScrollToPlugin.min.js') }}"></script>
+    <script src="{{ asset('redox/vendor/SplitText.min.js') }}"></script>
+    <script src="{{ asset('redox/vendor/TextPlugin.js') }}"></script>
+    <script src="{{ asset('redox/vendor/customEase.js') }}"></script>
+    <script src="{{ asset('redox/vendor/Flip.min.js') }}"></script>
+    <script src="{{ asset('redox/vendor/jquery.meanmenu.min.js') }}"></script>
+    <script src="{{ asset('redox/vendor/backToTop.js') }}"></script>
+    <script src="{{ asset('redox/vendor/matter.js') }}"></script>
+    <script src="{{ asset('redox/vendor/throwable.js') }}"></script>
+    <script src="{{ asset('redox/js/magiccursor.js') }}"></script>
+    <script src="{{ asset('redox/js/main.js') }}?v=1.0"></script>
+
+    {{-- Refrescar GSAP cuando Livewire cambia la altura del contenido --}}
+    <script>
+        document.addEventListener('livewire:initialized', () => {
+            const refresh = () => { if (window.ScrollTrigger) window.ScrollTrigger.refresh(); };
+            Livewire.hook('morph.updated', () => setTimeout(refresh, 60));
+            Livewire.hook('commit', ({ respond }) => respond(() => setTimeout(refresh, 120)));
+        });
+
+        // El smooth-scroll no debe robar la rueda al interactuar con un mapa:
+        // pausamos el smoother mientras el cursor está sobre cualquier mapa.
+        document.addEventListener('mouseover', (e) => {
+            if (e.target.closest && e.target.closest('.siap-map-canvas')) {
+                const sm = window.ScrollSmoother && window.ScrollSmoother.get && window.ScrollSmoother.get();
+                if (sm) sm.paused(true);
+            }
+        });
+        document.addEventListener('mouseout', (e) => {
+            const from = e.target.closest && e.target.closest('.siap-map-canvas');
+            const to = e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest('.siap-map-canvas');
+            if (from && !to) {
+                const sm = window.ScrollSmoother && window.ScrollSmoother.get && window.ScrollSmoother.get();
+                if (sm) sm.paused(false);
+            }
+        });
+    </script>
+
     @stack('scripts')
 </body>
+
 </html>

@@ -24,7 +24,7 @@ function buildPopup(el) {
 
   return `
     <div style="font-family:system-ui,sans-serif;padding:10px 12px;min-width:175px;">
-      <p style="font-weight:700;font-size:13px;color:#1B6B2F;margin:0 0 3px;line-height:1.3;">
+      <p style="font-weight:700;font-size:13px;color:#3366CC;margin:0 0 3px;line-height:1.3;">
         ${rotulo || "Elemento #" + parseInt(el.id, 10)}
       </p>
       <p style="font-size:11px;color:#6b7280;margin:0 0 8px;">
@@ -34,7 +34,7 @@ function buildPopup(el) {
         ${badge.label}
       </span>
       <a href="/pqrs?elemento_id=${parseInt(el.id, 10)}"
-         style="display:flex;align-items:center;justify-content:center;gap:6px;background:#1B6B2F;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-size:12px;font-weight:600;width:100%;box-sizing:border-box;">
+         style="display:flex;align-items:center;justify-content:center;gap:6px;background:#3366CC;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-size:12px;font-weight:600;width:100%;box-sizing:border-box;">
         ${svgFlag} Reportar problema
       </a>
     </div>`;
@@ -57,14 +57,17 @@ window.mapaPublico = function () {
       });
 
       this.map.addControl(new maplibregl.NavigationControl(), "top-right");
-      this.map.addControl(
-        new maplibregl.GeolocateControl({
-          positionOptions: { enableHighAccuracy: true },
-          trackUserLocation: true,
-          showUserLocation: true,
-        }),
-        "top-right"
-      );
+      const geolocate = new maplibregl.GeolocateControl({
+        positionOptions: { enableHighAccuracy: true },
+        trackUserLocation: true,
+        showUserLocation: true,
+      });
+      this.map.addControl(geolocate, "top-right");
+
+      // Botón externo "Mi ubicación"
+      window.siapMiUbicacion = () => {
+        try { geolocate.trigger(); } catch (e) { /* aún no listo */ }
+      };
 
       this.popup = new maplibregl.Popup({ closeButton: true, maxWidth: "240px", offset: 14 });
 

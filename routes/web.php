@@ -17,6 +17,6 @@ Route::get('/pqrs/consultar', ConsultaPqrs::class)->name('pqrs.consultar');
 // Compatibilidad: /reportar quedó integrado en el inicio
 Route::redirect('/reportar', '/')->name('reportar');
 
-Route::middleware(['throttle:5,60'])->group(function () {
-    Route::get('/pqrs', FormularioPqrs::class)->name('pqrs');
-});
+// Radicar PQRS (sin throttle en la vista; el control anti-spam del envío
+// se maneja dentro del componente Livewire).
+Route::get('/pqrs', FormularioPqrs::class)->name('pqrs');

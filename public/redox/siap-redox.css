@@ -1,0 +1,285 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   SIAP · Ajustes sobre la plantilla Redox
+   - Re-tematiza el color de acento al azul gov.co de Puerto Boyacá (#3366CC)
+   - Adapta header, mapa, formularios y tarjetas funcionales al estilo Redox
+   Cargar SIEMPRE después de style.css y del bundle de Vite.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+    --theme: #3366CC;
+    --action: #3366CC;
+    --siap-blue: #3366CC;
+    --siap-blue-dark: #27429c;
+    --siap-ink: #0c2a43;
+}
+
+/* ── Header siempre legible (fondo blanco al fijarse) ───────────────────── */
+.header-area .sticky,
+.header-area .transformed {
+    background-color: #ffffff !important;
+    box-shadow: 0 6px 24px rgba(12, 42, 67, 0.08);
+}
+
+.header-area .header__logo .siap-logo {
+    max-width: none;
+    height: 48px;
+    width: auto;
+}
+
+.header-brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.05;
+}
+.header-brand-text .brand-name {
+    font-family: "Thunder", sans-serif;
+    font-weight: 700;
+    font-size: 26px;
+    letter-spacing: 0.5px;
+    color: var(--siap-ink);
+}
+.header-brand-text .brand-sub {
+    font-size: 11px;
+    color: #64748b;
+}
+
+/* Item de navegación activo */
+.header-area .main-menu ul li.current a,
+.header-area .main-menu ul li a:hover {
+    color: var(--theme);
+}
+
+/* ── Lordicon helper ───────────────────────────────────────────────────── */
+lord-icon { display: inline-block; }
+
+/* ── Botón "Mi ubicación" y controles flotantes sobre el mapa ──────────── */
+.siap-map-shell {
+    position: relative;
+    border-radius: 24px;
+    overflow: hidden;
+    border: 1px solid rgba(12, 42, 67, 0.10);
+    background: #fff;
+    box-shadow: 0 24px 60px rgba(12, 42, 67, 0.10);
+}
+.siap-map-canvas { width: 100%; }
+.siap-map-float {
+    position: absolute;
+    z-index: 5;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(12, 42, 67, 0.10);
+    border-radius: 14px;
+    box-shadow: 0 10px 30px rgba(12, 42, 67, 0.12);
+}
+.siap-btn-ubicacion {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--siap-ink);
+    cursor: pointer;
+}
+.siap-btn-ubicacion:hover { color: var(--theme); }
+.siap-legend-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: #475569;
+}
+.siap-dot { width: 10px; height: 10px; border-radius: 9999px; display: inline-block; }
+
+/* ── Tarjetas / paneles funcionales en clave Redox ─────────────────────── */
+.siap-panel {
+    background: #ffffff;
+    border: 1px solid rgba(12, 42, 67, 0.08);
+    border-radius: 24px;
+    box-shadow: 0 18px 50px rgba(12, 42, 67, 0.07);
+}
+.siap-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--theme);
+}
+.siap-eyebrow::before {
+    content: "";
+    width: 28px;
+    height: 2px;
+    background: var(--theme);
+    display: inline-block;
+}
+
+/* Campos de formulario */
+.siap-input {
+    width: 100%;
+    border: 1px solid rgba(12, 42, 67, 0.18);
+    border-radius: 12px;
+    padding: 11px 14px;
+    font-size: 14px;
+    color: var(--siap-ink);
+    background: #fff;
+    transition: border-color .2s, box-shadow .2s;
+}
+.siap-input:focus {
+    outline: none;
+    border-color: var(--theme);
+    box-shadow: 0 0 0 3px rgba(51, 102, 204, 0.15);
+}
+.siap-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--siap-ink);
+    margin-bottom: 6px;
+}
+
+/* Botón sólido tipo SIAP */
+.siap-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 26px;
+    border-radius: 60px;
+    font-weight: 600;
+    font-size: 15px;
+    background: var(--theme);
+    color: #fff;
+    border: 1px solid var(--theme);
+    cursor: pointer;
+    transition: background .2s, transform .2s;
+}
+.siap-btn:hover { background: var(--siap-blue-dark); color: #fff; transform: translateY(-2px); }
+.siap-btn-ghost {
+    background: transparent;
+    color: var(--siap-ink);
+    border: 1px solid rgba(12, 42, 67, 0.25);
+}
+.siap-btn-ghost:hover { background: rgba(51,102,204,.06); color: var(--theme); border-color: var(--theme); transform: translateY(-2px); }
+
+/* ── Panel de reporte inline (reemplaza el slide-over fijo) ────────────── */
+.siap-report-panel {
+    border: 1px solid rgba(245, 158, 11, 0.35);
+    background: linear-gradient(180deg, #fffaf0 0%, #ffffff 60%);
+}
+
+/* ── Mapa: el smooth-scroll no debe interferir con el gesto del mapa ───── */
+.maplibregl-map { font-family: "Sequel Sans Roman Body", system-ui, sans-serif; }
+
+/* ── Cursor personalizado: ocultar en dispositivos táctiles ────────────── */
+@media (hover: none), (pointer: coarse) {
+    .cursor, .cursor-follower { display: none !important; }
+}
+
+/* Stats grandes */
+.siap-stat-num {
+    font-family: "Thunder", sans-serif;
+    font-weight: 700;
+    line-height: 1;
+}
+
+/* ── Barra de filtros del mapa (consistente y responsive) ──────────────── */
+.siap-filterbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+    background: #ffffff;
+    border: 1px solid rgba(12, 42, 67, 0.10);
+    border-radius: 18px;
+    padding: 14px 16px;
+    box-shadow: 0 10px 30px rgba(12, 42, 67, 0.06);
+}
+.siap-filter-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    flex: 1 1 auto;
+}
+.siap-filter-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+.siap-count { font-size: 13px; color: #64748b; white-space: nowrap; }
+.siap-count strong { color: var(--theme); font-weight: 700; }
+
+/* Selects e inputs del filtro: misma altura, mismo radio, mismo foco */
+.siap-select {
+    flex: 1 1 170px;
+    min-width: 150px;
+    height: 44px;
+    border: 1px solid rgba(12, 42, 67, 0.18);
+    border-radius: 12px;
+    padding: 0 38px 0 14px;
+    font-size: 14px;
+    color: var(--siap-ink);
+    background-color: #fff;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' viewBox='0 0 24 24'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    cursor: pointer;
+    transition: border-color .2s, box-shadow .2s;
+}
+.siap-select:focus {
+    outline: none;
+    border-color: var(--theme);
+    box-shadow: 0 0 0 3px rgba(51, 102, 204, 0.15);
+}
+
+/* Botón de ubicación: misma altura que los selects */
+.siap-btn-ubic {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 44px;
+    padding: 0 20px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #fff;
+    background: var(--theme);
+    border: 1px solid var(--theme);
+    cursor: pointer;
+    transition: background .2s, transform .2s;
+    white-space: nowrap;
+}
+.siap-btn-ubic:hover { background: var(--siap-blue-dark); transform: translateY(-1px); }
+.siap-btn-ubic svg { width: 16px; height: 16px; }
+
+/* Móvil: todo a ancho completo y apilado */
+@media (max-width: 575px) {
+    .siap-filterbar { padding: 12px; }
+    .siap-filter-group { width: 100%; }
+    .siap-select { flex: 1 1 100%; }
+    .siap-filter-actions { width: 100%; justify-content: space-between; }
+    .siap-btn-ubic { flex: 1 1 auto; }
+}
+
+/* Tablas (reportes públicos) con aire Redox */
+.siap-table { width: 100%; font-size: 14px; border-collapse: collapse; }
+.siap-table thead th {
+    text-align: left;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #64748b;
+    padding: 0 0 12px;
+    border-bottom: 1px solid rgba(12,42,67,.1);
+}
+.siap-table tbody td { padding: 12px 0; border-bottom: 1px solid rgba(12,42,67,.06); }
+.siap-table tbody tr:last-child td { border-bottom: 0; }

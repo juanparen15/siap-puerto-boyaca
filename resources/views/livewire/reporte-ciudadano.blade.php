@@ -1,211 +1,535 @@
 <div>
 
-    {{-- ═══════════════════════════════════════════════════════════════════════
-         HERO — base corporativa clara + toques de vidrio
-    ═══════════════════════════════════════════════════════════════════════ --}}
-    <section class="px-3 pt-20 sm:px-4">
-        <div class="renbel-panel relative mx-auto max-w-7xl overflow-hidden px-6 py-20 sm:px-12 lg:py-28">
-            {{-- Texto fantasma de fondo --}}
-            <div class="hero-ghost"><span>Puerto Boyacá</span></div>
-            {{-- Acento de color --}}
-            <div class="corp-accent-blob pointer-events-none absolute -right-32 -top-32 h-[460px] w-[460px] rounded-full blur-2xl"></div>
-
-            <div class="relative z-10 max-w-3xl">
-                <span class="corp-eyebrow">
-                    <span class="relative flex h-2 w-2">
-                        <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#f59e0b] opacity-70"></span>
-                        <span class="relative inline-flex h-2 w-2 rounded-full bg-[#f59e0b]"></span>
-                    </span>
-                    Portal ciudadano · Puerto Boyacá
-                </span>
-
-                <h1 class="font-display mt-6 text-5xl font-extrabold uppercase leading-[0.95] tracking-tight sm:text-6xl lg:text-7xl" style="color:var(--siap-ink)">
-                    Reporta el<br>
-                    <span class="text-grad">alumbrado</span><br>
-                    público
-                </h1>
-
-                <p class="mt-7 max-w-xl text-base leading-relaxed text-slate-500 sm:text-lg">
-                    ¿Una luminaria apagada, un poste caído o un cable expuesto? Ubícalo en el mapa,
-                    cuéntanos qué pasa y la Alcaldía lo atiende. Toma menos de un minuto — incluso de forma anónima.
-                </p>
-
-                <div class="mt-9 flex flex-col gap-3 sm:flex-row">
-                    <a href="#mapa" class="btn-pill">Reportar un daño</a>
-                    <a href="{{ route('pqrs.consultar') }}" class="btn-pill-ghost">Consultar mi reporte</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="relative overflow-hidden">
-        {{-- Stats --}}
-        <div class="relative z-10 mx-auto max-w-4xl px-4 pb-14 pt-14">
-            <div class="lg-surface lg-sheen grid grid-cols-2 overflow-hidden rounded-3xl md:grid-cols-4">
-                @foreach ([
-                    ['total', 'Puntos de luz', 'text-[#0f2540]'],
-                    ['operativos', 'Operativos', 'text-[#16a34a]'],
-                    ['no_operativos', 'Fuera de servicio', 'text-[#dc2626]'],
-                    ['pqrs_activos', 'Reportes activos', 'text-[#f59e0b]'],
-                ] as [$key, $label, $color])
-                    <div class="px-2 py-6 text-center">
-                        <span class="countup font-display block text-3xl font-extrabold md:text-4xl {{ $color }}" data-target="{{ $stats[$key] }}">0</span>
-                        <p class="mt-1 text-[11px] font-semibold uppercase tracking-wide text-slate-500">{{ $label }}</p>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    </section>
-
-    {{-- ═══ CÓMO FUNCIONA ═══ --}}
-    <section class="py-16">
-        <div class="mx-auto max-w-5xl px-4">
-            <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
-                @foreach ([
-                    ['https://cdn.lordicon.com/dhmavvpz.json', 'Ubica el punto', 'Encuentra el poste o la luminaria en el mapa interactivo.'],
-                    ['https://cdn.lordicon.com/tbabdzcy.json', 'Describe el daño', 'Elige el tipo de problema y agrega los detalles. Puedes ser anónimo.'],
-                    ['https://cdn.lordicon.com/pxixoqxa.json', 'Recibe tu radicado', 'Te damos un número para seguir el estado de tu reporte.'],
-                ] as $i => [$icono, $titulo, $desc])
-                    <div class="corp-card relative p-6">
-                        <span class="font-display absolute right-5 top-4 text-4xl font-extrabold text-slate-100">{{ $i + 1 }}</span>
-                        <lord-icon src="{{ $icono }}" trigger="loop" delay="{{ 800 + $i * 500 }}" stroke="bold"
-                            colors="primary:#3366CC,secondary:#22c55e" style="width:52px;height:52px"></lord-icon>
-                        <h3 class="font-display mt-4 text-lg font-bold" style="color:var(--siap-ink)">{{ $titulo }}</h3>
-                        <p class="mt-1 text-sm text-slate-500">{{ $desc }}</p>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    </section>
-
-    {{-- ═══ MAPA ═══ --}}
-    <section id="mapa" class="scroll-mt-24 pb-20">
-        <div class="mx-auto max-w-5xl px-4 pb-6 text-center">
-            <h2 class="font-display text-3xl font-bold md:text-4xl" style="color:var(--siap-ink)">Selecciona en el mapa</h2>
-            <p class="mt-2 text-slate-500">Toca un punto de luz para ver su estado y reportar el problema.</p>
-        </div>
-
-        <div class="mx-auto max-w-6xl px-4">
-            <div class="corp-card relative overflow-hidden p-2">
-                <button type="button" onclick="window.reportarMiUbicacion && window.reportarMiUbicacion()"
-                        class="lg-surface lg-sheen absolute left-5 top-5 z-[5] flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:text-[#3366CC]">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg>
-                    Mi ubicación
-                </button>
-
-                <div class="lg-surface lg-sheen absolute bottom-5 left-5 z-[5] rounded-xl px-4 py-2.5">
-                    <p class="mb-1.5 text-[10px] font-semibold uppercase tracking-wide text-slate-500">Estado</p>
-                    @foreach ([['#16a34a','Sin reportes'],['#f59e0b','Con reporte'],['#dc2626','Crítico'],['#94a3b8','Desinstalada']] as [$c,$l])
-                        <div class="flex items-center gap-2 text-xs text-slate-600">
-                            <span class="h-2.5 w-2.5 rounded-full" style="background:{{ $c }}"></span>{{ $l }}
-                        </div>
-                    @endforeach
-                </div>
-
-                <div id="mapa-reportar" wire:ignore class="overflow-hidden rounded-[1rem]" style="height:74vh;min-height:460px;width:100%;"></div>
-            </div>
-        </div>
-    </section>
-
-    {{-- ═══ FORM SLIDE-OVER ═══ --}}
-    @if ($mostrarForm)
-        <div class="fixed inset-0 z-[1000] flex justify-end">
-            <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" wire:click="cerrarForm"></div>
-
-            <div class="lg-sheen relative flex h-full w-full max-w-md flex-col overflow-y-auto border-l border-white/60 bg-white/90 p-6 shadow-2xl backdrop-blur-2xl">
-                <button wire:click="cerrarForm" class="absolute right-4 top-4 rounded-md p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                </button>
-
-                <div class="mb-5 pr-8">
-                    <span class="inline-flex items-center rounded-full border border-amber-200 bg-amber-50 px-2.5 py-0.5 text-xs font-medium text-amber-700">Reporte ciudadano</span>
-                    <h3 class="font-display mt-2 text-xl font-bold" style="color:var(--siap-ink)">Reportar un problema</h3>
-                    @if ($elementoLabel)
-                        <p class="mt-1 flex items-center gap-1.5 text-sm text-slate-500">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-3.5 w-3.5 shrink-0"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                            {{ $elementoLabel }}
-                        </p>
-                    @endif
-                </div>
-
-                <form wire:submit="enviarReporte" class="flex flex-1 flex-col gap-5">
-                    <div>
-                        <label class="mb-1.5 block text-sm font-medium text-slate-700">Tipo de problema <span class="text-red-500">*</span></label>
-                        <select wire:model="tipoProblema" class="lg-input w-full rounded-lg px-3 py-2.5 text-sm text-slate-700">
-                            <option value="">— Selecciona —</option>
-                            @foreach ($tiposProblema as $val => $label)
-                                <option value="{{ $val }}">{{ $label }}</option>
-                            @endforeach
-                        </select>
-                        @error('tipoProblema') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
-                    </div>
-
-                    <div>
-                        <label class="mb-1.5 block text-sm font-medium text-slate-700">Descripción <span class="text-red-500">*</span></label>
-                        <textarea wire:model="descripcion" rows="4" maxlength="2000"
-                                  placeholder="Describe el problema: desde cuándo ocurre, referencia del lugar, etc."
-                                  class="lg-input w-full resize-none rounded-lg px-3 py-2.5 text-sm text-slate-700"></textarea>
-                        @error('descripcion') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
-                    </div>
-
-                    <div x-data="{ abierto: false }" class="rounded-lg border border-slate-200">
-                        <button type="button" @click="abierto = !abierto" class="flex w-full items-center justify-between px-3 py-2.5 text-sm font-medium text-slate-600">
-                            Tus datos (opcional)
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 transition-transform" :class="abierto && 'rotate-180'"><polyline points="6 9 12 15 18 9"/></svg>
-                        </button>
-                        <div x-show="abierto" x-collapse class="space-y-3 px-3 pb-3" style="display:none;">
-                            <p class="text-xs text-slate-400">Si los proporcionas, podremos informarte el avance. Puedes reportar de forma anónima.</p>
-                            <input wire:model="nombre" placeholder="Nombre completo" class="lg-input w-full rounded-lg px-3 py-2 text-sm">
-                            <input wire:model="cedula" inputmode="numeric" placeholder="Cédula" class="lg-input w-full rounded-lg px-3 py-2 text-sm">
-                            <input wire:model="telefono" inputmode="numeric" placeholder="Teléfono" class="lg-input w-full rounded-lg px-3 py-2 text-sm">
-                            @error('telefono') <p class="text-sm text-red-600">{{ $message }}</p> @enderror
-                            <input wire:model="email" type="email" placeholder="Correo electrónico" class="lg-input w-full rounded-lg px-3 py-2 text-sm">
-                            @error('email') <p class="text-sm text-red-600">{{ $message }}</p> @enderror
+    <!-- hero area start  -->
+    <section class="hero-area">
+        <div class="container large">
+            <div class="hero-area-inner section-spacing-top">
+                <div class="hero-content section-spacing-bottom">
+                    <div class="award-wrapper fade-anim" data-delay="0.90" data-direction="left" data-ease="back.out(4)">
+                        <div class="circle-text-wrapper">
+                            <div class="circle-text">
+                                <img src="{{ asset('redox/imgs/shape/shape-3.webp') }}" alt="image" class="text">
+                                <img src="{{ asset('redox/imgs/shape/shape-2.webp') }}" alt="image" class="icon">
+                            </div>
                         </div>
                     </div>
-
-                    @error('general') <p class="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">{{ $message }}</p> @enderror
-
-                    <div class="mt-auto flex gap-3 pt-2">
-                        <button type="button" wire:click="cerrarForm" class="btn-corp-ghost flex-1 px-5 py-2.5 text-sm">Cancelar</button>
-                        <button type="submit" wire:loading.attr="disabled" class="btn-corp flex-1 px-5 py-2.5 text-sm">
-                            <span wire:loading.remove wire:target="enviarReporte">Enviar reporte</span>
-                            <span wire:loading wire:target="enviarReporte">Enviando…</span>
-                        </button>
+                    <div class="section-header">
+                        <div class="section-title-wrapper">
+                            <div class="title-wrapper">
+                                <h2 class="section-title font-instrumentsans-medium char-anim" data-delay="0.45">
+                                    Mejoramos
+                                    el alumbrado público
+                                    con<span><img class="title-shape-1 fade-anim"
+                                            src="{{ asset('redox/imgs/shape/shape-1.webp') }}" alt="image"
+                                            {{-- src="{{ asset('images/LOGO ALCALDIA.png') }}" alt="image" --}}
+                                            data-direction="right" data-delay="1.80"></span>tu
+                                    reporte</h2>
+                            </div>
+                        </div>
                     </div>
-                </form>
+                    <div class="section-content">
+                        <div class="features-wrapper-box fade-anim" data-delay="0.75">
+                            <div class="features-wrapper">
+                                <div class="feature-box">
+                                    <div class="content">
+                                        <span class="number">92%</span>
+                                        <p class="text">Puntos de luz operativos
+                                            en el municipio</p>
+                                    </div>
+                                </div>
+                                <div class="feature-box">
+                                    <div class="content">
+                                        <span class="number">8.500+</span>
+                                        <p class="text">Luminarias registradas
+                                            en el sistema SIAP</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-wrapper fade-anim" data-delay="0.75">
+                            <p class="text">El SIAP es el sistema con el que la Alcaldía de Puerto Boyacá gestiona y
+                                atiende el alumbrado público de todo el municipio.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="big-text-wrapper">
+                    <h2 class="big-text">SIAP
+                    </h2>
+                </div>
+
             </div>
         </div>
-    @endif
+    </section>
+    <!-- hero area end  -->
 
-    {{-- ═══ CONFIRMACIÓN ═══ --}}
-    @if ($radicadoGenerado)
-        <div class="fixed inset-0 z-[1100] flex items-center justify-center p-4">
-            <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" wire:click="reiniciar"></div>
-            <div class="lg-sheen relative w-full max-w-md rounded-3xl border border-white/60 bg-white/95 p-7 text-center shadow-2xl backdrop-blur-2xl">
-                <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="h-9 w-9"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                </div>
-                <h3 class="font-display text-xl font-bold" style="color:var(--siap-ink)">Reporte radicado</h3>
-                <p class="mt-1 text-sm text-slate-500">Gracias por ayudar a mejorar el alumbrado público de tu municipio.</p>
-
-                <div class="my-5 rounded-2xl border border-green-200 bg-green-50 px-5 py-4">
-                    <p class="text-xs text-slate-500">Número de radicado</p>
-                    <p class="font-display text-2xl font-bold tracking-wide text-[#16a34a]">{{ $radicadoGenerado }}</p>
-                </div>
-
-                <p class="mb-5 text-sm text-slate-500">Guarda este número para consultar el estado de tu reporte.</p>
-
-                <div class="flex flex-col gap-2 sm:flex-row">
-                    <button wire:click="reiniciar" class="btn-corp flex-1 px-5 py-2.5 text-sm">Entendido</button>
-                    <a href="{{ route('pqrs.consultar') }}" class="btn-corp-ghost flex-1 px-5 py-2.5 text-sm">Consultar estado</a>
+    <!-- about area start  -->
+    <section class="about-area ">
+        <div class="container large">
+            <div class="about-area-inner section-spacing">
+                <div class="section-content">
+                    <div class="shape-1"></div>
+                    <div class="shape-2"></div>
+                    <div class="shape-3"></div>
+                    <div class="shape-4"></div>
+                    <div class="section-title-wrapper">
+                        <div class="title-wrapper">
+                            <h2 class="section-title font-instrumentsans-medium">SIAP</h2>
+                        </div>
+                    </div>
+                    <div class="text-wrapper">
+                        <p class="text">El Sistema de Información de Alumbrado Público centraliza el inventario, las
+                            PQRS
+                            y la facturación del servicio. Reporta una falla, consulta el estado de tu solicitud y haz
+                            seguimiento en línea las 24 horas, incluso de forma anónima.</p>
+                    </div>
+                    <div class="btn-wrapper ">
+                        <a href="{{ route('pqrs') }}" class="rr-btn  btn-text-fli hover-bg-theme">
+                            <span class="btn-wrap">
+                                <span class="text-one">Reportar un daño</span>
+                                <span class="text-two">Reportar un daño</span>
+                            </span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
-    @endif
+    </section>
+    <!-- about area end  -->
+
+    <!-- video-box  start -->
+    <div class="video-box">
+        <video id="heroVideo" class="video-area" loop muted autoplay playsinline>
+            <source src="{{ asset('video/Alumbrado-Publico-Vereda-Pavitas.mp4') }}" type="video/mp4">
+        </video>
+
+        <!-- Flechas para cambiar video -->
+        <button type="button" class="video-nav video-prev" aria-label="Anterior">&#10094;</button>
+        <button type="button" class="video-nav video-next" aria-label="Siguiente">&#10095;</button>
+
+        <script>
+            (function(){
+                const sources = [
+                    '{{ asset("video/Alumbrado-Publico-Vereda-Pavitas.mp4") }}',
+                    '{{ asset("video/Alumbrado Público Puerto Gutiérrez.mp4") }}',
+                    '{{ asset("video/Alumbrado Calderón.mp4") }}'
+                ];
+                let idx = 0;
+                const video = document.getElementById('heroVideo');
+
+                function loadIndex(i){
+                    idx = (i + sources.length) % sources.length;
+                    // replace source and play
+                    video.pause();
+                    video.querySelector('source').setAttribute('src', sources[idx]);
+                    // reload and play
+                    video.load();
+                    video.play().catch(()=>{});
+                }
+
+                document.querySelector('.video-prev').addEventListener('click', function(){ loadIndex(idx - 1); });
+                document.querySelector('.video-next').addEventListener('click', function(){ loadIndex(idx + 1); });
+
+                // Optional: keyboard support (left/right)
+                document.addEventListener('keydown', function(e){
+                    if(e.key === 'ArrowLeft') loadIndex(idx - 1);
+                    if(e.key === 'ArrowRight') loadIndex(idx + 1);
+                });
+            })();
+        </script>
+        <style>
+            .video-box{ position:relative; }
+            .video-nav{ position:absolute; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.4); color:#fff; border:0; padding:10px 14px; cursor:pointer; font-size:22px; }
+            .video-prev{ left:18px; }
+            .video-next{ right:18px; }
+            .video-nav:focus{ outline:none; }
+        </style>
+    </div>
+    <!-- video-box  end -->
+
+    <!-- work area start  -->
+    <section class="work-area">
+
+        <!-- text slider area start  -->
+        <div class="text-slider-box fade-anim">
+            <div class="text-slider">
+                <div class="swiper text-slider-active">
+                    <div class="swiper-wrapper">
+                        @for ($i = 0; $i < 7; $i++)
+                            <div class="swiper-slide">
+                                <div class="text-slider-item">
+                                    <h2 class="title"><span class="dot"></span>Cómo te ayudamos
+                                    </h2>
+                                </div>
+                            </div>
+                        @endfor
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /text slider area end -->
+
+        <div class="container large">
+            <div class="work-area-inner">
+                <div class="section-header fade-anim">
+                    <div class="section-title-wrapper">
+                        <div class="title-wrapper">
+                            <h2 class="section-title font-instrumentsans-medium">Cómo te ayudamos</h2>
+                        </div>
+                    </div>
+                    <div class="text-wrapper">
+                        <p class="text">Un servicio cercano y transparente</p>
+                    </div>
+                    <div class="total-count">
+                        <span class="number">(06)</span>
+                    </div>
+                </div>
+                <div class="works-wrapper-box">
+                    <div class="works-wrapper-1 fade-anim">
+                        <div class="work-box">
+                            <div class="thumb">
+                                <div class="image scale" data-cursor-text="Reportar">
+                                    <a href="{{ route('pqrs') }}"><img
+                                            src="{{ asset('redox/imgs/project/image-1.webp') }}" alt="image"></a>
+                                </div>
+                            </div>
+                            <div class="content">
+                                <h3 class="title"><a href="{{ route('pqrs') }}">Reporta una falla</a></h3>
+                                <div class="meta">
+                                    <span class="tag">Ciudadanía</span>
+                                    <span class="date">2026</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="work-box">
+                            <div class="thumb">
+                                <div class="image scale" data-cursor-text="Ver mapa">
+                                    <a href="{{ route('mapa') }}"><img
+                                            src="{{ asset('redox/imgs/project/image-2.webp') }}" alt="image"></a>
+                                </div>
+                            </div>
+                            <div class="content">
+                                <h3 class="title"><a href="{{ route('mapa') }}">Mapa del alumbrado</a></h3>
+                                <div class="meta">
+                                    <span class="tag">Inventario</span>
+                                    <span class="date">2026</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="work-box">
+                            <div class="thumb">
+                                <div class="image scale" data-cursor-text="Consultar">
+                                    <a href="{{ route('pqrs.consultar') }}"><img
+                                            src="{{ asset('redox/imgs/project/image-3.webp') }}" alt="image"></a>
+                                </div>
+                            </div>
+                            <div class="content">
+                                <h3 class="title"><a href="{{ route('pqrs.consultar') }}">Consulta tu PQRS</a></h3>
+                                <div class="meta">
+                                    <span class="tag">Seguimiento</span>
+                                    <span class="date">2026</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="work-box">
+                            <div class="thumb">
+                                <div class="image scale" data-cursor-text="Radicar">
+                                    <a href="{{ route('pqrs') }}"><img
+                                            src="{{ asset('redox/imgs/project/image-4.webp') }}" alt="image"></a>
+                                </div>
+                            </div>
+                            <div class="content">
+                                <h3 class="title"><a href="{{ route('pqrs') }}">Radica una PQRS</a></h3>
+                                <div class="meta">
+                                    <span class="tag">Trámite</span>
+                                    <span class="date">2026</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="work-box">
+                            <div class="thumb">
+                                <div class="image scale" data-cursor-text="Ver datos">
+                                    <a href="{{ route('reportes') }}"><img
+                                            src="{{ asset('redox/imgs/project/image-5.webp') }}" alt="image"></a>
+                                </div>
+                            </div>
+                            <div class="content">
+                                <h3 class="title"><a href="{{ route('reportes') }}">Reportes públicos</a></h3>
+                                <div class="meta">
+                                    <span class="tag">Transparencia</span>
+                                    <span class="date">2026</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="work-box">
+                            <div class="thumb">
+                                <div class="image scale" data-cursor-text="Conoce más">
+                                    <a href="{{ route('mapa') }}"><img
+                                            src="{{ asset('redox/imgs/project/image-6.webp') }}" alt="image"></a>
+                                </div>
+                            </div>
+                            <div class="content">
+                                <h3 class="title"><a href="{{ route('mapa') }}">Atención oportuna</a></h3>
+                                <div class="meta">
+                                    <span class="tag">Cuadrillas</span>
+                                    <span class="date">2026</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="all-btn-wrapper fade-anim">
+                    <a href="{{ route('mapa') }}" class="rr-btn btn-border hover-bg-theme">
+                        <span class="btn-wrap">
+                            <span class="text-one">Ver el mapa</span>
+                            <span class="text-two">Ver el mapa</span>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- work area end  -->
+
+    <!-- service area start  -->
+    <section class="service-area">
+        <div class="container large">
+            <div class="service-area-inner section-spacing">
+                <div class="section-header">
+                    <div class="section-title-wrapper fade-anim">
+                        <div class="title-wrapper">
+                            <h2 class="section-title font-instrumentsans-medium word-anim">Nuestros <br>
+                                servicios</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="services-wrapper-box">
+                    <div class="services-wrapper-1">
+                        <div class="service-box fade-anim">
+                            <div class="count">
+                                <span class="number">(01)</span>
+                            </div>
+
+                            <div class="content">
+                                <h3 class="title"><a href="{{ route('pqrs') }}">Reporte ciudadano</a></h3>
+                                <ul class="service-list">
+                                    <li><a href="{{ route('pqrs') }}">Luminarias apagadas</a></li>
+                                    <li><a href="{{ route('pqrs') }}">Postes dañados</a></li>
+                                    <li><a href="{{ route('pqrs') }}">Cable expuesto</a></li>
+                                    <li><a href="{{ route('pqrs') }}">Vandalismo</a></li>
+                                    <li><a href="{{ route('pqrs') }}">Reporte anónimo</a></li>
+                                </ul>
+                            </div>
+                            <div class="thumb">
+                                <img class="grow" src="{{ asset('redox/imgs/gallery/image-3.webp') }}"
+                                    alt="image">
+                            </div>
+                        </div>
+                        <div class="service-box fade-anim">
+                            <div class="count">
+                                <span class="number">(02)</span>
+                            </div>
+
+                            <div class="content">
+                                <h3 class="title"><a href="{{ route('pqrs.consultar') }}">Consulta de PQRS</a></h3>
+                                <ul class="service-list">
+                                    <li><a href="{{ route('pqrs.consultar') }}">Por radicado</a></li>
+                                    <li><a href="{{ route('pqrs.consultar') }}">Por cédula</a></li>
+                                    <li><a href="{{ route('pqrs.consultar') }}">Estado en línea</a></li>
+                                    <li><a href="{{ route('pqrs.consultar') }}">Historial</a></li>
+                                    <li><a href="{{ route('pqrs.consultar') }}">Notificaciones</a></li>
+                                </ul>
+                            </div>
+                            <div class="thumb">
+                                <img class="grow" src="{{ asset('redox/imgs/gallery/image-4.webp') }}"
+                                    alt="image">
+                            </div>
+                        </div>
+                        <div class="service-box fade-anim">
+                            <div class="count">
+                                <span class="number">(03)</span>
+                            </div>
+
+                            <div class="content">
+                                <h3 class="title"><a href="{{ route('mapa') }}">Mapa interactivo</a></h3>
+                                <ul class="service-list">
+                                    <li><a href="{{ route('mapa') }}">Puntos georreferenciados</a></li>
+                                    <li><a href="{{ route('mapa') }}">Filtros por zona</a></li>
+                                    <li><a href="{{ route('mapa') }}">Estado en tiempo real</a></li>
+                                    <li><a href="{{ route('mapa') }}">Ubicación GPS</a></li>
+                                    <li><a href="{{ route('mapa') }}">Detalle por punto</a></li>
+                                </ul>
+                            </div>
+                            <div class="thumb">
+                                <img class="grow" src="{{ asset('redox/imgs/gallery/image-5.webp') }}"
+                                    alt="image">
+                            </div>
+                        </div>
+                        <div class="service-box fade-anim">
+                            <div class="count">
+                                <span class="number">(04)</span>
+                            </div>
+
+                            <div class="content">
+                                <h3 class="title"><a href="{{ route('reportes') }}">Transparencia</a></h3>
+                                <ul class="service-list">
+                                    <li><a href="{{ route('reportes') }}">Inventario público</a></li>
+                                    <li><a href="{{ route('reportes') }}">Indicadores</a></li>
+                                    <li><a href="{{ route('reportes') }}">Facturación</a></li>
+                                    <li><a href="{{ route('reportes') }}">Recaudos</a></li>
+                                    <li><a href="{{ route('reportes') }}">Datos abiertos</a></li>
+                                </ul>
+                            </div>
+                            <div class="thumb">
+                                <img class="grow" src="{{ asset('redox/imgs/gallery/image-6.webp') }}"
+                                    alt="image">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- service area end  -->
+
+    <!-- funfact area start  -->
+    <section class="funfact-area fade-anim">
+        <div class="container large">
+            <div class="funfact-area-inner pin-area">
+                <div class="section-header section-spacing-top pin-element">
+                    <div class="section-title-wrapper">
+                        <div class="title-wrapper">
+                            <h2 class="section-title font-instrumentsans-medium word-anim">SIAP <br>
+                                —en cifras</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="funfact-wrapper-box section-spacing">
+                    <span class="line-1"></span>
+                    <span class="line-2"></span>
+                    <span class="line-3"></span>
+                    <span class="line-4"></span>
+                    <div class="funfact-wrapper">
+                        <div class="funfact-item go-visible">
+                            <span class="number">8.500+</span>
+                            <p class="text">Luminarias registradas en
+                                el sistema municipal.</p>
+                        </div>
+                        <div class="funfact-item go-visible">
+                            <span class="number">92%</span>
+                            <p class="text">Puntos de luz operativos
+                                en todo el municipio.</p>
+                        </div>
+                        <div class="funfact-item go-visible">
+                            <span class="number">24/7</span>
+                            <p class="text">Recepción de reportes en
+                                línea, todos los días.</p>
+                        </div>
+                        <div class="funfact-item go-visible">
+                            <span class="number">15</span>
+                            <p class="text">Días hábiles para la
+                                respuesta a tu PQRS.</p>
+                        </div>
+                        <div class="funfact-item go-visible">
+                            <span class="number">100%</span>
+                            <p class="text">Trazabilidad y seguimiento
+                                de cada solicitud.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- funfact area end  -->
+
+    <!-- client area start  -->
+    <section class="client-area">
+        <div class="container large">
+            <div class="client-area-inner section-spacing-top">
+                <div class="section-content">
+                    <div class="section-title-wrapper">
+                        <div class="title-wrapper">
+                            <h2 class="section-title font-instrumentsans-medium word-anim"><span>Aliados:</span>
+                                Trabajamos
+                                junto a la comunidad y las entidades del municipio para un mejor
+                                alumbrado público.</h2>
+                        </div>
+                    </div>
+                    <div class="text-wrapper fade-anim">
+                        <p class="text">La Alcaldía de Puerto Boyacá, la Secretaría de Obras Públicas y la ciudadanía
+                            unen esfuerzos para mantener iluminadas todas las calles del municipio.</p>
+                    </div>
+                </div>
+                <div class="client-capsule-wrapper-box" data-t-throwable-scene="true">
+                    <div class="client-capsule-wrapper">
+                        @foreach (['client-9-light', 'client-10', 'client-11', 'client-12-light', 'client-13', 'client-14', 'client-15-light', 'client-16-light', 'client-17', 'client-18-light', 'client-19', 'client-20-light', 'client-21', 'client-22'] as $logo)
+                            <p data-t-throwable-el="">
+                                <span class="client-box {{ str_contains($logo, 'light') ? 'bg-theme' : '' }}">
+                                    <img src="{{ asset('redox/imgs/client/' . $logo . '.webp') }}" alt="image">
+                                </span>
+                            </p>
+                        @endforeach
+                    </div>
+                </div>
+                <div class="lines-wrapper">
+                    <div class="line"></div>
+                    <div class="line"></div>
+                    <div class="line"></div>
+                    <div class="line"></div>
+                    <div class="line"></div>
+                    <div class="line"></div>
+                    <div class="line"></div>
+                    <div class="line"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- client area end  -->
+
+    <!-- cta area start  -->
+    <div class="p-relative overflow-hidden">
+        <section class="cta-area">
+            <div class="cta-area-inner section-spacing">
+                <div class="area-bg"></div>
+                <div class="container large">
+                    <div class="section-content">
+                        <div class="section-title-wrapper">
+                            <div class="title-wrapper">
+                                <h2 class="section-title font-instrumentsans-medium char-anim"><a
+                                        href="{{ route('pqrs') }}">Reporta
+                                        ahora</a></h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <!-- cta area end  -->
+
+    <!-- productivity area start  -->
+    <section class="productivity-area">
+        <div class="container large">
+            <div class="productivity-area-inner section-spacing">
+                <div class="section-content">
+                    <div class="section-title-wrapper">
+                        <div class="title-wrapper">
+                            <h2 class="section-title font-instrumentsans-medium word-anim">Un alumbrado público <br>
+                                más <span class="shape-1">seguro</span>, con
+                                <span class="shape-2">información</span> y <span class="shape-3">cercanía</span> para
+                                cada barrio del <br>
+                                municipio
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- productivity area end  -->
+
+    <div class="image-wrapper parallax-view">
+        <img class="w-100" src="{{ asset('redox/imgs/gallery/image-7.webp') }}" alt="image" data-speed="0.1">
+    </div>
 
 </div>
-
-@push('scripts')
-@vite(['resources/js/reportar.js'])
-@endpush
