@@ -113,20 +113,39 @@
                                     @error('descripcion') <p style="color:#dc2626;font-size:13px;margin-top:6px;">{{ $message }}</p> @enderror
                                 </div>
                                 <div class="col-12">
-                                    <label class="siap-label">Ubicación en el mapa <span style="color:#94a3b8;font-weight:400;">(opcional — haga clic para colocar el pin)</span></label>
+                                    <label class="siap-label">Ubicación del problema <span style="color:#94a3b8;font-weight:400;">— toca un punto del mapa para seleccionarlo</span></label>
+
                                     @if ($elemento_id)
-                                        <p style="font-size:13px;color:var(--siap-blue);background:rgba(51,102,204,.06);border:1px solid rgba(51,102,204,.2);border-radius:10px;padding:8px 12px;margin:0 0 10px;">
-                                            Se ha pre-seleccionado el elemento de infraestructura #{{ $elemento_id }}. El mapa muestra su ubicación exacta.
-                                        </p>
+                                        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:rgba(51,102,204,.06);border:1px solid rgba(51,102,204,.2);border-radius:10px;padding:8px 12px;margin:0 0 10px;">
+                                            <span style="font-size:13px;color:var(--siap-blue);font-weight:600;">Punto seleccionado: #{{ $elemento_id }}</span>
+                                            <button type="button" wire:click="limpiarPunto" style="background:none;border:0;color:#dc2626;font-size:12px;font-weight:600;cursor:pointer;">Quitar selección</button>
+                                        </div>
                                     @endif
-                                    <div id="mapa-pqrs" class="siap-map-canvas" style="height:300px;border-radius:14px;overflow:hidden;border:1px solid rgba(12,42,67,.12);"
-                                         wire:ignore
-                                         x-data="mapaPqrs({ lat: {{ $latitud ?? 5.976 }}, lng: {{ $longitud ?? -74.594 }}, hasPreciseLocation: {{ ($latitud !== null) ? 'true' : 'false' }} })"
-                                         x-init="init()"></div>
+
+                                    <div style="display:flex;justify-content:flex-end;margin-bottom:10px;">
+                                        <button type="button" class="siap-btn-ubic" onclick="window.siapMiUbicacion && window.siapMiUbicacion()">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/></svg>
+                                            Mi ubicación
+                                        </button>
+                                    </div>
+
+                                    <div class="siap-map-shell">
+                                        <div class="siap-map-float" style="bottom:14px;left:14px;padding:10px 12px;">
+                                            <p style="margin:0 0 6px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#64748b;">Estado</p>
+                                            @foreach ([['#16a34a','Sin reportes'],['#ca8a04','Con reporte'],['#dc2626','Crítico'],['#94a3b8','Desinstalada']] as [$c,$l])
+                                                <div class="siap-legend-row" style="margin-top:4px;"><span class="siap-dot" style="background:{{ $c }}"></span>{{ $l }}</div>
+                                            @endforeach
+                                        </div>
+                                        <div id="mapa-pqrs" class="siap-map-canvas" style="height:380px;"
+                                             wire:ignore
+                                             x-data="mapaPqrs({ lat: {{ $latitud ?? 'null' }}, lng: {{ $longitud ?? 'null' }}, hasPreciseLocation: {{ ($latitud !== null) ? 'true' : 'false' }}, elementoId: {{ $elemento_id ?? 'null' }} })"
+                                             x-init="init()"></div>
+                                    </div>
+
                                     @if ($latitud !== null && $longitud !== null)
-                                        <p style="font-size:12px;color:#64748b;margin:6px 0 0;">Pin en: {{ number_format((float) $latitud, 6) }}, {{ number_format((float) $longitud, 6) }}</p>
+                                        <p style="font-size:12px;color:#64748b;margin:8px 0 0;">Ubicación: {{ number_format((float) $latitud, 6) }}, {{ number_format((float) $longitud, 6) }}</p>
                                     @else
-                                        <p style="font-size:12px;color:#94a3b8;margin:6px 0 0;">No se ha colocado ningún pin.</p>
+                                        <p style="font-size:12px;color:#94a3b8;margin:8px 0 0;">Aún no seleccionas un punto. Es opcional, pero ayuda a ubicar el problema.</p>
                                     @endif
                                 </div>
                             </div>

@@ -96,6 +96,22 @@ class FormularioPqrs extends Component
         }
     }
 
+    /** Selección de un punto del inventario desde el mapa (JS → Livewire). */
+    public function seleccionarPunto(int $id, float $lat, float $lng): void
+    {
+        $this->elemento_id = $id;
+        $this->latitud = $lat;
+        $this->longitud = $lng;
+    }
+
+    /** Quitar la selección / el punto elegido. */
+    public function limpiarPunto(): void
+    {
+        $this->elemento_id = null;
+        $this->latitud = null;
+        $this->longitud = null;
+    }
+
     public function siguiente(): void
     {
         $this->validate();

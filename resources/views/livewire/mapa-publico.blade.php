@@ -65,6 +65,12 @@
 
             {{-- Mapa --}}
             <div class="siap-map-shell fade-anim" data-delay="0.2">
+                <div class="siap-map-float" style="bottom:18px;left:18px;padding:12px 16px;">
+                    <p style="margin:0 0 8px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#64748b;">Estado</p>
+                    @foreach ([['#16a34a','Sin reportes'],['#ca8a04','Con reporte'],['#dc2626','Crítico'],['#94a3b8','Desinstalada']] as [$c,$l])
+                        <div class="siap-legend-row" style="margin-top:4px;"><span class="siap-dot" style="background:{{ $c }}"></span>{{ $l }}</div>
+                    @endforeach
+                </div>
                 <div id="mapa-publico"
                      wire:ignore
                      x-data="mapaPublico()"
