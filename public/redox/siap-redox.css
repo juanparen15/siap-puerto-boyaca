@@ -178,6 +178,22 @@ lord-icon { display: inline-block; }
     .cursor, .cursor-follower { display: none !important; }
 }
 
+/* Cápsulas de barrios (sección "Aliados"): tamaño original de la plantilla
+   (215×100) para que la física se apoye en las líneas; solo cambia el texto. */
+.client-area .client-box.barrio-box {
+    color: #fff;
+    font-family: "Thunder", sans-serif;
+    font-weight: 600;
+    font-size: 17px;
+    line-height: 1.05;
+    text-align: center;
+    letter-spacing: .4px;
+    text-transform: uppercase;
+}
+.client-area .client-box.barrio-box img { display: none; }
+/* El número de cápsulas (14 escritorio / 10 móvil) se ajusta por JS antes de
+   iniciar la física, para que se apoyen en las líneas sin saturar la escena. */
+
 /* Stats grandes */
 .siap-stat-num {
     font-family: "Thunder", sans-serif;
@@ -283,3 +299,38 @@ lord-icon { display: inline-block; }
 }
 .siap-table tbody td { padding: 12px 0; border-bottom: 1px solid rgba(12,42,67,.06); }
 .siap-table tbody tr:last-child td { border-bottom: 0; }
+
+/* Tablas responsive: en móvil/tablet cada fila se vuelve una tarjeta etiqueta/valor */
+@media (max-width: 768px) {
+    .siap-table thead { display: none; }
+    .siap-table, .siap-table tbody, .siap-table tr, .siap-table td { display: block; width: 100%; }
+    .siap-table tr {
+        border: 1px solid rgba(12, 42, 67, 0.10);
+        border-radius: 12px;
+        padding: 4px 14px;
+        margin-bottom: 12px;
+        background: #fff;
+    }
+    .siap-table tbody td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        text-align: right;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(12, 42, 67, 0.06);
+    }
+    .siap-table tbody tr td:last-child { border-bottom: 0; }
+    .siap-table td[data-label]::before {
+        content: attr(data-label);
+        font-weight: 700;
+        color: #64748b;
+        text-align: left;
+        font-size: 11px;
+        letter-spacing: .5px;
+        text-transform: uppercase;
+        flex-shrink: 0;
+    }
+    /* fila "sin registros" (colspan): centrada y sin etiqueta */
+    .siap-table td[colspan] { justify-content: center; text-align: center; }
+}

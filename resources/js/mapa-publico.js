@@ -46,6 +46,7 @@ window.mapaPublico = function () {
     popup: null,
     filtros: { tipo: "", estado: "", clasificacion: "" },
     _abortController: null,
+    _userMarker: null,
 
     init() {
       this.map = new maplibregl.Map({
@@ -64,9 +65,41 @@ window.mapaPublico = function () {
       });
       this.map.addControl(geolocate, "top-right");
 
-      // Botón externo "Mi ubicación"
+      // Botón externo "Mi ubicación": centra el mapa en el ciudadano,
+      // marca su posición y carga los puntos cercanos (vía moveend).
       window.siapMiUbicacion = () => {
-        try { geolocate.trigger(); } catch (e) { /* aún no listo */ }
+        if (!("geolocation" in navigator)) {
+          alert("Tu navegador no permite geolocalización.");
+          return;
+        }
+        const inseguro =
+          location.protocol !== "https:" &&
+          location.hostname !== "localhost" &&
+          location.hostname !== "127.0.0.1";
+
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            const { longitude, latitude } = pos.coords;
+            this.map.flyTo({ center: [longitude, latitude], zoom: 16, essential: true });
+            if (this._userMarker) this._userMarker.remove();
+            this._userMarker = new maplibregl.Marker({ color: "#3366CC" })
+              .setLngLat([longitude, latitude])
+              .setPopup(new maplibregl.Popup({ offset: 14 }).setHTML(
+                '<div style="font-family:system-ui,sans-serif;padding:6px 8px;font-size:12px;font-weight:600;color:#3366CC;">Tu ubicación</div>'
+              ))
+              .addTo(this.map);
+          },
+          (err) => {
+            let msg = "No se pudo obtener tu ubicación.";
+            if (err.code === 1) msg = "Permiso de ubicación denegado. Actívalo en los ajustes del navegador.";
+            else if (err.code === 3) msg = "La ubicación tardó demasiado. Intenta de nuevo.";
+            if (inseguro) {
+              msg = "La ubicación requiere una conexión segura (HTTPS). En el servidor con certificado funcionará; en local con http no es posible.";
+            }
+            alert(msg);
+          },
+          { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+        );
       };
 
       this.popup = new maplibregl.Popup({ closeButton: true, maxWidth: "240px", offset: 14 });

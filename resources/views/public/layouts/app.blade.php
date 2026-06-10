@@ -19,13 +19,13 @@
     <link rel="stylesheet" href="{{ asset('redox/vendor/animate.min.css') }}">
 
     {{-- CSS principal de la plantilla --}}
-    <link rel="stylesheet" href="{{ asset('redox/css/style.css') }}?v=1.0">
+    <link rel="stylesheet" href="{{ asset('redox/css/style.css') }}?v={{ filemtime(public_path('redox/css/style.css')) }}">
 
     {{-- Tailwind + estilos de mapa/popup --}}
     @vite(['resources/css/app.css', 'resources/css/public.css', 'resources/js/app.js'])
 
     {{-- Ajustes SIAP (deben ir DESPUÉS de todo para ganar especificidad) --}}
-    <link rel="stylesheet" href="{{ asset('redox/siap-redox.css') }}?v=1.0">
+    <link rel="stylesheet" href="{{ asset('redox/siap-redox.css') }}?v={{ filemtime(public_path('redox/siap-redox.css')) }}">
 
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
     @stack('styles')
@@ -219,7 +219,7 @@
                         <div class="copyright-text">
                             <p class="text">© {{ date('Y') }} Alcaldía de Puerto Boyacá ·
                                 <a href="{{ url('/admin') }}">Acceso funcionarios</a> ·
-                                Desarrollado por <a href="https://renbel.com.co" target="_blank" rel="noopener">RENBEL S.A.S.</a></p>
+                                Desarrollado por el contrato 099 de 2026</p>
                         </div>
                     </div>
                 </div>
@@ -246,6 +246,17 @@
     <script src="{{ asset('redox/vendor/matter.js') }}"></script>
     <script src="{{ asset('redox/vendor/throwable.js') }}"></script>
     <script src="{{ asset('redox/js/magiccursor.js') }}"></script>
+
+    {{-- Limitar el nº de cápsulas de la escena de física ANTES de iniciarla
+         (14 en escritorio, 10 en móvil) para que se apoyen en las líneas. --}}
+    <script>
+        (function () {
+            var max = window.innerWidth <= 768 ? 10 : 14;
+            var els = document.querySelectorAll('.client-capsule-wrapper [data-t-throwable-el]');
+            for (var i = els.length - 1; i >= max; i--) { els[i].remove(); }
+        })();
+    </script>
+
     <script src="{{ asset('redox/js/main.js') }}?v=1.0"></script>
 
     {{-- Refrescar GSAP cuando Livewire cambia la altura del contenido --}}

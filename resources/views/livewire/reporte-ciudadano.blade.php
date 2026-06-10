@@ -460,12 +460,29 @@
                             unen esfuerzos para mantener iluminadas todas las calles del municipio.</p>
                     </div>
                 </div>
+                @php
+                    // Barrios de Puerto Boyacá — Tabla 2, División política Urbana (oficial).
+                    $barrios = [
+                        'Muelle los Pescadores', 'Pueblo Nuevo', 'Club Amas de Casa', 'Estrada',
+                        'Esmeralda Londoño', 'Cristo Rey', 'Siete de Julio', 'Torcoroma',
+                        'El Palmar', 'Conjunto Iquira', 'Chambacú', 'Centro', 'Brisas del Magdalena',
+                        'Caracolí', 'Siete de Agosto', 'Villatex', 'Plan de Vivienda', 'El Rosal',
+                        'Galán', '12 de Octubre', 'Urbanización El Río', 'La Paz', 'Villa Magdala',
+                        'Los Guaduales', 'Los Pinos', 'Guayacanes', 'La Pradera', 'El Progreso',
+                        'Alfonso López', 'La Esperanza', 'Divino Niño', 'El Porvenir',
+                        'Nuevo Brisas del Magdalena', 'El Prado', 'Asofamilias', 'El Poblado',
+                        'Villa del Sol', 'Afrojordan', 'Villa Bethell', 'Asofamilias II',
+                        'El Palmar del Puerto', 'Villa Alicia', 'Candelaria II',
+                        'Miradores de San Lorenzo I', 'Miradores de San Lorenzo II',
+                        'Miradores de San Lorenzo III', 'Las Quinchas',
+                    ];
+                @endphp
                 <div class="client-capsule-wrapper-box" data-t-throwable-scene="true">
                     <div class="client-capsule-wrapper">
-                        @foreach (['client-9-light', 'client-10', 'client-11', 'client-12-light', 'client-13', 'client-14', 'client-15-light', 'client-16-light', 'client-17', 'client-18-light', 'client-19', 'client-20-light', 'client-21', 'client-22'] as $logo)
+                        @foreach ($barrios as $i => $barrio)
                             <p data-t-throwable-el="">
-                                <span class="client-box {{ str_contains($logo, 'light') ? 'bg-theme' : '' }}">
-                                    <img src="{{ asset('redox/imgs/client/' . $logo . '.webp') }}" alt="image">
+                                <span class="client-box barrio-box {{ $i % 3 === 0 ? 'bg-theme' : '' }}">
+                                    {{ $barrio }}
                                 </span>
                             </p>
                         @endforeach

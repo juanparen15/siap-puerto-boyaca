@@ -61,7 +61,7 @@
                             <thead><tr><th>Tipo</th><th style="text-align:right;">Cantidad</th></tr></thead>
                             <tbody>
                                 @forelse ($por_tipo as $tipo => $cantidad)
-                                    <tr><td style="text-transform:capitalize;">{{ str_replace('_', ' ', $tipo) }}</td><td style="text-align:right;font-weight:600;">{{ $cantidad }}</td></tr>
+                                    <tr><td data-label="Tipo" style="text-transform:capitalize;">{{ str_replace('_', ' ', $tipo) }}</td><td data-label="Cantidad" style="text-align:right;font-weight:600;">{{ $cantidad }}</td></tr>
                                 @empty
                                     <tr><td colspan="2" style="text-align:center;color:#94a3b8;">Sin datos</td></tr>
                                 @endforelse
@@ -76,7 +76,7 @@
                             <thead><tr><th>Estado</th><th style="text-align:right;">Cantidad</th></tr></thead>
                             <tbody>
                                 @forelse ($por_estado as $estado => $cantidad)
-                                    <tr><td style="text-transform:capitalize;">{{ str_replace('_', ' ', $estado) }}</td><td style="text-align:right;font-weight:600;">{{ $cantidad }}</td></tr>
+                                    <tr><td data-label="Estado" style="text-transform:capitalize;">{{ str_replace('_', ' ', $estado) }}</td><td data-label="Cantidad" style="text-align:right;font-weight:600;">{{ $cantidad }}</td></tr>
                                 @empty
                                     <tr><td colspan="2" style="text-align:center;color:#94a3b8;">Sin datos</td></tr>
                                 @endforelse
@@ -95,11 +95,11 @@
                         <tbody>
                             @forelse ($facturacion_reciente as $f)
                                 <tr>
-                                    <td>{{ $f->periodo }}</td>
-                                    <td>{{ $f->empresa_energetica ?? '—' }}</td>
-                                    <td>{{ number_format($f->kwh_consumidos ?? 0, 0, ',', '.') }}</td>
-                                    <td>$ {{ number_format($f->valor_facturado ?? 0, 0, ',', '.') }}</td>
-                                    <td>
+                                    <td data-label="Período">{{ $f->periodo }}</td>
+                                    <td data-label="Empresa">{{ $f->empresa_energetica ?? '—' }}</td>
+                                    <td data-label="kWh consumidos">{{ number_format($f->kwh_consumidos ?? 0, 0, ',', '.') }}</td>
+                                    <td data-label="Valor facturado">$ {{ number_format($f->valor_facturado ?? 0, 0, ',', '.') }}</td>
+                                    <td data-label="Estado">
                                         <span style="padding:2px 10px;border-radius:9999px;font-size:12px;font-weight:600;
                                             {{ $f->estado === 'pagada' ? 'background:#dcfce7;color:#15803d;' : ($f->estado === 'vencida' ? 'background:#fee2e2;color:#b91c1c;' : 'background:#fef9c3;color:#a16207;') }}">
                                             {{ ucfirst($f->estado ?? 'pendiente') }}
@@ -123,10 +123,10 @@
                         <tbody>
                             @forelse ($recaudos_recientes as $r)
                                 <tr>
-                                    <td>{{ $r->periodo ?? '—' }}</td>
-                                    <td>{{ $r->concepto ?? '—' }}</td>
-                                    <td>$ {{ number_format($r->valor_recaudado ?? 0, 0, ',', '.') }}</td>
-                                    <td>{{ $r->fuente_pago ?? '—' }}</td>
+                                    <td data-label="Período">{{ $r->periodo ?? '—' }}</td>
+                                    <td data-label="Concepto">{{ $r->concepto ?? '—' }}</td>
+                                    <td data-label="Valor">$ {{ number_format($r->valor_recaudado ?? 0, 0, ',', '.') }}</td>
+                                    <td data-label="Fuente">{{ $r->fuente_pago ?? '—' }}</td>
                                 </tr>
                             @empty
                                 <tr><td colspan="4" style="text-align:center;color:#94a3b8;">Sin registros de recaudo</td></tr>
