@@ -186,8 +186,44 @@
                                 </div>
 
                                 <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-                                    <a href="{{ route('pqrs.consultar') }}" class="siap-btn">Consultar estado de mi PQRS</a>
-                                    <a href="{{ route('pqrs') }}" class="siap-btn siap-btn-ghost">Radicar otra PQRS</a>
+                                    <button type="button" onclick="window.descargarComprobante && window.descargarComprobante()" class="siap-btn">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                        Descargar comprobante
+                                    </button>
+                                    <a href="{{ route('pqrs.consultar') }}" class="siap-btn siap-btn-ghost">Consultar estado</a>
+                                    <a href="{{ route('pqrs') }}" class="siap-btn siap-btn-ghost">Radicar otra</a>
+                                </div>
+                            </div>
+
+                            {{-- Comprobante (fuera de pantalla) que se exporta a imagen --}}
+                            <div id="comprobante-pqrs" data-radicado="{{ $radicadoGenerado }}"
+                                 style="position:fixed;left:-10000px;top:0;width:640px;background:#ffffff;color:#0c2a43;font-family:Arial,Helvetica,sans-serif;padding:40px;box-sizing:border-box;">
+                                <div style="display:flex;align-items:center;gap:16px;border-bottom:2px solid #3366CC;padding-bottom:18px;margin-bottom:22px;">
+                                    <img src="{{ asset('images/LOGO ALCALDIA.png') }}" style="height:72px;width:auto;" crossorigin="anonymous">
+                                    <div>
+                                        <div style="font-size:20px;font-weight:bold;color:#0c2a43;">Alcaldía de Puerto Boyacá</div>
+                                        <div style="font-size:13px;color:#475569;">SIAP · Sistema de Información de Alumbrado Público</div>
+                                    </div>
+                                </div>
+                                <div style="font-size:22px;font-weight:bold;color:#0c2a43;margin-bottom:4px;">Comprobante de radicación PQRS</div>
+                                <div style="font-size:13px;color:#64748b;margin-bottom:22px;">Generado el {{ now()->format('d/m/Y · H:i') }}</div>
+                                <div style="background:#f0fdf4;border:1px solid #16a34a;border-radius:10px;padding:16px 20px;margin-bottom:22px;">
+                                    <div style="font-size:12px;color:#15803d;text-transform:uppercase;letter-spacing:1px;">Número de radicado</div>
+                                    <div style="font-size:30px;font-weight:bold;color:#0c2a43;letter-spacing:1px;">{{ $radicadoGenerado }}</div>
+                                </div>
+                                <table style="width:100%;border-collapse:collapse;font-size:14px;color:#0c2a43;">
+                                    <tr><td style="padding:9px 0;color:#64748b;width:42%;border-bottom:1px solid #eef1f6;">Tipo de solicitud</td><td style="padding:9px 0;font-weight:bold;text-transform:capitalize;border-bottom:1px solid #eef1f6;">{{ $tipo_solicitud }}</td></tr>
+                                    <tr><td style="padding:9px 0;color:#64748b;border-bottom:1px solid #eef1f6;">Solicitante</td><td style="padding:9px 0;font-weight:bold;border-bottom:1px solid #eef1f6;">{{ $anonimo ? 'Ciudadano anónimo' : $nombre_ciudadano }}</td></tr>
+                                    @unless ($anonimo)
+                                        <tr><td style="padding:9px 0;color:#64748b;border-bottom:1px solid #eef1f6;">Cédula</td><td style="padding:9px 0;font-weight:bold;border-bottom:1px solid #eef1f6;">{{ $numero_cedula }}</td></tr>
+                                    @endunless
+                                    @if ($elemento_id)
+                                        <tr><td style="padding:9px 0;color:#64748b;border-bottom:1px solid #eef1f6;">Punto reportado</td><td style="padding:9px 0;font-weight:bold;border-bottom:1px solid #eef1f6;">#{{ $elemento_id }}</td></tr>
+                                    @endif
+                                    <tr><td style="padding:9px 0;color:#64748b;">Estado</td><td style="padding:9px 0;font-weight:bold;color:#3366CC;">Radicada</td></tr>
+                                </table>
+                                <div style="margin-top:24px;border-top:1px solid #e2e8f0;padding-top:14px;font-size:11px;color:#94a3b8;">
+                                    Conserve este comprobante. Puede consultar el estado de su solicitud en el portal SIAP con su número de radicado.
                                 </div>
                             </div>
                         @endif
@@ -201,4 +237,21 @@
 
 @push('scripts')
 @vite(['resources/js/pqrs-pin-map.js'])
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+    window.descargarComprobante = function () {
+        var el = document.getElementById('comprobante-pqrs');
+        if (!el) return;
+        if (!window.html2canvas) { alert('Aún se está cargando el generador. Intenta de nuevo en un momento.'); return; }
+        window.html2canvas(el, { scale: 2, backgroundColor: '#ffffff', useCORS: true, logging: false }).then(function (canvas) {
+            var a = document.createElement('a');
+            a.download = 'comprobante-' + (el.dataset.radicado || 'pqrs') + '.png';
+            a.href = canvas.toDataURL('image/png');
+            a.click();
+        }).catch(function (e) {
+            console.error(e);
+            alert('No se pudo generar el comprobante. Intenta de nuevo.');
+        });
+    };
+</script>
 @endpush
