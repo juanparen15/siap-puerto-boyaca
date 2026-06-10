@@ -51,18 +51,30 @@
 
                         {{-- PASO 1 --}}
                         @if ($paso === 1)
-                            <h3 style="font-family:'Thunder',sans-serif;font-weight:600;font-size:28px;color:var(--siap-ink);margin:0 0 24px;">Datos del ciudadano</h3>
+                            <h3 style="font-family:'Thunder',sans-serif;font-weight:600;font-size:28px;color:var(--siap-ink);margin:0 0 18px;">Datos del ciudadano</h3>
+
+                            {{-- Interruptor: radicar de forma anónima --}}
+                            <label style="display:flex;align-items:flex-start;gap:12px;background:#f8fafc;border:1px solid rgba(12,42,67,.1);border-radius:12px;padding:14px 16px;margin-bottom:22px;cursor:pointer;">
+                                <input type="checkbox" wire:model.live="anonimo" style="width:18px;height:18px;margin-top:2px;accent-color:#3366CC;cursor:pointer;flex-shrink:0;">
+                                <span>
+                                    <span style="display:block;font-weight:600;color:var(--siap-ink);font-size:14px;">Radicar de forma anónima</span>
+                                    <span style="display:block;font-size:12px;color:#64748b;margin-top:2px;">No necesitas dar tu nombre ni cédula. Puedes dejar un correo o teléfono si quieres recibir el avance.</span>
+                                </span>
+                            </label>
+
                             <div class="row" style="--bs-gutter-y:18px;">
-                                <div class="col-12">
-                                    <label class="siap-label">Nombre completo <span style="color:#dc2626;">*</span></label>
-                                    <input type="text" wire:model="nombre_ciudadano" placeholder="Ej. Juan Carlos Pérez" class="siap-input">
-                                    @error('nombre_ciudadano') <p style="color:#dc2626;font-size:13px;margin-top:6px;">{{ $message }}</p> @enderror
-                                </div>
-                                <div class="col-12">
-                                    <label class="siap-label">Número de cédula <span style="color:#dc2626;">*</span></label>
-                                    <input type="text" wire:model="numero_cedula" inputmode="numeric" placeholder="Ej. 12345678" class="siap-input">
-                                    @error('numero_cedula') <p style="color:#dc2626;font-size:13px;margin-top:6px;">{{ $message }}</p> @enderror
-                                </div>
+                                @unless ($anonimo)
+                                    <div class="col-12">
+                                        <label class="siap-label">Nombre completo <span style="color:#dc2626;">*</span></label>
+                                        <input type="text" wire:model="nombre_ciudadano" placeholder="Ej. Juan Carlos Pérez" class="siap-input">
+                                        @error('nombre_ciudadano') <p style="color:#dc2626;font-size:13px;margin-top:6px;">{{ $message }}</p> @enderror
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="siap-label">Número de cédula <span style="color:#dc2626;">*</span></label>
+                                        <input type="text" wire:model="numero_cedula" inputmode="numeric" placeholder="Ej. 12345678" class="siap-input">
+                                        @error('numero_cedula') <p style="color:#dc2626;font-size:13px;margin-top:6px;">{{ $message }}</p> @enderror
+                                    </div>
+                                @endunless
                                 <div class="col-md-6">
                                     <label class="siap-label">Correo electrónico <span style="color:#94a3b8;font-weight:400;">(opcional)</span></label>
                                     <input type="email" wire:model="email" placeholder="correo@ejemplo.com" class="siap-input">

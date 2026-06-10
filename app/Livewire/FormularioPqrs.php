@@ -14,6 +14,9 @@ class FormularioPqrs extends Component
 {
     public int $paso = 1;
 
+    // Radicar sin identificarse
+    public bool $anonimo = false;
+
     // Step 1: citizen data
     public string $nombre_ciudadano = '';
     public string $numero_cedula = '';
@@ -33,12 +36,16 @@ class FormularioPqrs extends Component
     protected function rules(): array
     {
         return match ($this->paso) {
-            1 => [
-                'nombre_ciudadano' => 'required|min:3|max:150',
-                'numero_cedula' => 'required|digits_between:6,15',
-                'email' => 'nullable|email|max:150',
-                'telefono' => 'nullable|regex:/^[0-9]{10}$/',
-            ],
+            1 => array_merge(
+                $this->anonimo ? [] : [
+                    'nombre_ciudadano' => 'required|min:3|max:150',
+                    'numero_cedula' => 'required|digits_between:6,15',
+                ],
+                [
+                    'email' => 'nullable|email|max:150',
+                    'telefono' => 'nullable|regex:/^[0-9]{10}$/',
+                ]
+            ),
             2 => [
                 'tipo_solicitud' => 'required|in:peticion,queja,reclamo,solicitud',
                 'descripcion' => 'required|min:20|max:2000',
@@ -119,13 +126,13 @@ class FormularioPqrs extends Component
         try {
             $pqrs = \DB::transaction(function () {
                 $pqrs = Pqrs::crearConRadicado([
-                    'numero_cedula' => $this->numero_cedula,
+                    'numero_cedula' => $this->anonimo ? 'ANONIMO' : $this->numero_cedula,
                     'elemento_id' => $this->elemento_id,
                     'latitud' => $this->latitud,
                     'longitud' => $this->longitud,
                     'tipo_solicitud' => $this->tipo_solicitud,
                     'descripcion' => $this->descripcion,
-                    'nombre_ciudadano' => $this->nombre_ciudadano,
+                    'nombre_ciudadano' => $this->anonimo ? 'Ciudadano anónimo' : $this->nombre_ciudadano,
                     'email' => $this->email ?: null,
                     'telefono' => $this->telefono ?: null,
                     'estado' => 'radicada',
