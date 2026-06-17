@@ -2,16 +2,21 @@
 
 namespace App\Livewire;
 
+use App\Enums\TipoSolicitud;
 use App\Models\InfraestructuraElemento;
 use App\Models\Pqrs;
+use App\Models\PqrsAdjunto;
 use App\Models\PqrsHistorial;
 use App\Notifications\PqrsRadicadaNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class FormularioPqrs extends Component
 {
+    use WithFileUploads;
+
     public int $paso = 1;
 
     // Radicar sin identificarse
@@ -30,8 +35,14 @@ class FormularioPqrs extends Component
     public ?float $latitud = null;
     public ?float $longitud = null;
 
+    /** Evidencia opcional (hasta 3 imágenes). */
+    public array $fotos = [];
+
     // Step 3: confirmation
     public ?string $radicadoGenerado = null;
+    public ?string $fechaLimiteTexto = null;
+    public ?int $plazoDias = null;
+    public ?string $tipoLabel = null;
 
     protected function rules(): array
     {
@@ -47,8 +58,10 @@ class FormularioPqrs extends Component
                 ]
             ),
             2 => [
-                'tipo_solicitud' => 'required|in:' . implode(',', array_keys(\App\Enums\TipoSolicitud::opciones())),
+                'tipo_solicitud' => 'required|in:' . implode(',', array_keys(TipoSolicitud::opciones())),
                 'descripcion' => 'required|min:20|max:2000',
+                'fotos' => 'nullable|array|max:3',
+                'fotos.*' => 'image|max:4096',
             ],
             default => [],
         };
@@ -70,6 +83,9 @@ class FormularioPqrs extends Component
             'descripcion.required'      => 'La descripción es obligatoria.',
             'descripcion.min'           => 'La descripción debe tener al menos 20 caracteres.',
             'descripcion.max'           => 'La descripción no puede superar los 2000 caracteres.',
+            'fotos.max'                 => 'Puedes adjuntar máximo 3 fotos.',
+            'fotos.*.image'             => 'Cada archivo debe ser una imagen.',
+            'fotos.*.max'               => 'Cada foto no puede superar los 4 MB.',
         ];
     }
 
@@ -110,6 +126,13 @@ class FormularioPqrs extends Component
         $this->elemento_id = null;
         $this->latitud = null;
         $this->longitud = null;
+    }
+
+    /** Quitar una foto antes de enviar. */
+    public function quitarFoto(int $index): void
+    {
+        unset($this->fotos[$index]);
+        $this->fotos = array_values($this->fotos);
     }
 
     public function siguiente(): void
@@ -161,6 +184,18 @@ class FormularioPqrs extends Component
                     'observacion' => 'PQRS radicada por ciudadano',
                 ]);
 
+                // Evidencia (fotos) opcional
+                foreach ($this->fotos as $foto) {
+                    $ruta = $foto->store('pqrs/' . $pqrs->id, 'public');
+                    PqrsAdjunto::create([
+                        'pqrs_id'         => $pqrs->id,
+                        'ruta'            => $ruta,
+                        'nombre_original' => $foto->getClientOriginalName(),
+                        'mime'            => $foto->getMimeType(),
+                        'tamano'          => $foto->getSize(),
+                    ]);
+                }
+
                 return $pqrs;
             });
 
@@ -171,6 +206,10 @@ class FormularioPqrs extends Component
             $pqrs->notify(new PqrsRadicadaNotification($pqrs));
 
             $this->radicadoGenerado = $pqrs->radicado;
+            $this->fechaLimiteTexto = $pqrs->fecha_limite?->format('d/m/Y');
+            $this->plazoDias = $pqrs->tipoCaso()?->diasHabiles();
+            $this->tipoLabel = $pqrs->tipoCaso()?->label();
+            $this->fotos = [];
             $this->paso = 3;
         } catch (\Throwable $e) {
             \Log::error('Error al radicar PQRS: ' . $e->getMessage());

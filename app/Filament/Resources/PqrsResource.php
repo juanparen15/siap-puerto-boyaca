@@ -10,6 +10,7 @@ use App\Models\Pqrs;
 use BackedEnum;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
+use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
@@ -82,6 +83,22 @@ class PqrsResource extends Resource
                 TextEntry::make('accion_tomada')->label('Acción tomada'),
                 TextEntry::make('fecha_respuesta')->label('Fecha de respuesta')->dateTime('d/m/Y H:i'),
             ])->columns(2),
+
+            Section::make('Evidencia adjunta')
+                ->visible(fn (Pqrs $record): bool => $record->adjuntos()->exists())
+                ->schema([
+                    RepeatableEntry::make('adjuntos')
+                        ->label('')
+                        ->schema([
+                            ImageEntry::make('ruta')
+                                ->label('')
+                                ->disk('public')
+                                ->height(150)
+                                ->extraImgAttributes(['style' => 'border-radius:8px;object-fit:cover;width:100%;']),
+                        ])
+                        ->columns(3)
+                        ->columnSpanFull(),
+                ]),
 
             Section::make('Historial de estados')->schema([
                 RepeatableEntry::make('historial')

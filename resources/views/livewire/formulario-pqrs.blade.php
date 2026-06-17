@@ -150,6 +150,33 @@
                                         <p style="font-size:12px;color:#94a3b8;margin:8px 0 0;">Aún no seleccionas un punto. Es opcional, pero ayuda a ubicar el problema.</p>
                                     @endif
                                 </div>
+
+                                {{-- Evidencia opcional (hasta 3 fotos) --}}
+                                <div class="col-12">
+                                    <label class="siap-label">Evidencia <span style="color:#94a3b8;font-weight:400;">(opcional — hasta 3 fotos)</span></label>
+                                    <label for="fotos-pqrs" style="display:flex;align-items:center;gap:12px;border:1.5px dashed rgba(12,42,67,.25);border-radius:12px;padding:14px 16px;cursor:pointer;color:#475569;font-size:14px;background:#f8fafc;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#3366CC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;flex-shrink:0;"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+                                        <span>Toca para adjuntar fotos del problema <span style="color:#94a3b8;">(JPG/PNG, máx. 4 MB c/u)</span></span>
+                                    </label>
+                                    <input id="fotos-pqrs" type="file" wire:model="fotos" multiple accept="image/*" style="display:none;">
+                                    <div wire:loading wire:target="fotos" style="font-size:12px;color:#3366CC;margin-top:6px;">Subiendo fotos…</div>
+                                    @error('fotos') <p style="color:#dc2626;font-size:13px;margin-top:6px;">{{ $message }}</p> @enderror
+                                    @error('fotos.*') <p style="color:#dc2626;font-size:13px;margin-top:6px;">{{ $message }}</p> @enderror
+
+                                    @if (count($fotos))
+                                        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;">
+                                            @foreach ($fotos as $i => $foto)
+                                                <div style="position:relative;width:88px;height:88px;border-radius:10px;overflow:hidden;border:1px solid rgba(12,42,67,.12);">
+                                                    @if (is_object($foto) && method_exists($foto, 'temporaryUrl'))
+                                                        <img src="{{ $foto->temporaryUrl() }}" style="width:100%;height:100%;object-fit:cover;display:block;">
+                                                    @endif
+                                                    <button type="button" wire:click="quitarFoto({{ $i }})" title="Quitar"
+                                                            style="position:absolute;top:3px;right:3px;background:rgba(220,38,38,.92);color:#fff;border:0;border-radius:9999px;width:20px;height:20px;font-size:13px;line-height:1;cursor:pointer;">&times;</button>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    @endif
+                                </div>
                             </div>
                             @error('general') <p style="color:#dc2626;font-size:14px;margin-top:16px;text-align:center;">{{ $message }}</p> @enderror
                             <div style="margin-top:28px;display:flex;justify-content:space-between;gap:12px;">
@@ -172,6 +199,14 @@
                                     <p style="font-size:13px;color:#64748b;margin:0 0 4px;">Número de radicado</p>
                                     <p class="siap-stat-num" style="font-size:28px;color:var(--siap-ink);margin:0;letter-spacing:1px;">{{ $radicadoGenerado }}</p>
                                 </div>
+
+                                @if ($fechaLimiteTexto)
+                                    <p style="color:#475569;font-size:14px;margin:0 0 22px;">
+                                        Tu <strong>{{ $tipoLabel }}</strong> será atendida a más tardar el
+                                        <strong style="color:var(--siap-blue);">{{ $fechaLimiteTexto }}</strong>
+                                        ({{ $plazoDias }} días hábiles).
+                                    </p>
+                                @endif
 
                                 <div style="text-align:left;background:#f8fafc;border-radius:16px;padding:22px;margin-bottom:24px;">
                                     <p style="font-weight:700;color:var(--siap-ink);font-size:14px;margin:0 0 14px;">Próximos pasos:</p>
@@ -239,7 +274,10 @@
                                         @if ($elemento_id)
                                             <tr><td style="padding:11px 0;color:#64748b;border-bottom:1px solid #eef1f6;">Punto reportado</td><td style="padding:11px 0;font-weight:700;border-bottom:1px solid #eef1f6;text-align:right;">#{{ $elemento_id }}</td></tr>
                                         @endif
-                                        <tr><td style="padding:11px 0;color:#64748b;">Estado</td><td style="padding:11px 0;font-weight:700;color:#3366CC;text-align:right;">Radicada</td></tr>
+                                        @if ($fechaLimiteTexto)
+                                        <tr><td style="padding:11px 0;color:#64748b;border-bottom:1px solid #eef1f6;">Fecha límite de respuesta</td><td style="padding:11px 0;font-weight:700;border-bottom:1px solid #eef1f6;text-align:right;">{{ $fechaLimiteTexto }}</td></tr>
+                                    @endif
+                                    <tr><td style="padding:11px 0;color:#64748b;">Estado</td><td style="padding:11px 0;font-weight:700;color:#3366CC;text-align:right;">Radicada</td></tr>
                                     </table>
 
                                     {{-- Pie --}}
