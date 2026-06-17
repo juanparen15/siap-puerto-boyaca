@@ -34,45 +34,45 @@
         </a>
         <span style="font-size:12px;color:#6b7280;">{{ number_format((float) $lat, 6) }}, {{ number_format((float) $lng, 6) }}</span>
     </div>
-
-    @assets
-        <link rel="stylesheet" href="{{ asset('maplibre/maplibre-gl.css') }}">
-        <script src="{{ asset('maplibre/maplibre-gl.js') }}" defer></script>
-    @endassets
-
-    @script
-        <script>
-            (function init() {
-                if (typeof maplibregl === 'undefined') { setTimeout(init, 150); return; }
-                var el = document.getElementById('pqrs-detalle-mapa');
-                if (!el || el.dataset.init === '1') return;
-                el.dataset.init = '1';
-
-                var lat = parseFloat(el.dataset.lat), lng = parseFloat(el.dataset.lng);
-                var map = new maplibregl.Map({
-                    container: el,
-                    style: {
-                        version: 8,
-                        sources: { osm: { type: 'raster', tiles: ['https://a.tile.openstreetmap.org/{z}/{x}/{y}.png'], tileSize: 256, attribution: '© OpenStreetMap contributors' } },
-                        layers: [{ id: 'osm', type: 'raster', source: 'osm' }]
-                    },
-                    center: [lng, lat],
-                    zoom: 16,
-                    attributionControl: { compact: true }
-                });
-                map.addControl(new maplibregl.NavigationControl(), 'top-right');
-
-                new maplibregl.Marker({ color: '#dc2626' })
-                    .setLngLat([lng, lat])
-                    .setPopup(new maplibregl.Popup({ offset: 14 }).setHTML(
-                        '<div style="font-family:system-ui,sans-serif;padding:6px 8px;font-size:12px;font-weight:600;color:#0c2a43;">Punto reportado</div>'
-                    ))
-                    .addTo(map);
-
-                [200, 600, 1200].forEach(function (t) { setTimeout(function () { map.resize(); }, t); });
-            })();
-        </script>
-    @endscript
 @else
     <p style="color:#6b7280;font-size:14px;">Este reporte no tiene una ubicación georreferenciada.</p>
 @endif
+
+@assets
+    <link rel="stylesheet" href="{{ asset('maplibre/maplibre-gl.css') }}">
+    <script src="{{ asset('maplibre/maplibre-gl.js') }}" defer></script>
+@endassets
+
+@script
+    <script>
+        (function init() {
+            var el = document.getElementById('pqrs-detalle-mapa');
+            if (! el || el.dataset.init === '1') return;
+            if (typeof maplibregl === 'undefined') { setTimeout(init, 150); return; }
+            el.dataset.init = '1';
+
+            var lat = parseFloat(el.dataset.lat), lng = parseFloat(el.dataset.lng);
+            var map = new maplibregl.Map({
+                container: el,
+                style: {
+                    version: 8,
+                    sources: { osm: { type: 'raster', tiles: ['https://a.tile.openstreetmap.org/{z}/{x}/{y}.png'], tileSize: 256, attribution: '© OpenStreetMap contributors' } },
+                    layers: [{ id: 'osm', type: 'raster', source: 'osm' }]
+                },
+                center: [lng, lat],
+                zoom: 16,
+                attributionControl: { compact: true }
+            });
+            map.addControl(new maplibregl.NavigationControl(), 'top-right');
+
+            new maplibregl.Marker({ color: '#dc2626' })
+                .setLngLat([lng, lat])
+                .setPopup(new maplibregl.Popup({ offset: 14 }).setHTML(
+                    '<div style="font-family:system-ui,sans-serif;padding:6px 8px;font-size:12px;font-weight:600;color:#0c2a43;">Punto reportado</div>'
+                ))
+                .addTo(map);
+
+            [200, 600, 1200].forEach(function (t) { setTimeout(function () { map.resize(); }, t); });
+        })();
+    </script>
+@endscript
