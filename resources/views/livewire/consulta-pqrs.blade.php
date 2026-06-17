@@ -72,18 +72,15 @@
                                     <p class="siap-stat-num" style="font-size:26px;color:var(--siap-ink);margin:0;">{{ $pqrs->radicado }}</p>
                                 </div>
                                 @php
-                                    $estadoStyle = match($pqrs->estado) {
-                                        'radicada'   => 'background:#fef3c7;color:#92400e;border-color:#fde68a;',
-                                        'en_proceso' => 'background:#dbeafe;color:#1e40af;border-color:#bfdbfe;',
+                                    $estado = $pqrs->estadoCaso();
+                                    $estadoStyle = match($estado?->value) {
+                                        'radicada'   => 'background:#dbeafe;color:#1e40af;border-color:#bfdbfe;',
+                                        'en_tramite' => 'background:#fef3c7;color:#92400e;border-color:#fde68a;',
                                         'respondida' => 'background:#dcfce7;color:#166534;border-color:#bbf7d0;',
                                         'cerrada'    => 'background:#f1f5f9;color:#475569;border-color:#e2e8f0;',
                                         default      => 'background:#f1f5f9;color:#475569;border-color:#e2e8f0;',
                                     };
-                                    $estadoLabel = match($pqrs->estado) {
-                                        'radicada' => 'Radicada', 'en_proceso' => 'En proceso',
-                                        'respondida' => 'Respondida', 'cerrada' => 'Cerrada',
-                                        default => ucfirst($pqrs->estado),
-                                    };
+                                    $estadoLabel = $estado?->label() ?? ucfirst($pqrs->estado);
                                 @endphp
                                 <span style="display:inline-block;font-size:14px;font-weight:600;padding:6px 18px;border-radius:9999px;border:1px solid;{{ $estadoStyle }}">{{ $estadoLabel }}</span>
                             </div>

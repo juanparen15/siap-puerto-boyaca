@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\EstadoPqrs;
+use App\Enums\TipoSolicitud;
 use App\Filament\Resources\PqrsResource\Pages\ListPqrs;
 use App\Filament\Resources\PqrsResource\Pages\ViewPqrs;
 use App\Models\Pqrs;
@@ -13,7 +15,6 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Actions\Action;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
@@ -25,9 +26,8 @@ class PqrsResource extends Resource
 {
     protected static ?string $model = Pqrs::class;
 
-    // Navigation icon is omitted: the 'Alumbrado Público' group already has an icon
-    // (defined in AdminPanelProvider). Filament v5 enforces that when a group has an icon,
-    // its items must not also have icons.
+    // El grupo 'Alumbrado Público' ya tiene ícono (Filament v5 no permite que el
+    // grupo y sus ítems lo tengan a la vez).
     protected static string|BackedEnum|null $navigationIcon = null;
 
     protected static string|UnitEnum|null $navigationGroup = 'Alumbrado Público';
@@ -41,7 +41,7 @@ class PqrsResource extends Resource
     public static function getNavigationBadge(): ?string
     {
         return cache()->remember('nav_badge_pqrs', now()->addMinutes(2), fn () =>
-            (string)(static::getModel()::whereIn('estado', ['radicada', 'en_proceso'])->count() ?: null)
+            (string) (static::getModel()::whereIn('estado', ['radicada', 'en_tramite'])->count() ?: null)
         );
     }
 
@@ -60,16 +60,15 @@ class PqrsResource extends Resource
         return $schema->components([
             Section::make('Datos del ciudadano')->schema([
                 TextEntry::make('radicado'),
-                TextEntry::make('tipo_solicitud')->label('Tipo de solicitud'),
+                TextEntry::make('tipo_solicitud')
+                    ->label('Tipo de solicitud')
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => TipoSolicitud::tryFrom($state)?->label() ?? $state)
+                    ->color(fn (string $state): string => TipoSolicitud::tryFrom($state)?->color() ?? 'gray'),
                 TextEntry::make('estado')
                     ->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        'radicada'   => 'danger',
-                        'en_proceso' => 'warning',
-                        'resuelta' => 'success',
-                        'cerrada'    => 'gray',
-                        default      => 'gray',
-                    }),
+                    ->formatStateUsing(fn (string $state): string => EstadoPqrs::tryFrom($state)?->label() ?? $state)
+                    ->color(fn (string $state): string => EstadoPqrs::tryFrom($state)?->color() ?? 'gray'),
                 TextEntry::make('nombre_ciudadano')->label('Nombre del ciudadano'),
                 TextEntry::make('numero_cedula')->label('Número de cédula'),
                 TextEntry::make('email')->label('Correo electrónico'),
@@ -89,8 +88,10 @@ class PqrsResource extends Resource
                     ->label('')
                     ->schema([
                         TextEntry::make('created_at')->label('Fecha')->dateTime('d/m/Y H:i'),
-                        TextEntry::make('estado_anterior')->label('Estado anterior'),
-                        TextEntry::make('estado_nuevo')->label('Estado nuevo'),
+                        TextEntry::make('estado_anterior')->label('Estado anterior')
+                            ->formatStateUsing(fn (?string $state): string => $state ? (EstadoPqrs::tryFrom($state)?->label() ?? $state) : '—'),
+                        TextEntry::make('estado_nuevo')->label('Estado nuevo')
+                            ->formatStateUsing(fn (string $state): string => EstadoPqrs::tryFrom($state)?->label() ?? $state),
                         TextEntry::make('observacion')->label('Observación'),
                         TextEntry::make('usuario.name')->label('Registrado por'),
                     ])
@@ -105,35 +106,20 @@ class PqrsResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('radicado')->searchable()->sortable(),
-                TextColumn::make('tipo_solicitud')->badge(),
+                TextColumn::make('tipo_solicitud')->label('Tipo')->badge()
+                    ->formatStateUsing(fn (string $state): string => TipoSolicitud::tryFrom($state)?->label() ?? $state)
+                    ->color(fn (string $state): string => TipoSolicitud::tryFrom($state)?->color() ?? 'gray'),
                 TextColumn::make('estado')->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        'radicada'   => 'danger',
-                        'en_proceso' => 'warning',
-                        'resuelta' => 'success',
-                        'cerrada'    => 'gray',
-                        default      => 'gray',
-                    }),
+                    ->formatStateUsing(fn (string $state): string => EstadoPqrs::tryFrom($state)?->label() ?? $state)
+                    ->color(fn (string $state): string => EstadoPqrs::tryFrom($state)?->color() ?? 'gray'),
                 TextColumn::make('nombre_ciudadano')->searchable(),
                 TextColumn::make('elemento.rotulo')->label('Elemento')->searchable(),
-                TextColumn::make('funcionario.name')->label('Asignado a'),
+                TextColumn::make('funcionario.name')->label('Asignado a')->placeholder('Sin asignar'),
                 TextColumn::make('created_at')->dateTime('d/m/Y H:i')->sortable()->label('Radicada'),
             ])
             ->filters([
-                SelectFilter::make('estado')
-                    ->options([
-                        'radicada'   => 'Radicada',
-                        'en_proceso' => 'En proceso',
-                        'resuelta' => 'Resuelta',
-                        'cerrada'    => 'Cerrada',
-                    ]),
-                SelectFilter::make('tipo_solicitud')
-                    ->options([
-                        'peticion'  => 'Petición',
-                        'queja'     => 'Queja',
-                        'reclamo'   => 'Reclamo',
-                        'solicitud' => 'Solicitud',
-                    ]),
+                SelectFilter::make('estado')->options(EstadoPqrs::opciones()),
+                SelectFilter::make('tipo_solicitud')->label('Tipo')->options(TipoSolicitud::opciones()),
             ])
             ->recordActions([
                 ViewAction::make(),
@@ -144,31 +130,21 @@ class PqrsResource extends Resource
                         Select::make('estado_nuevo')
                             ->label('Nuevo estado')
                             ->options([
-                                'en_proceso' => 'En proceso',
-                                'resuelta' => 'Resuelta',
-                                'cerrada'    => 'Cerrada',
+                                EstadoPqrs::EnTramite->value  => EstadoPqrs::EnTramite->label(),
+                                EstadoPqrs::Respondida->value => EstadoPqrs::Respondida->label(),
+                                EstadoPqrs::Cerrada->value    => EstadoPqrs::Cerrada->label(),
                             ])
                             ->required(),
                         Textarea::make('observacion')->label('Observación interna'),
-                        Textarea::make('accion_tomada')->label('Acción tomada'),
+                        Textarea::make('accion_tomada')->label('Acción tomada / respuesta al ciudadano'),
                     ])
                     ->action(function (Pqrs $record, array $data): void {
-                        $estadoAnterior = $record->estado;
-                        $update = [
-                            'estado'        => $data['estado_nuevo'],
-                            'accion_tomada' => $data['accion_tomada'] ?? $record->accion_tomada,
-                        ];
-                        if (in_array($data['estado_nuevo'], ['resuelta', 'cerrada'])) {
-                            $update['fecha_respuesta'] = now();
-                        }
-                        $record->update($update);
-                        \App\Models\PqrsHistorial::create([
-                            'pqrs_id'         => $record->id,
-                            'usuario_id'      => auth()->id(),
-                            'estado_anterior' => $estadoAnterior,
-                            'estado_nuevo'    => $data['estado_nuevo'],
-                            'observacion'     => $data['observacion'] ?? null,
-                        ]);
+                        $record->cambiarEstado(
+                            $data['estado_nuevo'],
+                            $data['observacion'] ?? null,
+                            auth()->id(),
+                            $data['accion_tomada'] ?? null,
+                        );
                         $record->notify(new \App\Notifications\PqrsActualizadaNotification($record));
                         cache()->forget('nav_badge_pqrs');
                     }),

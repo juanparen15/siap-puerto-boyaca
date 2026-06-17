@@ -97,13 +97,15 @@
                             <div class="row" style="--bs-gutter-y:18px;">
                                 <div class="col-12">
                                     <label class="siap-label">Tipo de solicitud <span style="color:#dc2626;">*</span></label>
-                                    <select wire:model="tipo_solicitud" class="siap-select" style="width:100%;height:auto;min-height:44px;">
+                                    <select wire:model.live="tipo_solicitud" class="siap-select" style="width:100%;height:auto;min-height:44px;">
                                         <option value="">-- Seleccione --</option>
-                                        <option value="peticion">Petición</option>
-                                        <option value="queja">Queja</option>
-                                        <option value="reclamo">Reclamo</option>
-                                        <option value="solicitud">Solicitud</option>
+                                        @foreach (\App\Enums\TipoSolicitud::cases() as $tipo)
+                                            <option value="{{ $tipo->value }}">{{ $tipo->label() }}</option>
+                                        @endforeach
                                     </select>
+                                    @if ($tipo_solicitud && ($caso = \App\Enums\TipoSolicitud::tryFrom($tipo_solicitud)))
+                                        <p style="font-size:12px;color:#64748b;margin:6px 0 0;">{{ $caso->descripcion() }}@if ($caso->diasHabiles()) · Plazo de respuesta: {{ $caso->diasHabiles() }} días hábiles.@endif</p>
+                                    @endif
                                     @error('tipo_solicitud') <p style="color:#dc2626;font-size:13px;margin-top:6px;">{{ $message }}</p> @enderror
                                 </div>
                                 <div class="col-12">

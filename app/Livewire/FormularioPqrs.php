@@ -47,7 +47,7 @@ class FormularioPqrs extends Component
                 ]
             ),
             2 => [
-                'tipo_solicitud' => 'required|in:peticion,queja,reclamo,solicitud',
+                'tipo_solicitud' => 'required|in:' . implode(',', array_keys(\App\Enums\TipoSolicitud::opciones())),
                 'descripcion' => 'required|min:20|max:2000',
             ],
             default => [],

@@ -400,7 +400,7 @@
                     <div class="section-title-wrapper">
                         <div class="title-wrapper">
                             <h2 class="section-title font-instrumentsans-medium word-anim">SIAP <br>
-                                —en cifras</h2>
+                                - EN CIFRAS</h2>
                         </div>
                     </div>
                 </div>

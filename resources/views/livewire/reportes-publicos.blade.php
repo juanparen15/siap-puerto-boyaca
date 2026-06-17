@@ -33,14 +33,14 @@
             @php
                 $operativos = $por_estado['operativa'] ?? 0;
                 $pctOperativos = $total_elementos > 0 ? round($operativos / $total_elementos * 100, 1) : 0;
-                $pqrsPendientes = ($pqrs_por_estado['radicada'] ?? 0) + ($pqrs_por_estado['en_proceso'] ?? 0);
+                $pqrsPendientes = ($pqrs_por_estado['radicada'] ?? 0) + ($pqrs_por_estado['en_tramite'] ?? 0);
             @endphp
             <div class="row fade-anim" style="--bs-gutter-y:24px;margin-bottom:32px;">
                 @foreach ([
                     ['Total elementos', $total_elementos, '#3366CC', null],
                     ['Operativos', $pctOperativos.'%', '#16a34a', $operativos.' de '.$total_elementos],
                     ['PQRS pendientes', $pqrsPendientes, '#f59e0b', null],
-                    ['PQRS resueltas', ($pqrs_por_estado['resuelta'] ?? 0), '#3366CC', null],
+                    ['PQRS respondidas', ($pqrs_por_estado['respondida'] ?? 0), '#3366CC', null],
                 ] as [$label, $valor, $color, $sub])
                     <div class="col-lg-3 col-md-6">
                         <div class="siap-panel" style="padding:30px 28px;height:100%;">
