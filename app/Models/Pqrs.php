@@ -149,6 +149,13 @@ class Pqrs extends Model
             'estado_nuevo'    => $nuevoValor,
             'observacion'     => $observacion,
         ]);
+
+        // Notificar al ciudadano (correo + WhatsApp si hay datos). No debe romper el flujo.
+        try {
+            $this->notify(new \App\Notifications\PqrsEstadoNotification($this, EstadoPqrs::from($nuevoValor)));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('No se pudo notificar el cambio de estado PQRS ' . $this->radicado . ': ' . $e->getMessage());
+        }
     }
 
     public static function crearConRadicado(array $datos): static

@@ -249,7 +249,6 @@ class PqrsResource extends Resource
                             auth()->id(),
                             $data['accion_tomada'],
                         );
-                        $record->notify(new \App\Notifications\PqrsActualizadaNotification($record));
                         cache()->forget('nav_badge_pqrs');
                         Notification::make()->title('PQRS respondida')->success()->send();
                     }),
@@ -291,7 +290,6 @@ class PqrsResource extends Resource
                             auth()->id(),
                             $data['accion_tomada'] ?? null,
                         );
-                        $record->notify(new \App\Notifications\PqrsActualizadaNotification($record));
                         cache()->forget('nav_badge_pqrs');
                     }),
             ])

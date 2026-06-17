@@ -7,7 +7,8 @@ use App\Models\InfraestructuraElemento;
 use App\Models\Pqrs;
 use App\Models\PqrsAdjunto;
 use App\Models\PqrsHistorial;
-use App\Notifications\PqrsRadicadaNotification;
+use App\Enums\EstadoPqrs;
+use App\Notifications\PqrsEstadoNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Component;
@@ -203,7 +204,11 @@ class FormularioPqrs extends Component
             RateLimiter::hit($key, 600);
 
             // Notify after transaction commits
-            $pqrs->notify(new PqrsRadicadaNotification($pqrs));
+            try {
+                $pqrs->notify(new PqrsEstadoNotification($pqrs, EstadoPqrs::Radicada));
+            } catch (\Throwable $e) {
+                \Log::warning('No se pudo notificar la radicación PQRS: ' . $e->getMessage());
+            }
 
             $this->radicadoGenerado = $pqrs->radicado;
             $this->fechaLimiteTexto = $pqrs->fecha_limite?->format('d/m/Y');
