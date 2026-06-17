@@ -232,59 +232,65 @@
                                 </div>
                             </div>
 
-                            {{-- Comprobante (fuera de pantalla) que se exporta a imagen.
-                                 Estilos en línea (hex) y fuente Thunder para ser consistente con el portal. --}}
+                            {{-- Comprobante (fuera de pantalla) — identidad del portal: Thunder,
+                                 eyebrow con línea, degradado gov.co y banda navy como el footer. --}}
                             <div id="comprobante-pqrs" data-radicado="{{ $radicadoGenerado }}"
-                                 style="position:fixed;left:-10000px;top:0;width:660px;background:#ffffff;color:#0c2a43;font-family:'Sequel Sans Roman Body',Arial,sans-serif;border-radius:22px;border:1px solid #e6eaf2;overflow:hidden;box-sizing:border-box;">
+                                 style="position:fixed;left:-10000px;top:0;width:680px;background:#ffffff;color:#0c2a43;font-family:'Sequel Sans Roman Body',Arial,sans-serif;border-radius:24px;overflow:hidden;border:1px solid #e6eaf2;box-sizing:border-box;">
 
-                                {{-- Barra superior con degradado gov.co --}}
-                                <div style="height:10px;background:linear-gradient(90deg,#3366CC 0%,#6c8cff 55%,#8a7bff 100%);"></div>
+                                <div style="height:8px;background:linear-gradient(90deg,#3366CC 0%,#6c8cff 55%,#8a7bff 100%);"></div>
 
-                                <div style="padding:36px 44px;">
+                                <div style="padding:42px 46px 32px;">
                                     {{-- Encabezado --}}
-                                    <div style="display:flex;align-items:center;gap:18px;border-bottom:1px solid #eef1f6;padding-bottom:22px;margin-bottom:26px;">
-                                        <img src="{{ asset('images/LOGO ALCALDIA.png') }}" style="height:76px;width:auto;" crossorigin="anonymous">
+                                    <div style="display:flex;align-items:center;gap:18px;margin-bottom:30px;">
+                                        <img src="{{ asset('images/LOGO ALCALDIA.png') }}" style="height:84px;width:auto;" crossorigin="anonymous">
                                         <div style="flex:1;">
-                                            <div style="font-family:'Thunder',sans-serif;font-weight:700;font-size:30px;line-height:1;color:#0c2a43;letter-spacing:.5px;">SIAP</div>
-                                            <div style="font-size:13px;color:#475569;margin-top:2px;">Alcaldía de Puerto Boyacá · Alumbrado Público</div>
+                                            <div style="font-family:'Thunder',sans-serif;font-weight:700;font-size:34px;line-height:.9;color:#0c2a43;letter-spacing:.5px;text-transform:uppercase;">SIAP</div>
+                                            <div style="font-size:13px;color:#475569;margin-top:3px;">Alcaldía de Puerto Boyacá · Alumbrado Público</div>
                                         </div>
                                         <div style="text-align:right;">
-                                            <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#3366CC;">Comprobante</div>
-                                            <div style="font-size:12px;color:#64748b;margin-top:2px;">{{ now()->format('d/m/Y · H:i') }}</div>
+                                            <div style="font-size:11px;color:#64748b;letter-spacing:1px;text-transform:uppercase;">Generado</div>
+                                            <div style="font-size:13px;font-weight:700;color:#0c2a43;margin-top:2px;">{{ now()->format('d/m/Y · H:i') }}</div>
                                         </div>
                                     </div>
 
-                                    <div style="font-family:'Thunder',sans-serif;font-weight:600;font-size:34px;line-height:1;color:#0c2a43;margin-bottom:20px;">
-                                        Comprobante de radicación PQRS
+                                    {{-- Eyebrow + título grande (estilo hero) --}}
+                                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                                        <span style="display:inline-block;width:32px;height:2px;background:#3366CC;"></span>
+                                        <span style="font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#3366CC;">Comprobante de radicación</span>
+                                    </div>
+                                    <div style="font-family:'Thunder',sans-serif;font-weight:700;font-size:48px;line-height:.92;color:#0c2a43;text-transform:uppercase;margin-bottom:26px;">
+                                        PQRS Radicada
                                     </div>
 
                                     {{-- Radicado destacado --}}
-                                    <div style="background:rgba(51,102,204,.06);border:1px solid rgba(51,102,204,.25);border-radius:16px;padding:18px 24px;margin-bottom:24px;">
-                                        <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#3366CC;margin-bottom:4px;">Número de radicado</div>
-                                        <div style="font-family:'Thunder',sans-serif;font-weight:700;font-size:38px;line-height:1;color:#0c2a43;letter-spacing:1px;">{{ $radicadoGenerado }}</div>
+                                    <div style="background:#f1f3f7;border-radius:16px;padding:20px 26px;margin-bottom:26px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
+                                        <div>
+                                            <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#3366CC;margin-bottom:4px;">Número de radicado</div>
+                                            <div style="font-family:'Thunder',sans-serif;font-weight:700;font-size:42px;line-height:1;color:#0c2a43;letter-spacing:1px;">{{ $radicadoGenerado }}</div>
+                                        </div>
+                                        <span style="background:#dbeafe;color:#1e40af;font-size:13px;font-weight:700;padding:7px 16px;border-radius:9999px;white-space:nowrap;">Radicada</span>
                                     </div>
 
                                     {{-- Detalle --}}
                                     <table style="width:100%;border-collapse:collapse;font-size:14px;color:#0c2a43;">
-                                        <tr><td style="padding:11px 0;color:#64748b;width:42%;border-bottom:1px solid #eef1f6;">Tipo de solicitud</td><td style="padding:11px 0;font-weight:700;text-transform:capitalize;border-bottom:1px solid #eef1f6;text-align:right;">{{ $tipo_solicitud }}</td></tr>
-                                        <tr><td style="padding:11px 0;color:#64748b;border-bottom:1px solid #eef1f6;">Solicitante</td><td style="padding:11px 0;font-weight:700;border-bottom:1px solid #eef1f6;text-align:right;">{{ $anonimo ? 'Ciudadano anónimo' : $nombre_ciudadano }}</td></tr>
+                                        <tr><td style="padding:12px 0;color:#64748b;width:44%;border-bottom:1px solid #eef1f6;">Tipo de solicitud</td><td style="padding:12px 0;font-weight:700;border-bottom:1px solid #eef1f6;text-align:right;">{{ \App\Enums\TipoSolicitud::tryFrom($tipo_solicitud)?->label() ?? $tipo_solicitud }}</td></tr>
+                                        <tr><td style="padding:12px 0;color:#64748b;border-bottom:1px solid #eef1f6;">Solicitante</td><td style="padding:12px 0;font-weight:700;border-bottom:1px solid #eef1f6;text-align:right;">{{ $anonimo ? 'Ciudadano anónimo' : $nombre_ciudadano }}</td></tr>
                                         @unless ($anonimo)
-                                            <tr><td style="padding:11px 0;color:#64748b;border-bottom:1px solid #eef1f6;">Cédula</td><td style="padding:11px 0;font-weight:700;border-bottom:1px solid #eef1f6;text-align:right;">{{ $numero_cedula }}</td></tr>
+                                            <tr><td style="padding:12px 0;color:#64748b;border-bottom:1px solid #eef1f6;">Cédula</td><td style="padding:12px 0;font-weight:700;border-bottom:1px solid #eef1f6;text-align:right;">{{ $numero_cedula }}</td></tr>
                                         @endunless
                                         @if ($elemento_id)
-                                            <tr><td style="padding:11px 0;color:#64748b;border-bottom:1px solid #eef1f6;">Punto reportado</td><td style="padding:11px 0;font-weight:700;border-bottom:1px solid #eef1f6;text-align:right;">#{{ $elemento_id }}</td></tr>
+                                            <tr><td style="padding:12px 0;color:#64748b;border-bottom:1px solid #eef1f6;">Punto reportado</td><td style="padding:12px 0;font-weight:700;border-bottom:1px solid #eef1f6;text-align:right;">#{{ $elemento_id }}</td></tr>
                                         @endif
                                         @if ($fechaLimiteTexto)
-                                        <tr><td style="padding:11px 0;color:#64748b;border-bottom:1px solid #eef1f6;">Fecha límite de respuesta</td><td style="padding:11px 0;font-weight:700;border-bottom:1px solid #eef1f6;text-align:right;">{{ $fechaLimiteTexto }}</td></tr>
-                                    @endif
-                                    <tr><td style="padding:11px 0;color:#64748b;">Estado</td><td style="padding:11px 0;font-weight:700;color:#3366CC;text-align:right;">Radicada</td></tr>
+                                            <tr><td style="padding:12px 0;color:#64748b;">Fecha límite de respuesta</td><td style="padding:12px 0;font-weight:700;color:#3366CC;text-align:right;">{{ $fechaLimiteTexto }}</td></tr>
+                                        @endif
                                     </table>
+                                </div>
 
-                                    {{-- Pie --}}
-                                    <div style="margin-top:26px;border-top:1px solid #eef1f6;padding-top:16px;display:flex;justify-content:space-between;align-items:center;gap:12px;">
-                                        <span style="font-size:11px;color:#94a3b8;max-width:60%;">Conserve este comprobante. Consulte el estado en el portal SIAP con su número de radicado.</span>
-                                        <span style="font-size:11px;color:#64748b;text-align:right;">SIAP · Puerto Boyacá<br>Contrato 099 de 2026</span>
-                                    </div>
+                                {{-- Banda navy (como el footer del portal) --}}
+                                <div style="background:#0c2a43;padding:18px 46px;display:flex;align-items:center;justify-content:space-between;gap:14px;">
+                                    <span style="font-family:'Thunder',sans-serif;font-weight:600;font-size:19px;letter-spacing:1px;text-transform:uppercase;color:#ffffff;">SIAP · Puerto Boyacá</span>
+                                    <span style="font-size:11px;color:#9fb3c8;text-align:right;line-height:1.6;">Conserve este comprobante · consúltelo en el portal SIAP<br>Desarrollado por el contrato 099 de 2026</span>
                                 </div>
                             </div>
                         @endif
