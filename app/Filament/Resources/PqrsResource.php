@@ -112,6 +112,28 @@ class PqrsResource extends Resource
                 TextColumn::make('estado')->badge()
                     ->formatStateUsing(fn (string $state): string => EstadoPqrs::tryFrom($state)?->label() ?? $state)
                     ->color(fn (string $state): string => EstadoPqrs::tryFrom($state)?->color() ?? 'gray'),
+                TextColumn::make('vencimiento')
+                    ->label('Vencimiento')
+                    ->badge()
+                    ->getStateUsing(function (Pqrs $record): string {
+                        $s = $record->semaforo;
+                        if ($s === null) {
+                            return 'Sin plazo';
+                        }
+                        if ($s === 'cumplida') {
+                            return 'Atendida';
+                        }
+                        $d = (int) $record->dias_restantes;
+                        return $d < 0 ? 'Vencida ' . abs($d) . 'd' : $d . ' día(s)';
+                    })
+                    ->color(fn (Pqrs $record): string => match ($record->semaforo) {
+                        'verde'  => 'success',
+                        'ambar'  => 'warning',
+                        'rojo'   => 'danger',
+                        default  => 'gray',
+                    })
+                    ->icon(fn (Pqrs $record): ?string => $record->semaforo === 'rojo' ? 'heroicon-m-exclamation-triangle' : null)
+                    ->tooltip(fn (Pqrs $record): ?string => $record->fecha_limite ? 'Vence: ' . $record->fecha_limite->format('d/m/Y') : null),
                 TextColumn::make('nombre_ciudadano')->searchable(),
                 TextColumn::make('elemento.rotulo')->label('Elemento')->searchable(),
                 TextColumn::make('funcionario.name')->label('Asignado a')->placeholder('Sin asignar'),
@@ -123,6 +145,22 @@ class PqrsResource extends Resource
             ])
             ->recordActions([
                 ViewAction::make(),
+                Action::make('asignar')
+                    ->label('Asignar')
+                    ->icon('heroicon-o-user-plus')
+                    ->color('gray')
+                    ->fillForm(fn (Pqrs $record): array => ['funcionario_id' => $record->funcionario_id])
+                    ->form([
+                        Select::make('funcionario_id')
+                            ->label('Funcionario responsable')
+                            ->options(fn (): array => \App\Models\User::query()->orderBy('name')->pluck('name', 'id')->all())
+                            ->searchable()
+                            ->preload()
+                            ->required(),
+                    ])
+                    ->action(function (Pqrs $record, array $data): void {
+                        $record->update(['funcionario_id' => $data['funcionario_id']]);
+                    }),
                 Action::make('cambiarEstado')
                     ->label('Cambiar estado')
                     ->icon('heroicon-o-arrow-path')
