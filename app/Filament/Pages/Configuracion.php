@@ -73,8 +73,6 @@ class Configuracion extends Page
                             ->visible(fn (Get $get): bool => $get('whatsapp_driver') === 'twilio'),
                         TextInput::make('twilio_token')
                             ->label('Twilio Auth Token')
-                            ->password()
-                            ->revealable()
                             ->visible(fn (Get $get): bool => $get('whatsapp_driver') === 'twilio'),
                         TextInput::make('twilio_whatsapp_from')
                             ->label('Número remitente (From)')
@@ -84,8 +82,6 @@ class Configuracion extends Page
 
                         TextInput::make('meta_whatsapp_token')
                             ->label('Token de acceso de Meta')
-                            ->password()
-                            ->revealable()
                             ->visible(fn (Get $get): bool => $get('whatsapp_driver') === 'meta'),
                         TextInput::make('meta_phone_number_id')
                             ->label('Phone Number ID')
@@ -98,8 +94,6 @@ class Configuracion extends Page
                     ->schema([
                         TextInput::make('gemini_api_key')
                             ->label('Gemini API Key')
-                            ->password()
-                            ->revealable()
                             ->columnSpanFull(),
                     ]),
 
