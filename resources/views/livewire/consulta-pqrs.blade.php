@@ -85,12 +85,41 @@
                                 <span style="display:inline-block;font-size:14px;font-weight:600;padding:6px 18px;border-radius:9999px;border:1px solid;{{ $estadoStyle }}">{{ $estadoLabel }}</span>
                             </div>
 
+                            {{-- Estado / SLA --}}
+                            @php
+                                $sem = $pqrs->semaforo;
+                                $semStyle = match($sem) {
+                                    'verde'    => 'background:#dcfce7;color:#166534;',
+                                    'ambar'    => 'background:#fef3c7;color:#92400e;',
+                                    'rojo'     => 'background:#fee2e2;color:#b91c1c;',
+                                    'cumplida' => 'background:#dbeafe;color:#1e40af;',
+                                    default    => 'background:#f1f5f9;color:#475569;',
+                                };
+                                $diasRest = $pqrs->dias_restantes;
+                            @endphp
+                            <div style="margin-top:14px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
+                                @if ($sem === 'cumplida')
+                                    <span style="display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;padding:5px 14px;border-radius:9999px;{{ $semStyle }}">Atendida</span>
+                                @elseif ($sem !== null)
+                                    <span style="display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;padding:5px 14px;border-radius:9999px;{{ $semStyle }}">
+                                        @if ($diasRest < 0) Vencida hace {{ abs($diasRest) }} día(s) hábil(es)
+                                        @else Quedan {{ $diasRest }} día(s) hábil(es) @endif
+                                    </span>
+                                    @if ($pqrs->fecha_limite)
+                                        <span style="font-size:13px;color:#64748b;">Fecha límite: <strong>{{ $pqrs->fecha_limite->format('d/m/Y') }}</strong></span>
+                                    @endif
+                                @endif
+                            </div>
+                            @if ($estado?->descripcion())
+                                <p style="margin:10px 0 0;color:#475569;font-size:14px;">{{ $estado->descripcion() }}</p>
+                            @endif
+
                             <hr style="border:0;border-top:1px solid rgba(12,42,67,.08);margin:24px 0;">
 
                             <div class="row" style="--bs-gutter-y:18px;">
                                 <div class="col-sm-6">
                                     <p style="font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#64748b;margin:0 0 4px;">Tipo de solicitud</p>
-                                    <p style="font-size:14px;font-weight:600;color:var(--siap-ink);text-transform:capitalize;margin:0;">{{ str_replace('_', ' ', $pqrs->tipo_solicitud) }}</p>
+                                    <p style="font-size:14px;font-weight:600;color:var(--siap-ink);margin:0;">{{ $pqrs->tipoCaso()?->label() ?? str_replace('_', ' ', $pqrs->tipo_solicitud) }}</p>
                                 </div>
                                 <div class="col-sm-6">
                                     <p style="font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#64748b;margin:0 0 4px;">Fecha de radicación</p>
@@ -107,9 +136,29 @@
                             </div>
 
                             @if ($pqrs->accion_tomada)
-                                <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:14px;padding:16px;margin-top:22px;">
-                                    <p style="font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#15803d;font-weight:700;margin:0 0 4px;">Acción tomada</p>
+                                <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:14px;padding:16px 18px;margin-top:22px;">
+                                    <p style="font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#15803d;font-weight:700;margin:0 0 6px;display:flex;align-items:center;gap:6px;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                                        Respuesta de la entidad
+                                    </p>
                                     <p style="font-size:14px;color:#14532d;margin:0;">{{ $pqrs->accion_tomada }}</p>
+                                    @if ($pqrs->fecha_respuesta)
+                                        <p style="font-size:12px;color:#15803d;margin:8px 0 0;">Respondida el {{ $pqrs->fecha_respuesta->format('d/m/Y H:i') }}</p>
+                                    @endif
+                                </div>
+                            @endif
+
+                            {{-- Evidencia adjunta por el ciudadano --}}
+                            @if ($pqrs->adjuntos->isNotEmpty())
+                                <div style="margin-top:22px;">
+                                    <p style="font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#64748b;margin:0 0 8px;">Evidencia adjunta</p>
+                                    <div style="display:flex;flex-wrap:wrap;gap:10px;">
+                                        @foreach ($pqrs->adjuntos as $adj)
+                                            <a href="{{ $adj->url }}" target="_blank" rel="noopener" style="display:block;width:96px;height:96px;border-radius:10px;overflow:hidden;border:1px solid rgba(12,42,67,.12);">
+                                                <img src="{{ $adj->url }}" alt="Evidencia" style="width:100%;height:100%;object-fit:cover;display:block;">
+                                            </a>
+                                        @endforeach
+                                    </div>
                                 </div>
                             @endif
 
@@ -135,10 +184,10 @@
                                                 <div style="background:#f8fafc;border:1px solid rgba(12,42,67,.06);border-radius:12px;padding:12px 14px;">
                                                     <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:4px;">
                                                         @if ($item->estado_anterior)
-                                                            <span style="font-size:12px;color:#64748b;text-transform:capitalize;">{{ str_replace('_', ' ', $item->estado_anterior) }}</span>
+                                                            <span style="font-size:12px;color:#64748b;">{{ \App\Enums\EstadoPqrs::tryFrom($item->estado_anterior)?->label() ?? str_replace('_', ' ', $item->estado_anterior) }}</span>
                                                             <span style="color:#94a3b8;font-size:12px;">→</span>
                                                         @endif
-                                                        <span style="font-size:12px;font-weight:700;color:var(--siap-blue);text-transform:capitalize;">{{ str_replace('_', ' ', $item->estado_nuevo) }}</span>
+                                                        <span style="font-size:12px;font-weight:700;color:var(--siap-blue);">{{ \App\Enums\EstadoPqrs::tryFrom($item->estado_nuevo)?->label() ?? str_replace('_', ' ', $item->estado_nuevo) }}</span>
                                                         @if ($item->usuario)<span style="font-size:12px;color:#94a3b8;">por {{ $item->usuario->name }}</span>@endif
                                                     </div>
                                                     @if ($item->observacion)<p style="font-size:14px;color:#334155;margin:0;">{{ $item->observacion }}</p>@endif

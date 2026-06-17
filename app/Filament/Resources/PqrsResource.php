@@ -13,6 +13,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Components\ViewEntry;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -59,32 +60,62 @@ class PqrsResource extends Resource
     public static function infolist(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Datos del ciudadano')->schema([
-                TextEntry::make('radicado'),
-                TextEntry::make('tipo_solicitud')
-                    ->label('Tipo de solicitud')
-                    ->badge()
-                    ->formatStateUsing(fn (string $state): string => TipoSolicitud::tryFrom($state)?->label() ?? $state)
-                    ->color(fn (string $state): string => TipoSolicitud::tryFrom($state)?->color() ?? 'gray'),
-                TextEntry::make('estado')
-                    ->badge()
-                    ->formatStateUsing(fn (string $state): string => EstadoPqrs::tryFrom($state)?->label() ?? $state)
-                    ->color(fn (string $state): string => EstadoPqrs::tryFrom($state)?->color() ?? 'gray'),
-                TextEntry::make('nombre_ciudadano')->label('Nombre del ciudadano'),
-                TextEntry::make('numero_cedula')->label('Número de cédula'),
-                TextEntry::make('email')->label('Correo electrónico'),
-                TextEntry::make('telefono')->label('Teléfono'),
-                TextEntry::make('created_at')->label('Radicada')->dateTime('d/m/Y H:i'),
-            ])->columns(2),
+            Section::make('Resumen')
+                ->icon('heroicon-o-clipboard-document-check')
+                ->columns(3)
+                ->schema([
+                    TextEntry::make('radicado')->label('Radicado')->copyable(),
+                    TextEntry::make('tipo_solicitud')->label('Tipo')->badge()
+                        ->formatStateUsing(fn (string $state): string => TipoSolicitud::tryFrom($state)?->label() ?? $state)
+                        ->color(fn (string $state): string => TipoSolicitud::tryFrom($state)?->color() ?? 'gray'),
+                    TextEntry::make('estado')->label('Estado')->badge()
+                        ->formatStateUsing(fn (string $state): string => EstadoPqrs::tryFrom($state)?->label() ?? $state)
+                        ->color(fn (string $state): string => EstadoPqrs::tryFrom($state)?->color() ?? 'gray'),
+                    TextEntry::make('created_at')->label('Radicada')->dateTime('d/m/Y H:i'),
+                    TextEntry::make('fecha_limite')->label('Fecha límite')
+                        ->getStateUsing(fn (Pqrs $record): string => $record->fecha_limite?->format('d/m/Y') ?? 'Sin plazo'),
+                    TextEntry::make('vencimiento')->label('Vencimiento')->badge()
+                        ->getStateUsing(function (Pqrs $record): string {
+                            $s = $record->semaforo;
+                            if ($s === null) return 'Sin plazo';
+                            if ($s === 'cumplida') return 'Atendida';
+                            $d = (int) $record->dias_restantes;
+                            return $d < 0 ? 'Vencida ' . abs($d) . 'd' : $d . ' día(s) háb.';
+                        })
+                        ->color(fn (Pqrs $record): string => match ($record->semaforo) {
+                            'verde' => 'success', 'ambar' => 'warning', 'rojo' => 'danger', default => 'gray',
+                        }),
+                    TextEntry::make('funcionario.name')->label('Asignado a')->placeholder('Sin asignar')->icon('heroicon-m-user'),
+                ]),
 
-            Section::make('Solicitud')->schema([
-                TextEntry::make('descripcion')->label('Descripción')->columnSpanFull(),
-                TextEntry::make('elemento.rotulo')->label('Elemento'),
-                TextEntry::make('accion_tomada')->label('Acción tomada'),
-                TextEntry::make('fecha_respuesta')->label('Fecha de respuesta')->dateTime('d/m/Y H:i'),
-            ])->columns(2),
+            Section::make('Datos del ciudadano')
+                ->icon('heroicon-o-user-circle')
+                ->columns(2)
+                ->schema([
+                    TextEntry::make('nombre_ciudadano')->label('Nombre'),
+                    TextEntry::make('numero_cedula')->label('Cédula'),
+                    TextEntry::make('email')->label('Correo electrónico')->placeholder('—')->copyable(),
+                    TextEntry::make('telefono')->label('Teléfono')->placeholder('—')->copyable(),
+                ]),
+
+            Section::make('Solicitud')
+                ->icon('heroicon-o-document-text')
+                ->columns(2)
+                ->schema([
+                    TextEntry::make('descripcion')->label('Descripción')->columnSpanFull(),
+                    TextEntry::make('elemento.rotulo')->label('Elemento reportado')->placeholder('—'),
+                    TextEntry::make('accion_tomada')->label('Respuesta / acción tomada')->placeholder('Pendiente')->columnSpanFull(),
+                    TextEntry::make('fecha_respuesta')->label('Fecha de respuesta')->dateTime('d/m/Y H:i')->placeholder('—'),
+                ]),
+
+            Section::make('Ubicación del reporte')
+                ->icon('heroicon-o-map-pin')
+                ->schema([
+                    ViewEntry::make('ubicacion')->hiddenLabel()->view('filament.infolists.pqrs-mapa'),
+                ]),
 
             Section::make('Evidencia adjunta')
+                ->icon('heroicon-o-photo')
                 ->visible(fn (Pqrs $record): bool => $record->adjuntos()->exists())
                 ->schema([
                     RepeatableEntry::make('adjuntos')
@@ -100,21 +131,24 @@ class PqrsResource extends Resource
                         ->columnSpanFull(),
                 ]),
 
-            Section::make('Historial de estados')->schema([
-                RepeatableEntry::make('historial')
-                    ->label('')
-                    ->schema([
-                        TextEntry::make('created_at')->label('Fecha')->dateTime('d/m/Y H:i'),
-                        TextEntry::make('estado_anterior')->label('Estado anterior')
-                            ->formatStateUsing(fn (?string $state): string => $state ? (EstadoPqrs::tryFrom($state)?->label() ?? $state) : '—'),
-                        TextEntry::make('estado_nuevo')->label('Estado nuevo')
-                            ->formatStateUsing(fn (string $state): string => EstadoPqrs::tryFrom($state)?->label() ?? $state),
-                        TextEntry::make('observacion')->label('Observación'),
-                        TextEntry::make('usuario.name')->label('Registrado por'),
-                    ])
-                    ->columns(5)
-                    ->columnSpanFull(),
-            ]),
+            Section::make('Historial de estados')
+                ->icon('heroicon-o-clock')
+                ->collapsible()
+                ->schema([
+                    RepeatableEntry::make('historial')
+                        ->label('')
+                        ->schema([
+                            TextEntry::make('created_at')->label('Fecha')->dateTime('d/m/Y H:i'),
+                            TextEntry::make('estado_anterior')->label('De')
+                                ->formatStateUsing(fn (?string $state): string => $state ? (EstadoPqrs::tryFrom($state)?->label() ?? $state) : '—'),
+                            TextEntry::make('estado_nuevo')->label('A')
+                                ->formatStateUsing(fn (string $state): string => EstadoPqrs::tryFrom($state)?->label() ?? $state),
+                            TextEntry::make('observacion')->label('Observación')->placeholder('—'),
+                            TextEntry::make('usuario.name')->label('Por')->placeholder('Sistema'),
+                        ])
+                        ->columns(5)
+                        ->columnSpanFull(),
+                ]),
         ]);
     }
 
