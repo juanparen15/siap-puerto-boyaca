@@ -76,7 +76,7 @@ export function addElementosLayers(map) {
     source: "elementos",
     filter: ["has", "point_count"],
     paint: {
-      "circle-color": "#1B6B2F",
+      "circle-color": "#3366CC",
       "circle-opacity": 0.85,
       "circle-radius": ["step", ["get", "point_count"], 16, 25, 22, 100, 30],
       "circle-stroke-width": 3,

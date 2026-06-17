@@ -124,15 +124,11 @@
                                 </div>
                             @endif
 
-                            @push('scripts')
-                                @vite(['resources/js/consulta-map.js'])
-                            @endpush
-
                             @if ($pqrs->historial->isNotEmpty())
                                 <div style="margin-top:26px;">
                                     <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
                                         <lord-icon src="https://cdn.lordicon.com/laobovmg.json" trigger="loop" delay="1500" stroke="bold"
-                                            colors="primary:#64748b" style="width:20px;height:20px"></lord-icon>
+                                            colors="primary:#3366CC,secondary:#22c55e" style="width:20px;height:20px"></lord-icon>
                                         <p style="font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#64748b;margin:0;">Historial de estados</p>
                                     </div>
                                     <ol style="position:relative;border-left:1px solid rgba(12,42,67,.12);margin-left:10px;padding:0;list-style:none;">
@@ -163,4 +159,8 @@
             </div>
         </div>
     </section>
+
+    @push('scripts')
+        @vite(['resources/js/consulta-map.js'])
+    @endpush
 </div>

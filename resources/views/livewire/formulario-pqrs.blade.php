@@ -37,7 +37,7 @@
                             <div style="display:flex;flex-direction:column;align-items:center;">
                                 <div style="width:56px;height:56px;border-radius:9999px;display:flex;align-items:center;justify-content:center;border:2px solid;{{ $paso >= $n ? 'border-color:#3366CC;background:rgba(51,102,204,.08);' : 'border-color:#e2e8f0;background:#fff;' }}">
                                     <lord-icon src="https://cdn.lordicon.com/{{ $ic }}.json" trigger="loop" delay="{{ 1200 + $idx*400 }}"
-                                        colors="primary:#121331,secondary:#000000" style="width:34px;height:34px;{{ $paso >= $n ? '' : 'opacity:.4;' }}"></lord-icon>
+                                        colors="primary:#3366CC,secondary:#22c55e" style="width:34px;height:34px;{{ $paso >= $n ? '' : 'opacity:.4;' }}"></lord-icon>
                                 </div>
                                 <span style="font-size:12px;margin-top:6px;{{ $paso >= $n ? 'color:#3366CC;font-weight:600;' : 'color:#94a3b8;' }}">{{ $lbl }}</span>
                             </div>
@@ -195,35 +195,56 @@
                                 </div>
                             </div>
 
-                            {{-- Comprobante (fuera de pantalla) que se exporta a imagen --}}
+                            {{-- Comprobante (fuera de pantalla) que se exporta a imagen.
+                                 Estilos en línea (hex) y fuente Thunder para ser consistente con el portal. --}}
                             <div id="comprobante-pqrs" data-radicado="{{ $radicadoGenerado }}"
-                                 style="position:fixed;left:-10000px;top:0;width:640px;background:#ffffff;color:#0c2a43;font-family:Arial,Helvetica,sans-serif;padding:40px;box-sizing:border-box;">
-                                <div style="display:flex;align-items:center;gap:16px;border-bottom:2px solid #3366CC;padding-bottom:18px;margin-bottom:22px;">
-                                    <img src="{{ asset('images/LOGO ALCALDIA.png') }}" style="height:72px;width:auto;" crossorigin="anonymous">
-                                    <div>
-                                        <div style="font-size:20px;font-weight:bold;color:#0c2a43;">Alcaldía de Puerto Boyacá</div>
-                                        <div style="font-size:13px;color:#475569;">SIAP · Sistema de Información de Alumbrado Público</div>
+                                 style="position:fixed;left:-10000px;top:0;width:660px;background:#ffffff;color:#0c2a43;font-family:'Sequel Sans Roman Body',Arial,sans-serif;border-radius:22px;border:1px solid #e6eaf2;overflow:hidden;box-sizing:border-box;">
+
+                                {{-- Barra superior con degradado gov.co --}}
+                                <div style="height:10px;background:linear-gradient(90deg,#3366CC 0%,#6c8cff 55%,#8a7bff 100%);"></div>
+
+                                <div style="padding:36px 44px;">
+                                    {{-- Encabezado --}}
+                                    <div style="display:flex;align-items:center;gap:18px;border-bottom:1px solid #eef1f6;padding-bottom:22px;margin-bottom:26px;">
+                                        <img src="{{ asset('images/LOGO ALCALDIA.png') }}" style="height:76px;width:auto;" crossorigin="anonymous">
+                                        <div style="flex:1;">
+                                            <div style="font-family:'Thunder',sans-serif;font-weight:700;font-size:30px;line-height:1;color:#0c2a43;letter-spacing:.5px;">SIAP</div>
+                                            <div style="font-size:13px;color:#475569;margin-top:2px;">Alcaldía de Puerto Boyacá · Alumbrado Público</div>
+                                        </div>
+                                        <div style="text-align:right;">
+                                            <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#3366CC;">Comprobante</div>
+                                            <div style="font-size:12px;color:#64748b;margin-top:2px;">{{ now()->format('d/m/Y · H:i') }}</div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div style="font-size:22px;font-weight:bold;color:#0c2a43;margin-bottom:4px;">Comprobante de radicación PQRS</div>
-                                <div style="font-size:13px;color:#64748b;margin-bottom:22px;">Generado el {{ now()->format('d/m/Y · H:i') }}</div>
-                                <div style="background:#f0fdf4;border:1px solid #16a34a;border-radius:10px;padding:16px 20px;margin-bottom:22px;">
-                                    <div style="font-size:12px;color:#15803d;text-transform:uppercase;letter-spacing:1px;">Número de radicado</div>
-                                    <div style="font-size:30px;font-weight:bold;color:#0c2a43;letter-spacing:1px;">{{ $radicadoGenerado }}</div>
-                                </div>
-                                <table style="width:100%;border-collapse:collapse;font-size:14px;color:#0c2a43;">
-                                    <tr><td style="padding:9px 0;color:#64748b;width:42%;border-bottom:1px solid #eef1f6;">Tipo de solicitud</td><td style="padding:9px 0;font-weight:bold;text-transform:capitalize;border-bottom:1px solid #eef1f6;">{{ $tipo_solicitud }}</td></tr>
-                                    <tr><td style="padding:9px 0;color:#64748b;border-bottom:1px solid #eef1f6;">Solicitante</td><td style="padding:9px 0;font-weight:bold;border-bottom:1px solid #eef1f6;">{{ $anonimo ? 'Ciudadano anónimo' : $nombre_ciudadano }}</td></tr>
-                                    @unless ($anonimo)
-                                        <tr><td style="padding:9px 0;color:#64748b;border-bottom:1px solid #eef1f6;">Cédula</td><td style="padding:9px 0;font-weight:bold;border-bottom:1px solid #eef1f6;">{{ $numero_cedula }}</td></tr>
-                                    @endunless
-                                    @if ($elemento_id)
-                                        <tr><td style="padding:9px 0;color:#64748b;border-bottom:1px solid #eef1f6;">Punto reportado</td><td style="padding:9px 0;font-weight:bold;border-bottom:1px solid #eef1f6;">#{{ $elemento_id }}</td></tr>
-                                    @endif
-                                    <tr><td style="padding:9px 0;color:#64748b;">Estado</td><td style="padding:9px 0;font-weight:bold;color:#3366CC;">Radicada</td></tr>
-                                </table>
-                                <div style="margin-top:24px;border-top:1px solid #e2e8f0;padding-top:14px;font-size:11px;color:#94a3b8;">
-                                    Conserve este comprobante. Puede consultar el estado de su solicitud en el portal SIAP con su número de radicado.
+
+                                    <div style="font-family:'Thunder',sans-serif;font-weight:600;font-size:34px;line-height:1;color:#0c2a43;margin-bottom:20px;">
+                                        Comprobante de radicación PQRS
+                                    </div>
+
+                                    {{-- Radicado destacado --}}
+                                    <div style="background:rgba(51,102,204,.06);border:1px solid rgba(51,102,204,.25);border-radius:16px;padding:18px 24px;margin-bottom:24px;">
+                                        <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#3366CC;margin-bottom:4px;">Número de radicado</div>
+                                        <div style="font-family:'Thunder',sans-serif;font-weight:700;font-size:38px;line-height:1;color:#0c2a43;letter-spacing:1px;">{{ $radicadoGenerado }}</div>
+                                    </div>
+
+                                    {{-- Detalle --}}
+                                    <table style="width:100%;border-collapse:collapse;font-size:14px;color:#0c2a43;">
+                                        <tr><td style="padding:11px 0;color:#64748b;width:42%;border-bottom:1px solid #eef1f6;">Tipo de solicitud</td><td style="padding:11px 0;font-weight:700;text-transform:capitalize;border-bottom:1px solid #eef1f6;text-align:right;">{{ $tipo_solicitud }}</td></tr>
+                                        <tr><td style="padding:11px 0;color:#64748b;border-bottom:1px solid #eef1f6;">Solicitante</td><td style="padding:11px 0;font-weight:700;border-bottom:1px solid #eef1f6;text-align:right;">{{ $anonimo ? 'Ciudadano anónimo' : $nombre_ciudadano }}</td></tr>
+                                        @unless ($anonimo)
+                                            <tr><td style="padding:11px 0;color:#64748b;border-bottom:1px solid #eef1f6;">Cédula</td><td style="padding:11px 0;font-weight:700;border-bottom:1px solid #eef1f6;text-align:right;">{{ $numero_cedula }}</td></tr>
+                                        @endunless
+                                        @if ($elemento_id)
+                                            <tr><td style="padding:11px 0;color:#64748b;border-bottom:1px solid #eef1f6;">Punto reportado</td><td style="padding:11px 0;font-weight:700;border-bottom:1px solid #eef1f6;text-align:right;">#{{ $elemento_id }}</td></tr>
+                                        @endif
+                                        <tr><td style="padding:11px 0;color:#64748b;">Estado</td><td style="padding:11px 0;font-weight:700;color:#3366CC;text-align:right;">Radicada</td></tr>
+                                    </table>
+
+                                    {{-- Pie --}}
+                                    <div style="margin-top:26px;border-top:1px solid #eef1f6;padding-top:16px;display:flex;justify-content:space-between;align-items:center;gap:12px;">
+                                        <span style="font-size:11px;color:#94a3b8;max-width:60%;">Conserve este comprobante. Consulte el estado en el portal SIAP con su número de radicado.</span>
+                                        <span style="font-size:11px;color:#64748b;text-align:right;">SIAP · Puerto Boyacá<br>Contrato 099 de 2026</span>
+                                    </div>
                                 </div>
                             </div>
                         @endif
