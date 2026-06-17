@@ -5,7 +5,7 @@ namespace App\Filament\Resources\PqrsResource\Pages;
 use App\Enums\EstadoPqrs;
 use App\Exports\PqrsPeriodoExport;
 use App\Filament\Resources\PqrsResource;
-use Filament\Resources\Components\Tab;
+use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Database\Eloquent\Builder;
 use Maatwebsite\Excel\Facades\Excel;
