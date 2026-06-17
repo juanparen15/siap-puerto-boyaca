@@ -20,11 +20,12 @@ class Pqrs extends Model
     protected $fillable = [
         'radicado', 'numero_cedula', 'elemento_id', 'latitud', 'longitud',
         'tipo_solicitud', 'descripcion', 'nombre_ciudadano', 'email',
-        'telefono', 'estado', 'accion_tomada', 'fecha_respuesta', 'funcionario_id',
+        'telefono', 'estado', 'accion_tomada', 'fecha_respuesta', 'fecha_limite', 'funcionario_id',
     ];
 
     protected $casts = [
         'fecha_respuesta' => 'datetime',
+        'fecha_limite' => 'datetime',
         'latitud' => 'decimal:7',
         'longitud' => 'decimal:7',
     ];
@@ -79,16 +80,6 @@ class Pqrs extends Model
     | SLA (plazos / semáforo)
     |--------------------------------------------------------------------------
     */
-
-    /** Fecha límite legal de respuesta (null si el tipo no tiene plazo). */
-    public function getFechaLimiteAttribute(): ?Carbon
-    {
-        $dias = $this->tipoCaso()?->diasHabiles();
-        if (! $dias || ! $this->created_at) {
-            return null;
-        }
-        return DiasHabiles::sumar($this->created_at, $dias);
-    }
 
     /** Días hábiles restantes (negativo si está vencida). Null si ya cerró o sin plazo. */
     public function getDiasRestantesAttribute(): ?int
@@ -165,6 +156,15 @@ class Pqrs extends Model
         $year = now()->year;
         $ultimo = static::whereYear('created_at', $year)->lockForUpdate()->count() + 1;
         $datos['radicado'] = 'PQRS-' . $year . '-' . str_pad($ultimo, 6, '0', STR_PAD_LEFT);
+
+        // Fecha límite legal (días hábiles según el tipo)
+        if (empty($datos['fecha_limite'])) {
+            $dias = TipoSolicitud::tryFrom($datos['tipo_solicitud'] ?? '')?->diasHabiles();
+            if ($dias) {
+                $datos['fecha_limite'] = DiasHabiles::sumar(now(), $dias);
+            }
+        }
+
         return static::create($datos);
     }
 }

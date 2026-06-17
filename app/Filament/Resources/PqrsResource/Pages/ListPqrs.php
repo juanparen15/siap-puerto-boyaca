@@ -47,6 +47,15 @@ class ListPqrs extends ListRecords
             'cerrada' => Tab::make('Cerradas')
                 ->badge($contar(EstadoPqrs::Cerrada))
                 ->modifyQueryUsing(fn (Builder $q) => $q->where('estado', EstadoPqrs::Cerrada->value)),
+            'vencidas' => Tab::make('Vencidas')
+                ->badge(PqrsResource::getModel()::whereNotIn('estado', ['respondida', 'cerrada'])
+                    ->whereNotNull('fecha_limite')->where('fecha_limite', '<', now())->count() ?: null)
+                ->badgeColor('danger')
+                ->icon('heroicon-m-exclamation-triangle')
+                ->modifyQueryUsing(fn (Builder $q) => $q
+                    ->whereNotIn('estado', ['respondida', 'cerrada'])
+                    ->whereNotNull('fecha_limite')
+                    ->where('fecha_limite', '<', now())),
         ];
     }
 }

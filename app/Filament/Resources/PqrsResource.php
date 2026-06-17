@@ -19,9 +19,12 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Actions\Action;
 use Filament\Actions\ViewAction;
+use Filament\Notifications\Notification;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use UnitEnum;
 
 class PqrsResource extends Resource
@@ -193,9 +196,40 @@ class PqrsResource extends Resource
             ->filters([
                 SelectFilter::make('estado')->options(EstadoPqrs::opciones()),
                 SelectFilter::make('tipo_solicitud')->label('Tipo')->options(TipoSolicitud::opciones()),
+                Filter::make('vencidas')
+                    ->label('Solo vencidas')
+                    ->toggle()
+                    ->query(fn (Builder $query): Builder => $query
+                        ->whereNotIn('estado', ['respondida', 'cerrada'])
+                        ->whereNotNull('fecha_limite')
+                        ->where('fecha_limite', '<', now())),
+                Filter::make('sin_asignar')
+                    ->label('Sin asignar')
+                    ->toggle()
+                    ->query(fn (Builder $query): Builder => $query->whereNull('funcionario_id')),
             ])
             ->recordActions([
                 ViewAction::make(),
+                Action::make('responder')
+                    ->label('Responder')
+                    ->icon('heroicon-o-chat-bubble-left-right')
+                    ->color('success')
+                    ->visible(fn (Pqrs $record): bool => ! in_array($record->estado, ['respondida', 'cerrada'], true))
+                    ->form([
+                        Textarea::make('accion_tomada')->label('Respuesta al ciudadano')->required()->rows(4),
+                        Textarea::make('observacion')->label('Observación interna (opcional)')->rows(2),
+                    ])
+                    ->action(function (Pqrs $record, array $data): void {
+                        $record->cambiarEstado(
+                            \App\Enums\EstadoPqrs::Respondida,
+                            $data['observacion'] ?? null,
+                            auth()->id(),
+                            $data['accion_tomada'],
+                        );
+                        $record->notify(new \App\Notifications\PqrsActualizadaNotification($record));
+                        cache()->forget('nav_badge_pqrs');
+                        Notification::make()->title('PQRS respondida')->success()->send();
+                    }),
                 Action::make('asignar')
                     ->label('Asignar')
                     ->icon('heroicon-o-user-plus')
