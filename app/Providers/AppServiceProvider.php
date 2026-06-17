@@ -13,7 +13,9 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(\App\Services\GeminiService::class, fn () =>
-            new \App\Services\GeminiService(config('services.gemini.api_key', ''))
+            new \App\Services\GeminiService(
+                \App\Models\Configuracion::get('gemini_api_key') ?: config('services.gemini.api_key', '')
+            )
         );
     }
 

@@ -16,6 +16,8 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\ViewEntry;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Actions\Action;
 use Filament\Actions\ViewAction;
@@ -216,7 +218,28 @@ class PqrsResource extends Resource
                     ->color('success')
                     ->visible(fn (Pqrs $record): bool => ! in_array($record->estado, ['respondida', 'cerrada'], true))
                     ->form([
-                        Textarea::make('accion_tomada')->label('Respuesta al ciudadano')->required()->rows(4),
+                        Textarea::make('accion_tomada')
+                            ->label('Respuesta al ciudadano')
+                            ->required()
+                            ->rows(5)
+                            ->hintAction(
+                                Action::make('mejorarIA')
+                                    ->label('Mejorar con IA')
+                                    ->icon('heroicon-m-sparkles')
+                                    ->action(function (Get $get, Set $set): void {
+                                        $texto = trim((string) $get('accion_tomada'));
+                                        if ($texto === '') {
+                                            Notification::make()->title('Escribe primero un borrador de respuesta.')->warning()->send();
+                                            return;
+                                        }
+                                        try {
+                                            $set('accion_tomada', app(\App\Services\GeminiService::class)->mejorarRespuesta($texto));
+                                            Notification::make()->title('Redacción mejorada con IA')->success()->send();
+                                        } catch (\Throwable $e) {
+                                            Notification::make()->title('No se pudo mejorar la redacción')->body($e->getMessage())->danger()->send();
+                                        }
+                                    })
+                            ),
                         Textarea::make('observacion')->label('Observación interna (opcional)')->rows(2),
                     ])
                     ->action(function (Pqrs $record, array $data): void {
