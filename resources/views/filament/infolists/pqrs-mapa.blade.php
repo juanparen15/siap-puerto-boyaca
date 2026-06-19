@@ -1,13 +1,13 @@
-@php($r = $getRecord())
+@php
+    $r = $getRecord();
+    $lat = $r->latitud;
+    $lng = $r->longitud;
+    $gmaps = 'https://www.google.com/maps/search/?api=1&query=' . $lat . ',' . $lng;
+    $gdir  = 'https://www.google.com/maps/dir/?api=1&destination=' . $lat . ',' . $lng;
+    $waze  = 'https://waze.com/ul?ll=' . $lat . ',' . $lng . '&navigate=yes';
+@endphp
 
-@if ($r->latitud && $r->longitud)
-    @php
-        $lat = $r->latitud;
-        $lng = $r->longitud;
-        $gmaps = 'https://www.google.com/maps/search/?api=1&query=' . $lat . ',' . $lng;
-        $gdir  = 'https://www.google.com/maps/dir/?api=1&destination=' . $lat . ',' . $lng;
-        $waze  = 'https://waze.com/ul?ll=' . $lat . ',' . $lng . '&navigate=yes';
-    @endphp
+@if ($lat && $lng)
 
     <div wire:ignore>
         <div id="pqrs-detalle-mapa"
