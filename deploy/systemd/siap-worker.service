@@ -8,7 +8,7 @@ Group=www-data
 Restart=always
 RestartSec=5
 WorkingDirectory=/var/www/html/siap-puerto-boyaca
-ExecStart=/usr/bin/php /var/www/html/siap-puerto-boyaca/artisan queue:work --sleep=3 --tries=3 --max-time=3600
+ExecStart=/usr/bin/php /var/www/html/siap-puerto-boyaca/artisan queue:work --sleep=3 --tries=1 --timeout=600 --memory=512 --max-time=3600
 StartLimitIntervalSec=0
 
 [Install]
