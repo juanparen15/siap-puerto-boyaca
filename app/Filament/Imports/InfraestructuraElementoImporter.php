@@ -81,11 +81,20 @@ class InfraestructuraElementoImporter extends Importer
 
     public function resolveRecord(): ?InfraestructuraElemento
     {
+        // 1) Clave principal de deduplicación: globalid
         $globalid = $this->data['globalid'] ?? null;
-        if (empty($globalid)) {
-            return new InfraestructuraElemento();
+        if (! empty($globalid)) {
+            return InfraestructuraElemento::firstOrNew(['globalid' => $globalid]);
         }
-        return InfraestructuraElemento::firstOrNew(['globalid' => $globalid]);
+
+        // 2) Respaldo: si no hay globalid, evitar duplicados por rótulo
+        $rotulo = $this->data['rotulo'] ?? null;
+        if (! empty($rotulo)) {
+            return InfraestructuraElemento::firstOrNew(['rotulo' => $rotulo]);
+        }
+
+        // 3) Sin identificadores: crear nuevo
+        return new InfraestructuraElemento();
     }
 
     public static function getCompletedNotificationBody(Import $import): string
