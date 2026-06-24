@@ -17,6 +17,7 @@ class InfraestructuraElementoImporter extends Importer
         return [
             ImportColumn::make('tipo')
                 ->label('tipo_de_elemento')
+                ->guess(['tipo_de_elemento', 'tipo de elemento', 'tipo'])
                 ->rules(['required'])
                 ->fillRecordUsing(function ($record, $value) {
                     $allowed = ['luminaria', 'poste', 'reflector', 'sendero_peatonal', 'campo_deportivo', 'luminaria_parque'];
@@ -32,49 +33,64 @@ class InfraestructuraElementoImporter extends Importer
                     $record->tipo = $mapped;
                 }),
             ImportColumn::make('rotulo')
-                ->label('referencia_del_rotulo'),
-            ImportColumn::make('marca'),
+                ->label('referencia_del_rotulo')
+                ->guess(['referencia_del_rotulo', 'rotulo', 'rótulo']),
+            ImportColumn::make('marca')
+                ->guess(['marca']),
             ImportColumn::make('tecnologia')
-                ->label('tipo_de_tecnologia'),
+                ->label('tipo_de_tecnologia')
+                ->guess(['tipo_de_tecnologia', 'tecnologia', 'tecnología']),
             ImportColumn::make('potencia_w')
                 ->label('potencia_w')
+                ->guess(['potencia_w', 'potencia'])
                 ->integer(),
             ImportColumn::make('estado')
                 ->label('estado_actual')
-                ->fillRecordUsing(fn ($record, $value) => $record->estado = match(strtoupper(trim($value))) {
+                ->guess(['estado_actual', 'estado'])
+                ->fillRecordUsing(fn ($record, $value) => $record->estado = match(strtoupper(trim((string) $value))) {
                     'OPERATIVA' => 'operativa',
                     'NO OPERATIVA' => 'no_operativa',
                     'DESINSTALADA' => 'desinstalada',
                     default => 'operativa',
                 }),
             ImportColumn::make('tipo_poste')
-                ->label('tipo_de_poste'),
+                ->label('tipo_de_poste')
+                ->guess(['tipo_de_poste', 'tipo_poste']),
             ImportColumn::make('altura_poste_m')
                 ->label('altura_del_poste_m')
+                ->guess(['altura_del_poste_m', 'altura_poste_m'])
                 ->numeric(),
             ImportColumn::make('carga_rotura_kgf')
                 ->label('carga_de_rotura_kgf')
+                ->guess(['carga_de_rotura_kgf', 'carga_rotura_kgf'])
                 ->integer(),
             ImportColumn::make('clasificacion')
-                ->fillRecordUsing(fn ($record, $value) => $record->clasificacion = match(strtoupper(trim($value))) {
+                ->guess(['clasificacion', 'clasificación'])
+                ->fillRecordUsing(fn ($record, $value) => $record->clasificacion = match(strtoupper(trim((string) $value))) {
                     'CASCO URBANO' => 'casco_urbano',
                     'PUERTO SERVIEZ' => 'puerto_serviez',
                     default => 'casco_urbano',
                 }),
-            ImportColumn::make('descripcion'),
+            ImportColumn::make('descripcion')
+                ->guess(['descripcion', 'descripción']),
             ImportColumn::make('observaciones')
-                ->label('observaciones_mtto'),
+                ->label('observaciones_mtto')
+                ->guess(['observaciones_mtto', 'observaciones']),
             ImportColumn::make('latitud')
                 ->label('y')
+                ->guess(['y', 'latitud', 'lat'])
                 ->numeric()
-                ->rules(['numeric', 'between:-4,13']),
+                ->rules(['nullable', 'numeric', 'between:-4,13']),
             ImportColumn::make('longitud')
                 ->label('x')
+                ->guess(['x', 'longitud', 'lon', 'lng'])
                 ->numeric()
-                ->rules(['numeric', 'between:-82,-66']),
+                ->rules(['nullable', 'numeric', 'between:-82,-66']),
             ImportColumn::make('fecha_levantamiento')
-                ->label('fecha_de_levantamiento'),
+                ->label('fecha_de_levantamiento')
+                ->guess(['fecha_de_levantamiento', 'fecha_levantamiento']),
             ImportColumn::make('globalid')
+                ->guess(['globalid', 'GlobalID', 'objectid'])
                 ->sensitive(),
         ];
     }
